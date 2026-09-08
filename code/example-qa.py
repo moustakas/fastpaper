@@ -144,6 +144,7 @@ def main():
     parser.add_argument('--fphotodir', default=None,
                         help='Full path to the Legacy Surveys Tractor catalog tree '
                              f'(default: {DEFAULT_FPHOTODIR} if present, else $FPHOTO_DIR).')
+    parser.add_argument('--debug-plots', action='store_true', help='Generate more verbose output and diagnostic plots.')
     args = parser.parse_args()
 
     from fastspecfit.singlecopy import sc_data
@@ -183,7 +184,8 @@ def main():
         specphot=True)
 
     objmeta, specphot, fastspec, _ = fastspec_one(
-        0, specdata, objmeta, fastfit_dtype, specphot_dtype, broadlinefit=True)
+        0, specdata, objmeta, fastfit_dtype, specphot_dtype, broadlinefit=True,
+        debug_plots=args.debug_plots)
 
     print(f'  logmstar={specphot["LOGMSTAR"]:.2f}, tauv={specphot["TAUV"]:.2f}, '
           f'vdisp={specphot["VDISP"]:.0f} km/s')
