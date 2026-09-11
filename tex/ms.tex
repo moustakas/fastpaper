@@ -659,10 +659,6 @@ which flags which lines, if present, are most likely to be
 well-detected in a given spectrum. We describe these latter quantities
 in detail in the next subsection (\S\ref{ssec:patches}).
 
-\todo{The table should add a comment about the ``UV/QSO''
-  categorization and also explain the \texttt{isbroad} designation not
-  shown here (but implicitly used in the next section).}
-
 \input{tables/table-emlines}
 
 %Twelve UV and AGN broad lines---from Ly$\alpha$ through
@@ -708,25 +704,24 @@ in the final fitting pass, described in \S\ref{sssec:kinematic}).
 \caption{Illustration of the line-masking algorithm for an example BGS
   target at $z=0.3292$ (\texttt{TARGETID=39627670102744387} from the
   main survey bright-time program, appearing on HEALPix
-  17366). \todo{Consider adding an image cutout.} \textit{Top:} the
-  full per-camera DESI spectrum (B, R, Z in blue, green, and red,
-  respectively) together with the per-patch best-fitting local linear
-  continuum and Gaussian model line-profiles (darker blue, green, and
-  red in B, R, and Z, respectively) for all the candidate strong lines
-  in the observed spectral range. \textit{Bottom:} Zoomed-in panels
-  which more clearly show the per-patch fitting results. In each
-  panel, camera-colored pixels mark the pixels in the final line-mask
-  (and therefore excluded from the subsequent continuum-fit), while
-  light-gray pixels are the surrounding continuum used for that
-  patch's local linear fit. The darker curves show the combined
-  best-fit line-plus-continuum model, while the dashed black line and
-  surrounding dotted band show the local linear continuum and its
-  $\pm1\sigma$ noise envelope. Finally, the legends indicate the S/N
-  value inferred for each line and the patch label. For this
-  particular object, a significant broad \ha{} Balmer line was
-  correctly identified, resulting in patches ``m'' and ``p'' and
-  patches ``t'' and ``u'' merging into larger patches ``mp'' and
-  ``tu'', respectively, and more aggressive (conservative)
+  17366). \textit{Top:} the full per-camera DESI spectrum (B, R, Z in
+  blue, green, and red, respectively) together with the per-patch
+  best-fitting local linear continuum and Gaussian model line-profiles
+  (darker blue, green, and red in B, R, and Z, respectively) for all
+  the candidate strong lines in the observed spectral
+  range. \textit{Bottom:} Zoomed-in panels which more clearly show the
+  per-patch fitting results. In each panel, camera-colored pixels mark
+  the pixels in the final line-mask (and therefore excluded from the
+  subsequent continuum-fit), while light-gray pixels are the
+  surrounding continuum used for that patch's local linear fit. The
+  darker curves show the combined best-fit line-plus-continuum model,
+  while the dashed black line and surrounding dotted band show the
+  local linear continuum and its $\pm1\sigma$ noise envelope. Finally,
+  the legends indicate the S/N value inferred for each line and the
+  patch label. For this particular object, a significant broad \ha{}
+  Balmer line was correctly identified, resulting in patches ``m'' and
+  ``p'' and patches ``t'' and ``u'' merging into larger patches ``mp''
+  and ``tu'', respectively, and more aggressive (conservative)
   line-masking. \label{fig:linemasker}}
 \end{figure*}
 
@@ -897,14 +892,14 @@ stellar-mass--velocity-dispersion relation,
   \log_{10}(\vdisp/\kms) = a + b\,(\logmstar - 11),
   \label{eq:sigma_mstar}
 \end{equation}
-with $(a,b) = (2.30,\,0.25)$ (\todo{need a ref}) using a fast,
-preliminary estimate of the stellar mass, \Mstar{}
-(\S\ref{sssec:fitting}). If our estimate of \Mstar{} fails---for
-whatever reason---we instead adopt a fallback $\vdisp = 150$~\kms{}
-(\texttt{VDISP\_NOMINAL}), close to the characteristic ``knee'' of the
-velocity dispersion function \citep{bezanson11a, taylor22a}. In either
-fallback case we set \texttt{VDISP\_IVAR}~$=0$ to indicate that
-\vdisp{} has not been independently measured.
+with $(a,b) = (2.30,\,0.25)$ using a fast, preliminary estimate of the
+stellar mass, \Mstar{} (\S\ref{sssec:fitting}). If our estimate of
+\Mstar{} fails---for whatever reason---we instead adopt a fallback
+$\vdisp = 150$~\kms{} (\texttt{VDISP\_NOMINAL}), close to the
+characteristic ``knee'' of the velocity dispersion function
+\citep{bezanson11a, taylor22a}. In either fallback case we set
+\texttt{VDISP\_IVAR}~$=0$ to indicate that \vdisp{} has not been
+independently measured.
 
 When a direct measurement is warranted, we determine \vdisp{} by
 finding the optimal Gaussian kernel dispersion,
@@ -969,11 +964,12 @@ $k$. Finally, we compute the median scalar aperture correction,
 $\bar{\eta}=\mathrm{median}(\eta_g,\,\eta_r,\,\eta_z)$, and apply the
 resulting multiplicative factor (falling back to $\bar{\eta}=1.0$ if
 any part of the preceding analysis fails) during the full
-spectrophotometric fit (\S\ref{sssec:fitting}). \todo{Do we need to
-  say any more? Or point to a discussion of the limitations of this
-  correction? And there's a subtelty not mentioned: to derive the
-  aperture correction we use the SPS model variant with the FSPS
-  line-emission.}
+spectrophotometric fit (\S\ref{sssec:fitting}).
+
+\todo{Do we need to say any more? Or point to a discussion of the
+  limitations of this correction? And there's a subtelty not
+  mentioned: to derive the aperture correction we use the SPS model
+  variant with the FSPS line-emission.}
 
 %large band-to-band scatter indicates strong color gradients within the
 %fiber aperture. We treat $\bar{\eta}$ as exact and do not propagate
@@ -1154,7 +1150,7 @@ stellar age---as described in \S\ref{ssec:quantities}.
 \subsubsection{Smooth Continuum Correction}
 \label{sssec:smooth}
 
-\todo{Does this section need a figure to illustrate the technique?}
+%\todo{Does this section need a figure to illustrate the technique?}
 
 Despite its flexibility, our parametric continuum model $C(\lambda)$
 (\S\ref{sssec:fitting}) can leave small- or even large-scale
@@ -1713,7 +1709,7 @@ $h^{-2}\,\msun$), therefore, is simply
 %We encourage users to carefully check the SFRs derived by
 %\fastspecfit, however, because of the lack of rest-frame UV photometry
 %and the relatively simple modeling priors.
-\todo{Should we warn users to carefully vet SFR before using it?}
+%\todo{Should we warn users to carefully vet SFR before using it?}
 Additional estimates of the SFR of course can be inferred from various
 other tracers, such as the \ha, \oii, or UV luminosity (where they
 have been reliably measured and with appropriate corrections for dust
@@ -2270,8 +2266,10 @@ respectively. Table~\ref{table:sample} summarizes the total number of
 objects in the VAC observed as part of the DESI main, special, and SV
 programs, totaling over 38~million objects, including the
 approximately 165,000 targets, or $0.4\%$ of the full sample with
-corrected redshifts. \todo{Possibly document how there can be
-  duplicates between these categories?}
+corrected redshifts.
+
+%\todo{Possibly document how there can be duplicates between these
+%  categories?}
 
 We produce the \texttt{Loa/v2.0} VAC using \fastspecfit{}
 version~\texttt{3.6.1} and the \texttt{ftemplates-chabrier-2.2.0.fits}
@@ -2281,7 +2279,7 @@ We run on the HEALPix-coadded DESI spectra and organize the output
 catalogs identically to how the input spectra and redshift catalogs
 are organized in DESI DR1 and DR2 (see \S3.3 in
 \citealt{desi-collaboration26a} and DESI Collaboration et~al., in
-preparation).\footnote{\url{https://fastspecfit.readthedocs.io/en/3.6.1/vacs.html\#data-organization}}
+preparation).\footnote{\url{https://fastspecfit.readthedocs.io/en/latest/vacs.html\#data-organization}}
 Each \fastspec{} output file contains well over 1000 columns organized
 across five FITS extensions:
 \begin{itemize}
@@ -2317,10 +2315,11 @@ across five FITS extensions:
 \noindent For the most complete, column-by-column description of the
 data model, pinned to the \fastspecfit{} version used to produce this
 VAC, we refer to the online
-documentation.\footnote{\url{https://fastspecfit.readthedocs.io/en/3.6.1/fastspec.html}}
-\todo{I'm not sure we should link to the 3.6.1 documentation because
-  I've already corrected a few errors that are only in main. That
-  said, although there's some risk to pointing to ``latest.''}
+documentation.\footnote{\url{https://fastspecfit.readthedocs.io/en/latest/fastspec.html}}
+
+%\todo{I'm not sure we should link to the 3.6.1 documentation because
+%  I've already corrected a few errors that are only in main. That
+%  said, although there's some risk to pointing to ``latest.''}
 
 Because there are more than 52,000 individual files (one per HEALPix),
 most users will find it convenient to work with the merged catalogs
@@ -2801,7 +2800,7 @@ catalogs is very good, particularly given the different data
 (photometry only versus spectrophotometry), templates, and
 star-formation-history parameterizations involved.
 
-\todo{Could also check K-corrections against k-correct?}
+%\todo{Could also check K-corrections against k-correct?}
 
 \subsection{Pipeline Diagnostics}
 \label{ssec:diagnostics}
@@ -2835,10 +2834,11 @@ possible systematic calibration errors in the reduced data. To
 illustrate this kind of application, in this section we use
 \fastspec{} measurements to characterize wavelength-solution errors
 revealed by correlated per-camera emission-line velocity
-shifts. \todo{I may or may not check spectrophotometric calibration
-  residuals, too, but that would require rerunning a bunch of fits
-  without the aperture correction; not a trivial amount of compute
-  time.}
+shifts.
+
+%\todo{I may or may not check spectrophotometric calibration residuals,
+%  too, but that would require rerunning a bunch of fits without the
+%  aperture correction; not a trivial amount of compute time.}
 
 \fastspecfit{} does not fit the three DESI cameras (B, R, Z)
 independently. Narrow emission lines instead share a common kinematic
@@ -3011,29 +3011,40 @@ $\approx$10~Gyr.
   from $P_1$ following \citet{jin21a}. \label{fig:bpt}}
 \end{figure*}
 
-%Where $P_1 = 0.63,\log[\ion{N}{2}]/\ha + 0.51,\log[\ion{S}{2}]/\ha +0.59,\log[\ion{O}{3}]/\hb$
-%and
-%$P_3 = -0.46,\log[\ion{N}{2}]/\ha - 0.37,\log[\ion{S}{2}]/\ha + 0.81,\log[\ion{O}{3}]/\hb$
-
 Next, in Figure~\ref{fig:bpt} we construct two optical emission-line
 diagnostic diagrams from the \fastspecfit{} VAC which can be used to
 identify and characterize AGN. For simplicity, we show just BGS
 targets from the SV3 bright program with a flux $\mathrm{S/N}>3$ on
 all the relevant emission lines. For a more comprehensive sample of
-AGN in BGS and other target classes, see \citet{juneau25a} and
-S.~Juneau et~al., in preparation. The left-hand panel of
-Figure~\ref{fig:bpt} shows the traditional BPT \citep{baldwin81a}
-diagram, \oiiilam/\hb{} versus \niilam/\ha, with the empirical
-star-forming/AGN demarcation line from \citet{kauffmann03c} shown as a
-dashed curve. Galaxies above this line are AGN candidates, and the
-density distribution of the sample across this boundary encodes the
-mix of nuclear activity in the low-redshift galaxy population.
+AGN in the BGS sample and other target classes, see \citet{juneau25a}
+and S.~Juneau et~al., in preparation. The left-hand panel of
+Figure~\ref{fig:bpt} shows the traditional Baldwin, Phillips, and
+Terlevich \citep[BPT;][]{baldwin81a} diagram, \oiiilam/\hb{} versus
+\niilam/\ha, with the empirical star-forming/AGN demarcation line from
+\citet{kauffmann03c} shown as a dashed curve. Galaxies above and below
+this boundary have line-emission consistent with ionization from an
+AGN and star formation, respectively. Meanwhile, the star-formation
+sequence itself is a sequence in gas-phase abundance, with a
+second-order dependence on excitation or ionization parameter
+\citep[e.g.,][]{kewley02a}.
 
-The right panel recasts the same sample in the $P_1$--$P_3$ projection
+%the density distribution of the sample across this boundary encodes
+%the mix of nuclear activity in the low-redshift galaxy population.
+
+The right panel recasts the same sample (with an additional
+$\mathrm{S/N}>3$ cut on 
+
+in the $P_1$--$P_3$ projection
 of \citet{ji20a}, which replaces this hard boundary with a continuous
 AGN fraction $f_\mathrm{AGN}$ \citep{jin21a}. \todo{Quantify
   AGN-candidate and star-forming fractions from the left panel, and
   the $f_\mathrm{AGN}$ distribution from the right panel.}
+
+%Where $P_1 = 0.63,\log[\ion{N}{2}]/\ha + 0.51,\log[\ion{S}{2}]/\ha +0.59,\log[\ion{O}{3}]/\hb$
+%and
+%$P_3 = -0.46,\log[\ion{N}{2}]/\ha - 0.37,\log[\ion{S}{2}]/\ha + 0.81,\log[\ion{O}{3}]/\hb$
+
+
 
 \subsection{Planned Improvements}
 \label{ssec:improvements}
@@ -3278,7 +3289,7 @@ other hand, follow the same
 prefix. For a detailed column-by-column description of the \fastphot{}
 data model, pinned to the \fastspecfit{} version used to produce this
 VAC, please see the online
-documentation.\footnote{\url{https://fastspecfit.readthedocs.io/en/3.6.1/fastphot.html}}
+documentation.\footnote{\url{https://fastspecfit.readthedocs.io/en/latest/fastphot.html}}
 
 \begin{figure*}
 \centering\includegraphics[width=1.0\textwidth]{figures/compare-mstar-fastphot.pdf}
