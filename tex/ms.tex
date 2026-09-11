@@ -36,10 +36,10 @@
 \newcommand{\hii}{\ion{H}{2}}
 \newcommand{\hei}{\ion{He}{1}}
 \newcommand{\heii}{\ion{He}{2}}
-\newcommand{\lya}{Ly\ensuremath{\alpha}}
-\newcommand{\ha}{H\ensuremath{\alpha}}
-\newcommand{\hb}{H\ensuremath{\beta}}
-\newcommand{\hg}{H\ensuremath{\gamma}}
+\newcommand{\ha}{\ensuremath{\mathrm{H}\alpha}}
+\newcommand{\hb}{\ensuremath{\mathrm{H}\beta}}
+\newcommand{\hg}{\ensuremath{\mathrm{H}\gamma}}
+\newcommand{\lya}{\ensuremath{\mathrm{Ly}\alpha}}
 
 \newcommand{\niilam}{[\ion{N}{2}]~$\lambda6584$}
 \newcommand{\oiiilam}{[\ion{O}{3}]~$\lambda5007$}
@@ -2996,19 +2996,18 @@ $\approx$10~Gyr.
 
 \begin{figure*}
 \centering\includegraphics[width=1.0\textwidth]{figures/bpt-agn.pdf}
-\caption{AGN diagnostics for BGS galaxies in the SV3 bright
-  program. Both panels show the same sample of with signal-to-noise
-  ratio $>3$ detected in all six diagnostic emission lines
-  ([\ion{N}{2}] $\lambda6584$, \ha{}, [\ion{S}{2}]
-  $\lambda\lambda6716,6731$, [\ion{O}{3}] $\lambda5007$, and \hb). The
-  background color map and contours show the number density of
-  objects. (Left) Classical BPT diagram \citep{baldwin81a}. The dashed
-  curve shows the empirical star-forming/AGN demarcation of
-  \citet{kauffmann03c}; galaxies above this line are AGN
-  candidates. (Right) The $P_1$--$P_3$ projection of \citet{ji20a},
-  which separates star-forming galaxies (low $P_1$) from AGN (high
-  $P_1$). The top axis shows the AGN fraction $f_\mathrm{AGN}$ mapped
-  from $P_1$ following \citet{jin21a}. \label{fig:bpt}}
+\caption{AGN diagnostic diagrams for BGS galaxies in the SV3 bright
+  program. In both panels, we require flux $\mathrm{S/N}>3$ in all the
+  emission lines used to construct each diagram, andf the background
+  color map and contours show the number density of objects. (Left)
+  Traditional BPT diagram \citep{baldwin81a}, where the dashed curve
+  shows the empirical star-forming/AGN demarcation boundary from
+  \citet{kauffmann03c}. (Right) $P_1$--$P_3$ optical diagnostic
+  diagram of \citet{ji20a}, which separates star-forming galaxies (low
+  $P_1$) from AGN (high $P_1$). $P_1$ and $P_3$ are defined in
+  equations~(\ref{eq:p1}) and (\ref{eq:p3}). The top axis shows the
+  AGN fraction $f_\mathrm{AGN}$ mapped from $P_1$ following
+  \citet{jin21a}. \label{fig:bpt}}
 \end{figure*}
 
 Next, in Figure~\ref{fig:bpt} we construct two optical emission-line
@@ -3016,14 +3015,14 @@ diagnostic diagrams from the \fastspecfit{} VAC which can be used to
 identify and characterize AGN. For simplicity, we show just BGS
 targets from the SV3 bright program with a flux $\mathrm{S/N}>3$ on
 all the relevant emission lines. For a more comprehensive sample of
-AGN in the BGS sample and other target classes, see \citet{juneau25a}
-and S.~Juneau et~al., in preparation. The left-hand panel of
-Figure~\ref{fig:bpt} shows the traditional Baldwin, Phillips, and
+AGN in the BGS sample and other target classes, see \citet{juneau25a,
+  siudek25a} and S.~Juneau et~al., in preparation. The left-hand panel
+of Figure~\ref{fig:bpt} shows the traditional Baldwin, Phillips, and
 Terlevich \citep[BPT;][]{baldwin81a} diagram, \oiiilam/\hb{} versus
-\niilam/\ha, with the empirical star-forming/AGN demarcation line from
-\citet{kauffmann03c} shown as a dashed curve. Galaxies above and below
-this boundary have line-emission consistent with ionization from an
-AGN and star formation, respectively. Meanwhile, the star-formation
+\niilam/\ha, with the empirical star-forming/AGN demarcation curve
+from \citet{kauffmann03c} shown as a dashed curve. Galaxies above and
+below this boundary have line-emission consistent with ionization from
+an AGN and star formation, respectively. Meanwhile, the star-formation
 sequence itself is a sequence in gas-phase abundance, with a
 second-order dependence on excitation or ionization parameter
 \citep[e.g.,][]{kewley02a}.
@@ -3031,49 +3030,52 @@ second-order dependence on excitation or ionization parameter
 %the density distribution of the sample across this boundary encodes
 %the mix of nuclear activity in the low-redshift galaxy population.
 
-The right panel recasts the same sample (with an additional
-$\mathrm{S/N}>3$ cut on 
-
-in the $P_1$--$P_3$ projection
-of \citet{ji20a}, which replaces this hard boundary with a continuous
-AGN fraction $f_\mathrm{AGN}$ \citep{jin21a}. \todo{Quantify
-  AGN-candidate and star-forming fractions from the left panel, and
-  the $f_\mathrm{AGN}$ distribution from the right panel.}
-
-%Where $P_1 = 0.63,\log[\ion{N}{2}]/\ha + 0.51,\log[\ion{S}{2}]/\ha +0.59,\log[\ion{O}{3}]/\hb$
-%and
-%$P_3 = -0.46,\log[\ion{N}{2}]/\ha - 0.37,\log[\ion{S}{2}]/\ha + 0.81,\log[\ion{O}{3}]/\hb$
-
-
+The right-hand panel of Figure~\ref{fig:bpt} visualizes the same BGS
+sample in the $P_1$--$P_3$ optical diagnostic diagram of
+\citet{ji20a}, where
+\begin{align}
+  P_1 &\equiv  0.63\,\log(\text{\nii}/\ha) + 0.51\,\log(\text{\sii}/\ha) + 0.59\,\log(\text{\oiii}/\hb) \label{eq:p1}
+\\
+  P_3 &\equiv -0.46\,\log(\text{\nii}/\ha) - 0.37\,\log(\text{\sii}/\ha) + 0.81\,\log(\text{\oiii}/\hb) \label{eq:p3}
+\end{align}
+This panel contains $\approx8\%$ fewer objects than the left-hand
+panel, due to the additional S/N cut on the \siidoublet{} doublet. In
+this projection, $P_1$ maps onto a continuous AGN fraction,
+$f_\mathrm{AGN}$ \citep{ji20a, jin21a}, the fractional contribution of
+AGN photoionization to the total line emission. At fixed $P_3$,
+\citet{ji20a} show that contours of constant ionization parameter run
+nearly parallel to the $P_1$ axis, largely decoupled from variations
+in gas-phase abundance, with second-order variations due to
+differences in nitrogen abundance.
 
 \subsection{Planned Improvements}
 \label{ssec:improvements}
 
-Several improvements to \fastspecfit{} are planned for future data
-releases. On the modeling side, we plan to replace the current
-solar-metallicity-only SPS templates (\S\ref{ssec:templates}) with
-semi-empirical, non-negative matrix factorization (NMF) templates
-trained directly on DESI spectra and spanning a range of stellar
-metallicities; to adopt asymmetric emission-line profiles for lines
-such as [\ion{O}{3}]~$\lambda5007$ that are known to exhibit
-blue-wing outflow signatures; to forward-model Galactic foreground
-reddening rather than correcting for it up front; and to improve the
-aperture corrections that place fiber spectra on the total-flux scale
-of the broadband photometry. We also plan to resolve a known
-inconsistency between the emission lines fitted as part of the full
-continuum model and those measured directly from the DESI spectrum,
-including their line ratios \todo{cite Ashod's paper as a possible way
-forward}.
+\fastspecfit{} continues to be developed, with several improvements
+planned in the future. On the fitting side, we plan to improve the
+treatment of QSOs and broad-line AGN, including a dedicated
+\texttt{fastqso} fitting mode, and to develop a new Bayesian fitting
+mode as an alternative to the current maximum-likelihood approach
+(\S\ref{ssec:uncertainties}).
 
-On the fitting side, we plan to improve the treatment of QSOs and
-broad-line AGN, including a dedicated \texttt{fastqso} fitting mode,
-and to develop a new Bayesian fitting mode as an alternative to the
-current maximum-likelihood approach (\S\ref{ssec:uncertainties}).
-Finally, to keep pace with the growing scale of DESI and other
-surveys, we plan to add GPU acceleration to the most computationally
-intensive kernels (\S\ref{ssec:performance}) and to extend
-\fastspecfit{} to the complete SDSS spectroscopic dataset.
+%Finally, to keep pace with the growing scale of DESI and other
+%surveys, we plan to add GPU acceleration to the most computationally
+%intensive kernels (\S\ref{ssec:performance}) and to extend
+%\fastspecfit{} to the complete SDSS spectroscopic dataset.
 
+%On the modeling side, we plan to replace the current
+%solar-metallicity-only SPS templates (\S\ref{ssec:templates}) with
+%semi-empirical, non-negative matrix factorization (NMF) templates
+%trained directly on DESI spectra and spanning a range of stellar
+%metallicities; to adopt asymmetric emission-line profiles for lines
+%such as [\ion{O}{3}]~$\lambda5007$ that are known to exhibit blue-wing
+%outflow signatures; to forward-model Galactic foreground reddening
+%rather than correcting for it up front; and to improve the aperture
+%corrections that place fiber spectra on the total-flux scale of the
+%broadband photometry. We also plan to resolve a known inconsistency
+%between the emission lines fitted as part of the full continuum model
+%and those measured directly from the DESI spectrum, including their
+%line ratios \todo{cite Ashod's paper as a possible way forward}.
 
 %% ============================================================
 \section{Summary}
