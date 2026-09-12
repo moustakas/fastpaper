@@ -176,8 +176,8 @@ populations and line-emitting gas; SED-fitting codes such as
 cases, spectroscopy) with physically motivated stellar population
 synthesis (SPS) models to infer star-formation histories, stellar
 masses, and dust properties; and codes like \texttt{PyQSOFit}
-\citep{guo18a} are tailored to fitting the UV/optical spectra of
-quasars.
+\citep{guo18a} are tailored to fitting the ultraviolet/optical spectra
+of quasars.
 
 Each of these codes makes different trade-offs among flexibility,
 physical realism, and computational speed, but none were designed to
@@ -2053,7 +2053,7 @@ panel also shows a blueward asymmetry in the forbidden-line profiles
 spanning \oii, \oiii, and even \sii---confirmed quantitatively by
 \oiiilam's negative third moment ($M_3=-371$~\AA$^3$;
 \S\ref{sssec:lines})---suggestive of an AGN-driven ionized outflow
-\citep{harrison14a, mullaney13a}. The correspondingly high
+\citep{mullaney13a, harrison14a}. The correspondingly high
 $D_n(4000)=1.27$ is consistent with the moderately dust-attenuated,
 intermediate-age stellar population recovered by the continuum fit.
 
@@ -3051,12 +3051,64 @@ differences in nitrogen abundance.
 \subsection{Planned Improvements}
 \label{ssec:improvements}
 
-\fastspecfit{} continues to be developed, with several improvements
-planned in the future. On the fitting side, we plan to improve the
-treatment of QSOs and broad-line AGN, including a dedicated
-\texttt{fastqso} fitting mode, and to develop a new Bayesian fitting
-mode as an alternative to the current maximum-likelihood approach
-(\S\ref{ssec:uncertainties}).
+\fastspecfit{} continues to be actively developed based on feedback
+from a small but growing community of users both within and outside of
+the DESI collaboration. We strive to fix reported bugs rapidly and to
+implement user requests on a somewhat slower, but regular basis. In
+addition, there is ongoing effort to improve and expand the
+documentation, and to add to the number of user-facing tutorials for
+working with the code and VACs.
+
+The next major development cycle will focus on making \fastspecfit{}'s
+default inputs and assumptions easier for users to modify, building on
+infrastructure that is already partly in place.  \fastspecfit{}
+already supports a flexible line list and a fairly flexible
+kinematic-constraints file (\S\ref{ssec:emlinelist},
+\S\ref{sssec:kinematic}). Users can build and load (at runtime)
+custom, project-specific files to add or remove lines and adjust
+amplitude constraints without touching the fitting
+code. \citet{scholte26a}, for example, extend the default line-list to
+measure a larger number of electron-temperature-sensitive auroral
+lines in a large sample of low-redshift star-forming galaxies. The
+kinematic model choices, however, are more rigid; they currently only
+support the narrow-only and narrow+broad options documented in
+\S\ref{sssec:kinematic}. To address this shortcoming, we plan to
+generalize the configuration file so that users can assign an
+arbitrary mixture of Gaussian components to any line, not just the
+Balmer series. With this change, for example, the \oiiidoublet{}
+doublet and other forbidden lines can be modeled with multiple
+kinematic components (with flexible constraints between them) rather
+than a single Gaussian line \citep[e.g.,][]{harrison14a, pucha25a}.
+
+%We also plan to make it easier for users to build arbitrary input SPS
+%model templates. Although this flexibility already exists to some
+%degree---for example, users can choose a custom range of stellar
+%metallicities and ages with no algorithmic changes needed---the dust
+%model!  Users could then explore a broader model space, such as an
+%additional stellar-metallicity axis or an age range restricted for
+%high-redshift work, without modifying the fitting code itself.
+
+Two additional fitting modes (\S\ref{sec:modes}) are also under active
+development. The first, \texttt{fastqso}, is being designed to better
+model AGN/QSO spectra (\S\ref{ssec:example_qso}). Instead of a
+non-negative sum of SPS models, its continuum model will consist of a
+UV power law, a velocity-broadened \ion{Fe}{2} (1100--3100~\AA)
+template, a tunable amount of host-galaxy (stellar) light, and an
+infrared torus component. Combined with the more flexible
+emission-line modeling described above, \texttt{fastqso} will yield
+significantly better rest-frame photometry, emission-line properties,
+and more. The second fitting mode under development,
+\texttt{fastbayes} (for ``fast Bayesian''), is being scoped as a
+complementary alternative to \texttt{fastphot}. Instead of the current
+maximum-likelihood method (\S\ref{sssec:fitting}), \texttt{fastbayes}
+will interpolate and likelihood-weight a large precomputed grid of SPS
+models to estimate the posterior probability distribution of stellar
+mass, SFR, dust attenuation, and other physical properties. Because
+the grid is precomputed rather than sampled on the fly, this approach
+will return full posterior distributions in a fraction of the time
+required by standard Bayesian fitting codes
+\citep[e.g.,][]{johnson21a}. We defer a more complete description of
+these and other developments to forthcoming papers.
 
 %Finally, to keep pace with the growing scale of DESI and other
 %surveys, we plan to add GPU acceleration to the most computationally
