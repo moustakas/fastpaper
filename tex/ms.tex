@@ -960,16 +960,17 @@ factor
   \label{eq:apercorr}
 \end{equation}
 where $D_k$ is the total Tractor flux of the object in bandpass
-$k$. Finally, we compute the median scalar aperture correction,
+$k$. Then, we compute the median scalar aperture correction,
 $\bar{\eta}=\mathrm{median}(\eta_g,\,\eta_r,\,\eta_z)$, and apply the
 resulting multiplicative factor (falling back to $\bar{\eta}=1.0$ if
 any part of the preceding analysis fails) during the full
 spectrophotometric fit (\S\ref{sssec:fitting}).
 
-\todo{Do we need to say any more? Or point to a discussion of the
-  limitations of this correction? And there's a subtelty not
-  mentioned: to derive the aperture correction we use the SPS model
-  variant with the FSPS line-emission.}
+%We derive $C_k^\mathrm{fib}$ from the SPS template variant excluding
+%nebular emission (\S\ref{ssec:templates}). Emission lines are masked
+%in this preliminary fit (\S\ref{ssec:patches}), so the resulting
+%$\bar\eta$ carries no information about the nebular contribution to
+%the fiber photometry.
 
 %large band-to-band scatter indicates strong color gradients within the
 %fiber aperture. We treat $\bar{\eta}$ as exact and do not propagate
@@ -1115,7 +1116,11 @@ pixel and bandpass becomes
   \label{eq:chi2cont}
 \end{equation}
 where $\bar\eta$ is the scalar aperture correction described in
-\S\ref{sssec:apercorr}.
+\S\ref{sssec:apercorr}. The templates $S_n^\mathrm{obs}$ entering this
+fit include nebular emission (\S\ref{ssec:templates}). Because $m_i$
+masks line-contaminated pixels, this choice affects only the
+photometric term $C_k$, matching it to the observed broadband flux,
+which includes any nebular contribution.
 
 Because equation~(\ref{eq:designmatrix}) is linear in the multiple
 template coefficients $\mathbf{c}$ but nonlinear only in the single
@@ -1729,8 +1734,9 @@ age, but falls between the two.
 
 Next, we compute K-corrections and rest-frame absolute magnitudes by
 synthesizing photometry from the best-fitting continuum model
-$C(\lambda)$ in the observed and rest frames, following the standard
-formalism of \citet{hogg02a} and \citet{blanton03a}. For each output
+$C(\lambda)$, which includes nebular emission (\S\ref{ssec:templates}),
+in the observed and rest frames, following the standard formalism of
+\citet{hogg02a} and \citet{blanton03a}. For each output
 bandpass we identify the observed-frame Legacy Surveys or WISE filter
 whose rest-frame effective wavelength lies closest to the target band,
 restricted to filters detected at $\mathrm{S/N}>2$. This
@@ -1772,8 +1778,8 @@ rest-frame wavelengths.
 
 In addition to rest-frame photometry, we also measure several
 rest-frame monochromatic luminosities and observed-frame continuum
-flux densities using the best-fitting continuum model,
-$C(\lambda)$. We report luminosities at 1450, 1700, 3000, and
+flux densities using the best-fitting continuum-only model,
+$C(\lambda)$, which excludes nebular emission. We report luminosities at 1450, 1700, 3000, and
 5100~\AA{} in solar units ($\lambda L_\lambda$), and at 1500 and
 2800~\AA{} in $\mathrm{erg\,s^{-1}\,Hz^{-1}}$ ($L_\nu$), the latter
 chosen to facilitate UV-continuum SFR estimates (e.g.,
