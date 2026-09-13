@@ -51,8 +51,11 @@ Figure-generation and QA scripts run on NERSC (Perlmutter) and require the DESI 
 python code/build-figures.py --compare-mstar [--specprod loa] [--verbose]
 python code/build-figures.py --compare-mstar --split-contours [--specprod loa]
 
-# Illustrative-example QA figure (Section 4) — single target, standalone fit, no completed catalog needed
-python code/example-qa.py --redrockfile data/redrock-main-bright-15344.fits --outfile tex/figures/example-bgs.pdf
+# Illustrative-example QA figures (Section 4) — single target, standalone fit, no completed catalog needed.
+# See data/README.md for the full file-to-figure manifest, including the vdisp-qa.py workshop figure.
+python code/example-qa.py --redrockfile data/redrock-main-bright-40945.fits --outfile tex/figures/example-bgs.pdf   # Fig 3, BGS
+python code/example-qa.py --redrockfile data/redrock-main-dark-29973.fits --outfile tex/figures/example-elg.pdf    # Fig 4, ELG
+python code/example-qa.py --redrockfile data/redrock-main-dark-29972.fits --outfile tex/figures/example-qso.pdf    # Fig 5, QSO
 
 # Line-masking / patch-fitting QA figure (Section 3.3)
 python code/linemasker-qa.py --redrockfile data/redrock-main-bright-17366.fits --outfile tex/figures/linemasker.pdf

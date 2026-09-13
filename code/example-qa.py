@@ -22,8 +22,11 @@ redshift label only; headline fit parameters belong in the caption/prose.
 Example (mini specprod built with fastspecfit's build-mini-specprod):
 
     python code/example-qa.py \
-        --redrockfile data/redrock-main-bright-15344.fits \
+        --redrockfile data/redrock-main-bright-40945.fits \
         --outfile tex/figures/example-bgs.pdf
+
+See data/README.md for the full manifest of which data/*.fits pair feeds
+which figure (Figs. 3-5) and the exact command for each.
 
 --targetid is only needed if --redrockfile contains more than one target.
 
@@ -303,7 +306,7 @@ def make_figure(specdata, objmeta, specphot, fastspec, coadd_type, groups, outfi
     # and zoom-panel rows below it.
     # ------------------------------------------------------------------
     L, R = 0.09, 0.97
-    fig_w_in, fig_h_in = 3.6 * max(ngroup, 1), 12.5
+    fig_w_in, fig_h_in = 3.2 * max(ngroup, 1), 12.5
 
     sed_y1, sed_h = 0.9, 0.33          # leaves room above for the rest-frame twin axis
     sed_y0 = sed_y1 - sed_h
@@ -367,11 +370,15 @@ def make_figure(specdata, objmeta, specphot, fastspec, coadd_type, groups, outfi
     if np.any(abmag_lim):
         # markersize bumped up relative to the detections above -- the
         # lolims caret glyph reads visually smaller than a filled circle at
-        # the same nominal markersize
+        # the same nominal markersize. Filled marker + heavier
+        # markeredgewidth/elinewidth match fastspecfit.qa.qa_fastspec's
+        # upper-limit styling (markerfacecolor=photcol1, not 'none';
+        # markeredgewidth=elinewidth=3) -- the thinner/unfilled version here
+        # read as washed-out arrows rather than upper-limit markers.
         sedax.errorbar(phot_tbl['lambda_eff'][abmag_lim]/1e4, phot_tbl['abmag_limit'][abmag_lim],
-                       lolims=True, yerr=0.75, fmt='o', markersize=20, markeredgewidth=1.5,
-                       markeredgecolor='k', markerfacecolor='none', elinewidth=1.5,
-                       ecolor='darkorange', capsize=3, alpha=0.7, zorder=4)
+                       lolims=True, yerr=0.75, fmt='o', markersize=18, markeredgewidth=3,
+                       markeredgecolor='k', markerfacecolor='darkorange', elinewidth=3,
+                       ecolor='darkorange', capsize=4, alpha=0.7, zorder=4)
     sedax.xaxis.set_major_formatter(major_formatter)
     obsticks = np.array([0.1, 0.2, 0.5, 1.0, 1.5, 3.0, 5.0, 10.0, 20.0])
     obsticks = obsticks[(obsticks >= phot_wavelims[0]) & (obsticks <= phot_wavelims[1])]
