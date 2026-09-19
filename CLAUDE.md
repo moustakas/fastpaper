@@ -53,7 +53,7 @@ python code/build-figures.py --compare-mstar --split-contours [--specprod loa]
 
 # Illustrative-example QA figures (Section 4) — single target, standalone fit, no completed catalog needed.
 # See data/README.md for the full file-to-figure manifest, including the vdisp-qa.py workshop figure.
-python code/example-qa.py --redrockfile data/redrock-main-bright-40945.fits --outfile tex/figures/example-bgs.pdf   # Fig 3, BGS
+python code/example-qa.py --redrockfile data/redrock-main-bright-27851.fits --outfile tex/figures/example-bgs.pdf   # Fig 3, BGS
 python code/example-qa.py --redrockfile data/redrock-main-dark-29973.fits --outfile tex/figures/example-elg.pdf    # Fig 4, ELG
 python code/example-qa.py --redrockfile data/redrock-main-dark-29972.fits --outfile tex/figures/example-qso.pdf    # Fig 5, QSO
 

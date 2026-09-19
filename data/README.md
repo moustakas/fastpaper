@@ -18,7 +18,7 @@ TARGETID or which figure they feed.
 | File pair | TARGETID | z | Figure / script |
 |---|---|---|---|
 | `{coadd,redrock}-main-bright-17366` | 39627670102744387 | 0.3292 | Fig. 2, `linemasker.pdf` (§3.3) — `code/linemasker-qa.py` |
-| `{coadd,redrock}-main-bright-40945` | 39627690398977348 | 0.0989 | Fig. 3, `example-bgs.pdf` (§4.1) — `code/example-qa.py` |
+| `{coadd,redrock}-main-bright-27851` | 39628087574398347 | 0.0813 | Fig. 3, `example-bgs.pdf` (§4.1) — `code/example-qa.py` |
 | `{coadd,redrock}-main-dark-29973` | 39627663165362386 | 0.9449 | Fig. 4, `example-elg.pdf` (§4.2) — `code/example-qa.py` |
 | `{coadd,redrock}-main-dark-29972` | 39627657142340435 | 2.0731 | Fig. 5, `example-qso.pdf` (§4.3) — `code/example-qa.py` |
 | `redrock-main-dark-17289`, `f-main-dark-17289-39627496647296130`, `qa-vdisp-chi2scan-39627496647296130.ecsv`, `cutout-39627496647296130.jpeg` | 39627496647296130 | — | Draft vdisp-section figure, not yet in `ms.tex` — `code/vdisp-qa.py` |
@@ -27,9 +27,9 @@ The exact regeneration command for each is given inline in `CLAUDE.md`
 ("Running the Analysis Scripts").
 
 When you swap a target for one of these figures (as happened for Fig. 3,
-BGS: 31152 → 40945 in September 2026), update the TARGETID/z/HEALPix here,
-in `CLAUDE.md`, and in the figure's caption in `ms.tex` together, and move
-the old file pair into `extras/` below.
+BGS: 31152 → 40945 → 27851 in September 2026), update the TARGETID/z/HEALPix
+here, in `CLAUDE.md`, and in the figure's caption in `ms.tex` together, and
+move the old file pair into `extras/` below.
 
 ## `extras/`
 

@@ -1962,17 +1962,17 @@ currently under development in \S\ref{ssec:improvements}.
 \label{sec:casestudy}
 %% ============================================================
 
-We illustrate the ability for \fastspecfit{} to fit extragalactic
-targets with three example fits: a low-redshift ($z\approx0.1$) BGS
-galaxy dominated by an evolved stellar population, with weak narrow
-emission lines and no broad-line component (\S\ref{ssec:example_bgs});
-an ELG at $z \approx 0.95$ with
-prominent \oiidoublet, \oiiidoublet, and higher-order Balmer lines
-(\S\ref{ssec:example_elg}); and a high-redshift ($z\approx2$) QSO with
-strong \lya, \ion{N}{5}~$\lambda1240$, \ion{C}{4}~$\lambda1549$, and
-\mgiidoublet{} (\S\ref{ssec:example_qso}). Together, these examples
-highlight both the dynamic range of the code as well as some of its
-known limitations (for example, using SPS models to fit QSO spectra).
+We illustrate \fastspecfit's ability to model DESI spectrophotometry
+of extragalactic targets with three example fits: a low-redshift
+($z\approx0.1$) BGS galaxy dominated by an evolved stellar population
+but hosting a narrow-line AGN (\S\ref{ssec:example_bgs}); an ELG at $z
+\approx 1$ with prominent \oiidoublet, \oiiidoublet, and higher-order
+Balmer lines (\S\ref{ssec:example_elg}); and a high-redshift
+($z\approx2$) QSO with strong \lya, \ion{N}{5}~$\lambda1240$,
+\ion{C}{4}~$\lambda1549$, and \mgiidoublet{}
+(\S\ref{ssec:example_qso}). Together, these examples highlight both
+the dynamic range of the code as well as some of its known limitations
+(for example, using SPS models to fit QSO spectra).
 
 %---most notably that the SPS templates are entirely stellar, so users
 %should interpret continuum-derived quantities for QSOs and broad-line
@@ -1984,14 +1984,14 @@ known limitations (for example, using SPS models to fit QSO spectra).
 \begin{figure*}
 \centering\includegraphics[width=1.0\textwidth]{figures/example-bgs.pdf}
 \caption{\fastspecfit{} output for a low-redshift BGS galaxy at
-  $z=0.0989$ (TARGETID~39627690398977348; main survey, bright program,
-  HEALPix~40945).  Top: broadband SED, with the best-fit stellar
+  $z=0.0813$ (TARGETID~39628087574398347; main survey, bright program,
+  HEALPix~27851).  Top: broadband SED, with the best-fit stellar
   continuum model (gray curve), synthesized photometry (open
   diamonds), and observed Legacy Surveys $grz$ and WISE $W1$--$W4$
   photometry with $1\sigma$ error bars (filled orange circles); the
   top axis gives the rest-frame wavelength, and the gray bar below the
   photometry marks the observed DESI wavelength range and the
-  $2.63\times$ aperture-correction factor. The inset in the lower
+  $6.35\times$ aperture-correction factor. The inset in the lower
   right shows the Legacy Survey $grz$ image with the
   $1\farcs5$-diameter DESI fiber (solid) and a $10\arcsec$ reference
   aperture (dashed) overlaid. Middle: full observed-frame DESI
@@ -2007,35 +2007,66 @@ known limitations (for example, using SPS models to fit QSO spectra).
   (bold).\label{fig:example_bgs}}
 \end{figure*}
 
-We begin with Figure~\ref{fig:example_bgs}, which shows a
-low-redshift ($z=0.0989$), $r=16.52$~mag BGS target dominated by an
-evolved stellar population. Its spectrum (median
-$\mathrm{S/N}\approx9$--$37$ across the three cameras, lowest in the
-blue) exhibits deep Ca~H\&K and $G$-band stellar absorption alongside
-only weak narrow emission lines. The direct velocity-dispersion
-measurement converges cleanly ($\Delta\chi^2=1163$ against the $25$
-threshold; \S\ref{sssec:vdisp}), returning $\vdisp=281\pm13$~\kms{}.
-This value is unusually high, consistent with the massive,
-bulge-dominated system implied by $\log(M_\star/M_\odot)=10.98\pm0.00$.
-The joint fit also returns a median aperture correction of
-$\bar\eta=2.63$ (\S\ref{sssec:apercorr}; the gray bar beneath the SED
-in Figure~\ref{fig:example_bgs}), consistent across cameras
-($2.56$--$2.84$).
+Figure~\ref{fig:example_bgs} shows the DESI spectrum and Legacy
+Surveys color-cutout of a low-redshift ($z=0.0813$), BGS target
+(\texttt{TARGETID=39628087574398347}) with clear line-emission and a
+stellar continuum dominated by an old, evolved stellar population. The
+Tractor fit to the available Legacy Surveys imaging
+(\S\ref{ssec:photometry}) yields an apparent (Galactic
+extinction-corrected) $r$-band magnitude of 15.67~mag, an $n=3.70$
+\citet{sersic68a} morphological type, and a half-light semi-major axis
+of $3\farcs89$. Given this galaxy's angular extent and the $1\farcs5$
+DESI fiber, we derive a median aperture correction of $\bar\eta=6.35$,
+ranging between $5.82$ and $7.05$ across the three $grz$ bands
+(\S\ref{sssec:apercorr}).
+%illustrated by the gray horizontal bar in the upper panel of
+%Figure~\ref{fig:example_bgs}.
+An aperture correction this large is not surprising given the galaxy's
+redshift and angular size, but it is several times larger than the
+typical value for BGS targets.
 
-The continuum fit returns modest dust attenuation
-($\tauv=0.48\pm0.01$) and an old light-weighted age of $12.6$~Gyr
-(\S\ref{sssec:fitting}). Together with the elevated $D_n(4000)=1.92$,
-these values reflect the evolved stellar population that dominates
-the broadband SED and continuum shape.
+%The joint fit also returns a median aperture correction of
+%$\bar\eta=6.35$ (\S\ref{sssec:apercorr}; the gray bar beneath the SED
+%in Figure~\ref{fig:example_bgs}) that ranges from $5.82$ to $7.05$
+%across the three cameras, reflecting how much flux this extended,
+%luminous host loses outside the compact $1\farcs5$ DESI fiber.
 
-\fastspecfit{} nonetheless recovers weak narrow emission lines,
-including \oiidoublet, the Balmer series, and \oiiidoublet, at
-$\mathrm{S/N}\approx4$--$10$ and equivalent widths below $5$~\AA. This
-modest line emission implies a residual star-formation rate of
-$\mathrm{SFR}=1.80\pm0.31~M_\odot\,\mathrm{yr}^{-1}$. The $\chi^2$
-criterion of equation~(\ref{eq:broadchi2}) does not favor an
-additional broad Balmer component in this object, so \fastspecfit{}
-adopts the narrow-only kinematic model (\S\ref{sssec:kinematic}).
+From the fit to the stellar continuum we derive a stellar velocity
+dispersion of $\vdisp=287\pm11$~\kms, and from the joint
+spectrophotometric fit, including the infrared WISE bands, we infer a
+luminosity and rest-frame color of $M_{0.1r}=-21.14$ and
+$^{0.1}(g-r)=0.944$, respectively, a stellar mass of
+$\log_{10}(M_\star/M_\odot)=11.24$, and an approximate age of $\langle
+t_\star\rangle=12.7$~Gyr, all of which are consistent with its optical
+morphology \citep{blanton09a}. Formally, we also derive a $V$-band
+optical depth of $\tauv=0.73$; however, this suprisingly large dust
+attenuation value most likely reflects the age-dust-metallicity
+degeneracy rather than indicating a truly dusty massive galaxy. Our
+relatively simple SPS modeling choices---restricted set of model ages,
+fixed solar metallicity, simple IR spectrum,
+etc. (\S\ref{ssec:templates})---can be susceptible to these kinds of
+degeneracies for certain classes of galaxies, so the SPS properties
+inferred by \fastspecfit{} should be interpreted with care.
+
+The fit to the emission-line spectrum builds out the rest of the
+physical picture for this galaxy. Despite a relatively quiescent
+stellar continuum, we detect multiple forbidden and permitted
+recombination lines at high statistical significance, including \ha,
+\hb, \hg, \oiidoublet, \oiiidoublet, \niidoublet, and \siidoublet. We
+find no evidence for a broad Balmer-line component, and derive average
+narrow-line kinematics of $\sigma_\mathrm{narrow}=281\pm2$~\kms{} and
+$\Delta v_\mathrm{narrow}=+76\pm30$~\kms{}
+(\S\ref{sssec:kinematic}). Not surprisingly for this type of object,
+the $\log_{10}($\oiiilam$/\hb)=+0.53$ and
+$\log_{10}($\niilam$/\ha)=-0.25$ line-ratios place this galaxy clearly
+into the type~2 Seyfert/AGN region of the Baldwin, Phillips, and
+Terlevich \citep[BPT;][]{baldwin81a} diagram (\S\ref{ssec:reach}).
+
+%The Balmer decrement, $\ha/\hb=5.26$, exceeds the case-B recombination
+%value of $2.86$ by a wide margin, pointing to substantial dust
+%extinction local to the line-emitting gas and echoing the significant
+%continuum attenuation already inferred from the stellar population
+%fit.
 
 \subsection{Intermediate-Redshift Emission-Line Galaxy}
 \label{ssec:example_elg}
@@ -2055,43 +2086,72 @@ adopts the narrow-only kinematic model (\S\ref{sssec:kinematic}).
   (bold).\label{fig:example_elg}}
 \end{figure*}
 
-Figure~\ref{fig:example_elg} shows an intermediate-redshift ELG at
-$z=0.9449$, where the DESI window covers rest-frame
-$\sim$1900--5000~\AA{} and brings several emission lines beyond
-\oiidoublet{} into view, including H$\gamma$, \hb{}, and
-\oiiidoublet{}.  Its faint, blue star-forming continuum
-($\mathrm{S/N}\approx2.5$--$3.7$ across the three cameras, roughly
-five times fainter than the BGS example in \S\ref{ssec:example_bgs})
-tests \fastspecfit{}'s ability to recover accurate line fluxes and a
-physically meaningful stellar mass in the low-continuum regime typical
-of ELGs.
+Figure~\ref{fig:example_elg} shows the broadband photometric SED,
+Legacy Surveys color image, and DESI spectrum of an example
+intermediate-redshift ($z=0.9449$) ELG target
+(\texttt{TARGETID=39627663165362386}). This galaxy is considerably
+fainter than the BGS target shown in Figure~\ref{fig:example_bgs}; its
+Galactic extinction corrected $r$-band magnitude is 21.09~mag,
+although it remains well-detected all the way out to
+$\approx5$~\micron{} in the two shortest WISE bands. The best-fitting
+Tractor morphology is a point-spread function (\texttt{PSF}); in other
+words, the galaxy is unresolved in the Legacy Surveys imaging. Not
+unexpectedly, the multiplicative aperture correction is small, ranging
+between 1.013 and 1.033 with a median value of $\bar\eta=1.026$
+(\S\ref{sssec:apercorr}).
 
-Even at this low continuum signal-to-noise, the joint spectrophotometric
-fit converges to a young, low-mass, dusty stellar population:
-$\logmstar=9.51\pm0.19$, $\tauv=0.37\pm0.02$, a light-weighted age of
-only $0.06$~Gyr (poorly constrained, consistent with zero within its
-$3.9$~Gyr uncertainty), and $\mathrm{SFR}=39.2\pm0.9$~\msun{}~yr$^{-1}$,
-giving the correspondingly low $D_n(4000)=1.08$ visible in the middle
-panel of Figure~\ref{fig:example_elg}. The fitted velocity dispersion,
-$\vdisp=85$~\kms{}, is consistent with the fitted narrow emission-line
-width ($\sigma_\mathrm{narrow}=101\pm5$~\kms{}), and the aperture
-correction is small (only $1.03\times$), reflecting how little flux
-this compact, low-surface-brightness target loses outside the DESI
-fiber.
+Although the stellar continuum is only marginally detected
+($\mathrm{S/N}\approx2.5$--$3.7$~pixel$^{-1}$ over the three DESI
+cameras), its shape is consistent with that of a blue, star-forming
+galaxy. The best-fitting \fastspecfit{} model yields
+$M_{0.1r}=-21.59$, $^{0.1}(g-r)=0.053$,
+$\log_{10}(M_\star/M_\odot)=9.51\pm0.21$, and $\langle
+t_\star\rangle=0.06\pm3.9$~Gyr. We also infer an SED-based SFR of
+$39\pm1$~\msun{}~yr$^{-1}$ and a dust attenuation value of
+$\tauv=0.37\pm0.02$. All these properties are broadly consistent with
+the optical morphology and color of the galaxy, and are fairly typical
+for DESI ELG targets.
 
-Although \ha{} is redshifted beyond the DESI window at this redshift,
-\fastspecfit{} can still evaluate the broad-line selection criteria
-(\S\ref{sssec:kinematic}) using the other members of the broad-Balmer
-kinematic group, \hb{} and H$\gamma$, which remain in range; neither
-shows significant broad emission, so \fastspecfit{} correctly retains
-the narrow-only kinematic model. The bottom row of
-Figure~\ref{fig:example_elg} shows
-the resulting narrow-line fits, including the resolved \oiidoublet{}
-doublet, whose amplitude ratio encodes the electron density of the
-star-forming gas, and the resolved \oiiidoublet{} doublet with its
-fixed $\sim1{:}3$ ratio set by atomic physics. The recovered stellar
-mass, star-formation rate, and $D_n(4000)$ are all consistent with a
-young, low-mass, actively star-forming galaxy.
+Despite the relatively low continuum S/N, all the strongest nebular
+emission lines lying within the DESI spectral range are well-detected,
+including \oiidoublet, \oiiidoublet, \hb, and \hg, as shown in the
+bottom row of Figure~\ref{fig:example_elg}. From the emission-line
+fits, we measure a mean narrow-line width and velocity center of
+$\sigma_\mathrm{narrow}=101\pm5$~\kms{} and $\Delta
+v_\mathrm{narrow}=-3\pm10$~\kms, respectively
+(\S\ref{sssec:kinematic}), and cleanly resolve the \oiidoublet{}
+doublet. The relative strength of the two components of the \oii{}
+doublet depends on the collisional de-excitation rate of their upper
+levels \citep{osterbrock89a}, and so the doublet ratio we measure,
+$\lambda3726/\lambda3729=0.841\pm0.053$, implies an electron density
+of $n_e=275^{+94}_{-89}$~cm$^{-3}$ for the star-forming gas
+\citep{luridiana15a}. Taken together, the stellar mass, rest-frame
+color, star-formation rate, and emission-line properties we measure
+are all consistent with a young, low-mass, actively star-forming
+galaxy.
+
+%Even at this low continuum signal-to-noise, the joint
+%spectrophotometric fit converges to a young, low-mass, dusty stellar
+%population: $\logmstar=9.51\pm0.19$, $\tauv=0.37\pm0.02$, a
+%light-weighted age of only $0.06$~Gyr (poorly constrained, consistent
+%with zero within its $3.9$~Gyr uncertainty), and
+%$\mathrm{SFR}=39.2\pm0.9$~\msun{}~yr$^{-1}$, giving the
+%correspondingly low $D_n(4000)=1.08$ visible in the middle panel of
+%Figure~\ref{fig:example_elg}. The fitted velocity dispersion,
+%$\vdisp=85$~\kms{}, is consistent with the fitted narrow emission-line
+%width ($\sigma_\mathrm{narrow}=101\pm5$~\kms{}), and the aperture
+%correction is small (only $1.03\times$), reflecting how little flux
+%this compact, low-surface-brightness target loses outside the DESI
+%fiber.
+
+%where the DESI window covers rest-frame $\sim$1900--5000~\AA{} and
+%brings several emission lines beyond \oiidoublet{} into view,
+%including H$\gamma$, \hb{}, and \oiiidoublet{}.  Its faint, blue
+%star-forming continuum ($\mathrm{S/N}\approx2.5$--$3.7$ across the
+%three cameras, roughly five times fainter than the BGS example in
+%\S\ref{ssec:example_bgs}) tests \fastspecfit{}'s ability to recover
+%accurate line fluxes and a physically meaningful stellar mass in the
+%low-continuum regime typical of ELGs.
 
 \subsection{High-Redshift Quasar}
 \label{ssec:example_qso}
@@ -2111,15 +2171,26 @@ young, low-mass, actively star-forming galaxy.
   model (bold).\label{fig:example_qso}}
 \end{figure*}
 
-\todo{Subsection needs some editing.} Figure~\ref{fig:example_qso}
-shows a QSO at $z=2.0731$, where four broad UV emission-line
-complexes---\lya+\ion{N}{5}, \ion{C}{4},
-\ion{C}{3}]+\ion{Si}{3}]+\ion{Al}{3}, and \mgiidoublet---fall within
-    the DESI spectral window. The bright spectrum
-    ($\mathrm{S/N}\approx17$--$21$ across the three cameras) shows the
-    smooth, blue power-law continuum characteristic of an unobscured,
-    accretion-disk-dominated quasar, rising steadily from the optical
-    through the mid-IR.
+Figure~\ref{fig:example_qso} presents the third and final example
+\fastspecfit{} fit we highlight. In this figure we display the Legacy
+Surveys color cutout, $grz$ and WISE $W1$--$W4$ photometry, and DESI
+spectrum of a high-redshift ($z=2.0731$), $r=18.58$~mag
+(extinction-corrected) QSO target
+(\texttt{TARGETID=39627657142340435}). As expected for this class of
+targets, the object has a point-source morphology (Tractor type
+\texttt{PSF}) and a blue, flat (power-law) rest-frame UV/optical
+continuum. On top of the relatively high S/N continuum
+($\mathrm{S/N}\approx17$--$21$~pixel$^{-1}$), the DESI spectrum shows
+several prominent, broad, UV emission-line complexes, including
+\lya~$\lambda1215$ + \ion{N}{5}~$\lambda1240$,
+\ion{C}{4}~$\lambda1549$, \ion{C}{3}]~$\lambda1908$ +
+  \ion{Si}{3}]~$\lambda1892$ + \ion{Al}{3}~$\lambda1857$, and
+    \mgiidoublet.
+
+%The bright spectrum ($\mathrm{S/N}\approx17$--$21$ across the three
+%cameras) shows the smooth, blue power-law continuum characteristic of
+%an unobscured, accretion-disk-dominated quasar, rising steadily from
+%the optical through the mid-IR.
 
 This example illustrates both the flexibility and a fundamental
 limitation of \fastspecfit{}'s continuum model. The fitting machinery
@@ -2997,15 +3068,14 @@ targets from the SV3 bright program with a flux $\mathrm{S/N}>3$ on
 all the relevant emission lines. For a more comprehensive sample of
 AGN in the BGS sample and other target classes, see \citet{juneau25a,
   siudek25a} and S.~Juneau et~al., in preparation. The left-hand panel
-of Figure~\ref{fig:bpt} shows the traditional Baldwin, Phillips, and
-Terlevich \citep[BPT;][]{baldwin81a} diagram, \oiiilam/\hb{} versus
-\niilam/\ha, with the empirical star-forming/AGN demarcation curve
-from \citet{kauffmann03c} shown as a dashed curve. Galaxies above and
-below this boundary have line-emission consistent with ionization from
-an AGN and star formation, respectively. Meanwhile, the star-formation
-sequence itself is a sequence in gas-phase abundance, with a
-second-order dependence on excitation or ionization parameter
-\citep[e.g.,][]{kewley02a}.
+of Figure~\ref{fig:bpt} shows the traditional BPT \citep{baldwin81a}
+diagram, \oiiilam/\hb{} versus \niilam/\ha, with the empirical
+star-forming/AGN demarcation curve from \citet{kauffmann03c} shown as
+a dashed curve. Galaxies above and below this boundary have
+line-emission consistent with ionization from an AGN and star
+formation, respectively. Meanwhile, the star-formation sequence itself
+is a sequence in gas-phase abundance, with a second-order dependence
+on excitation or ionization parameter \citep[e.g.,][]{kewley02a}.
 
 %the density distribution of the sample across this boundary encodes
 %the mix of nuclear activity in the low-redshift galaxy population.
