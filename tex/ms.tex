@@ -1972,7 +1972,8 @@ Balmer lines (\S\ref{ssec:example_elg}); and a high-redshift
 \ion{C}{4}~$\lambda1549$, and \mgiidoublet{}
 (\S\ref{ssec:example_qso}). Together, these examples highlight both
 the dynamic range of the code as well as some of its known limitations
-(for example, using SPS models to fit QSO spectra).
+(for example, the use of purely stellar templates to model QSO
+continua).
 
 %---most notably that the SPS templates are entirely stellar, so users
 %should interpret continuum-derived quantities for QSOs and broad-line
@@ -2192,47 +2193,26 @@ several prominent, broad, UV emission-line complexes, including
 %an unobscured, accretion-disk-dominated quasar, rising steadily from
 %the optical through the mid-IR.
 
-This example illustrates both the flexibility and a fundamental
-limitation of \fastspecfit{}'s continuum model. The fitting machinery
-makes no assumption about target class: the same non-negative
-combination of SPS templates that works for the star-forming and
-quiescent galaxies in \S\ref{ssec:example_bgs} and
-\S\ref{ssec:example_elg} runs here without any special-casing and
-formally converges to a well-defined solution. But a QSO's true
-continuum is not a non-negative sum of stellar templates---the
-accretion disk contributes a significant non-thermal power-law
-component that our purely stellar template set cannot represent, so
-\fastspecfit{} instead absorbs this excess blue flux into young,
-dusty, high-mass stellar-population coefficients. The resulting
-continuum solution is, in detail, wrong, even though it is formally
-well constrained: $\logmstar=11.13\pm0.00$, $\tauv=0.89\pm0.00$, a
-light-weighted age pinned at the youngest template age
-($0.02\pm0.00$~Gyr), and an implied
-$\mathrm{SFR}=1503\pm9$~\msun{}~yr$^{-1}$---far in excess of any known
-star-forming galaxy, with formal uncertainties that are vanishingly
-small precisely because the fit has enough freedom to lock onto a
-single, reproducible, but unphysical solution. Continuum-derived
-quantities are therefore not reliable for luminous, unobscured QSOs
-and broad-line AGN; addressing this properly requires a non-thermal
-continuum component, planned for a future, dedicated \texttt{fastqso}
+The fit to the stellar continuum is formally well-behaved but not
+physically meaningful for this target. The SPS templates are purely
+stellar and cannot represent the non-thermal power-law emission from
+the accretion disk, so continuum-derived quantities (stellar mass,
+SFR, age, and dust attenuation) should not be used for luminous,
+unobscured QSOs and broad-line AGN. Addressing this properly requires
+a non-thermal continuum component, planned for a future \texttt{fastqso}
 fitting mode (\S\ref{ssec:improvements}).
 
 The broad-line measurements are more directly useful, though still
 approximate. With no Balmer lines in the DESI window at this redshift,
-\fastspecfit{} skips the narrow-versus-broad Balmer selection entirely
-and fits the four UV complexes with their own always-broad kinematics,
-returning line widths of order $\sigma_\mathrm{UV}\approx2700$~\kms{}
-and a velocity offset of order $\Delta v_\mathrm{UV}\approx-640$~\kms{},
-each with large formal uncertainties ($1300$--$1500$~\kms{}). These
-large uncertainties reflect a real limitation of the model: a single
-Gaussian is a poor approximation to the strong, often asymmetric
-UV/QSO broad lines visible in the bottom row of
-Figure~\ref{fig:example_qso}, especially Ly$\alpha$, a resonance line
-whose radiative transfer through the intergalactic and circumgalactic
-medium routinely produces complex, asymmetric profiles no single
-Gaussian can capture. Users requiring precise UV broad-line kinematics
-should treat these single-component measurements as an effective
-width and centroid, not a physically complete line-profile
+\fastspecfit{} fits the four UV complexes with their own always-broad
+kinematics, returning $\sigma_\mathrm{UV}\approx2700$~\kms{} and
+$\Delta v_\mathrm{UV}\approx-640$~\kms{}, each with a large formal
+uncertainty ($1300$--$1500$~\kms{}). These uncertainties reflect the
+fact that a single Gaussian is a poor approximation to the strong,
+often asymmetric UV broad lines visible in the bottom row of
+Figure~\ref{fig:example_qso}, especially \lya. Users requiring precise
+UV broad-line kinematics should treat these measurements as an
+effective width and centroid rather than a complete line-profile
 decomposition.
 
 

@@ -1,3 +1,5 @@
+.DS_Store
+
 # LaTeX build artifacts
 tex/figures/*.png
 tex/figures/*.pdf
