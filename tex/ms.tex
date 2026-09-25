@@ -2197,13 +2197,11 @@ The fit to the stellar continuum is formally well-behaved but not
 physically meaningful for this target. The SPS templates are purely
 stellar and cannot represent the non-thermal power-law emission from
 the accretion disk, so continuum-derived quantities (stellar mass,
-SFR, age, and dust attenuation) should not be used for luminous,
-unobscured QSOs and broad-line AGN. Addressing this properly requires
-a non-thermal continuum component, planned for a future \texttt{fastqso}
-fitting mode (\S\ref{ssec:improvements}).
+SFR, age, and dust attenuation) should not be used for targets like
+this. The derived K-corrections and rest-frame luminosities
+(\S\ref{ssec:quantities}) meanwhile, should be less affected by using
+SPS models but should still not be used for precision work.
 
-The broad-line measurements are more directly useful, though still
-approximate. With no Balmer lines in the DESI window at this redshift,
 \fastspecfit{} fits the four UV complexes with their own always-broad
 kinematics, returning $\sigma_\mathrm{UV}\approx2700$~\kms{} and
 $\Delta v_\mathrm{UV}\approx-640$~\kms{}, each with a large formal
@@ -2213,8 +2211,8 @@ often asymmetric UV broad lines visible in the bottom row of
 Figure~\ref{fig:example_qso}, especially \lya. Users requiring precise
 UV broad-line kinematics should treat these measurements as an
 effective width and centroid rather than a complete line-profile
-decomposition.
-
+decomposition.  Addressing all these issues will be part of a future
+\texttt{fastqso} fitting mode (\S\ref{ssec:improvements}).
 
 %% ============================================================
 \section{DR2 \fastspec{} VAC}
