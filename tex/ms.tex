@@ -391,10 +391,12 @@ available $grz$ imaging to derive the integrated flux for each
 source. A forced-photometry technique is used to derive fluxes in the
 four WISE bands---$W1$ (3.4\,\micron), $W2$ (4.6\,\micron), $W3$
 (12\,\micron), and $W4$ (22\,\micron) \citep{wright10a}---based on the
-unWISE full-depth coadds produced by \citet{meisner21a} for $W1$ and
-$W2$ and \citet{lang14a} for $W3$ and $W4$. \fastspecfit{} fits this
-total photometry, in all seven $grz$ and WISE $W1$--$W4$ bands,
-together with the DESI spectrum in a joint spectrophotometric fit
+unWISE coadds\footnote{\url{https://unwise.me}} produced by
+\citet{meisner21a} for $W1$ and $W2$ (based on the six-year WISE plus
+NEOWISE-Reactivation imaging; \citealt{mainzer14a}) and
+\citet{lang14a} for $W3$ and $W4$. \fastspecfit{} fits this total
+photometry, in all seven $grz$ and WISE $W1$--$W4$ bands, together
+with the DESI spectrum in a joint spectrophotometric fit
 (\S\ref{sec:modeling}); in any band where a source is undetected, the
 reported $1\sigma$ flux uncertainty is used as an upper limit.
 
@@ -634,7 +636,7 @@ There is no AGN-like emission (either continuum or emission lines) in
 these templates, a shortcoming which should be kept in mind throughout
 this paper (\S\ref{ssec:example_qso}). However,
 \S\ref{ssec:improvements} discusses some of the planned improvements
-for \fastspecfit{}, including a QSO/AGN fitting mode.
+for \fastspecfit, including a QSO/AGN fitting mode.
 
 %\input{tables/table-templates}
 
@@ -886,7 +888,7 @@ unmasked pixels between 3800--6000~\AA{} (in the rest-frame). In
 practice, this requirement means that we can only estimate \vdisp{}
 for galaxies up to $z\approx1$. Second, we determine fit significance
 by performing a fast $\chi^2$ grid scan of six trial
-velocity-broadening widths spanning $[50,\,500]$~\kms{},
+velocity-broadening widths spanning $[50,\,500]$~\kms,
 simultaneously solving for \tauv{} and the template coefficients by
 linear least-squares at each grid point
 (\S\ref{sssec:fitting}). If this scan yields a peak-to-peak
@@ -915,7 +917,7 @@ independently measured.
 
 When a direct measurement is possible, we determine \vdisp{} by
 finding the optimal Gaussian kernel dispersion, $\vdisp^\mathrm{kern}
-\in [50,\,500]$~\kms{}, using \texttt{scipy.optimize.least\_squares}
+\in [50,\,500]$~\kms, using \texttt{scipy.optimize.least\_squares}
 with a Trust-Region Reflective minimization algorithm
 \citep{branch99a}, fitting for $\vdisp^\mathrm{kern}$ and \tauv{}
 simultaneously over the same range as above. At each trial value of
@@ -1733,10 +1735,10 @@ $h^{-2}\,\msun$), therefore, is simply
 Additional estimates of the SFR of course can be inferred from various
 other tracers, such as the \ha, \oii, or UV luminosity (where they
 have been reliably measured and with appropriate corrections for dust
-attenuation and other effects; \citealt{moustakas06b, kennicutt98a}),
-but \fastspecfit{} does not directly report those quantities. Finally,
-we compute the mean stellar age as the coefficient-weighted average of
-the age-bin midpoints $t_n$ (in Gyr),
+attenuation and other effects; \citealt{moustakas06b, kennicutt98a,
+  hao11a}), but \fastspecfit{} does not directly report those
+quantities. Finally, we compute the mean stellar age as the
+coefficient-weighted average of the age-bin midpoints $t_n$ (in Gyr),
 \begin{equation}
   \langle t_\star\rangle = \frac{\sum_{n=1}^{n_\mathrm{template}}
     c_n\,t_n}{\sum_{n=1}^{n_\mathrm{template}} c_n}.
@@ -2011,17 +2013,17 @@ model QSO continua.
   in the lower right shows the Legacy Surveys $grz$ color image with
   the $1\farcs5$-diameter DESI fiber (solid) and a $10\arcsec$
   reference aperture (dashed) overlaid. Middle: observed-frame DESI
-  spectrum (light colors, one per camera) with the best-fitting stellar
-  continuum (black), the stellar continuum plus smooth-continuum
-  correction (dashed gray), and the total model including emission
-  lines (bold, per-camera colors). Light gray labels mark every
-  emission line in the observed wavelength range included in the
-  fit. Bottom: zooms on four representative line
-  complexes---\oiidoublet{}, \hb+\oiiidoublet{}, \ha+\niidoublet{},
-  and \siidoublet---showing the spectrum after subtracting both the stellar
-  continuum and the smooth-continuum correction, the individual
-  best-fitting Gaussian components (thin curves), and the total
-  emission-line model (bold curve).\label{fig:example_bgs}}
+  spectrum (light colors, one per camera) with the best-fitting
+  stellar continuum (black), the stellar continuum plus
+  smooth-continuum correction (dashed gray), and the total model
+  including emission lines (bold, per-camera colors). Light gray
+  labels mark every emission line in the observed wavelength range
+  included in the fit. Bottom: zooms on four representative line
+  complexes---\oiidoublet, \hb+\oiiidoublet, \ha+\niidoublet, and
+  \siidoublet---showing the spectrum after subtracting both the
+  stellar continuum and the smooth-continuum correction, the
+  individual best-fitting Gaussian components (thin curves), and the
+  total emission-line model (bold curve).\label{fig:example_bgs}}
 \end{figure*}
 
 Figure~\ref{fig:example_bgs} shows the DESI spectrum and Legacy
@@ -2095,7 +2097,7 @@ Terlevich \citep[BPT;][]{baldwin81a} diagram (\S\ref{ssec:reach}).
   HEALPix~29973) with a median aperture correction of
   $\bar\eta=1.03$. In the top panel, open circles with downward carets
   indicate broadband non-detections (upper limits). The bottom row
-  zooms on \oiidoublet{}, \hg, \hb, and
+  zooms on \oiidoublet, \hg, \hb, and
   \oiiidoublet.\label{fig:example_elg}}
 \end{figure*}
 
@@ -2151,7 +2153,7 @@ galaxy.
 %$\mathrm{SFR}=39.2\pm0.9$~\msun{}~yr$^{-1}$, giving the
 %correspondingly low $D_n(4000)=1.08$ visible in the middle panel of
 %Figure~\ref{fig:example_elg}. The fitted velocity dispersion,
-%$\vdisp=85$~\kms{}, is consistent with the fitted narrow emission-line
+%$\vdisp=85$~\kms, is consistent with the fitted narrow emission-line
 %width ($\sigma_\mathrm{narrow}=101\pm5$~\kms{}), and the aperture
 %correction is small (only $1.03\times$), reflecting how little flux
 %this compact, low-surface-brightness target loses outside the DESI
@@ -2159,7 +2161,7 @@ galaxy.
 
 %where the DESI window covers rest-frame $\sim$1900--5000~\AA{} and
 %brings several emission lines beyond \oiidoublet{} into view,
-%including H$\gamma$, \hb{}, and \oiiidoublet{}.  Its faint, blue
+%including H$\gamma$, \hb, and \oiiidoublet.  Its faint, blue
 %star-forming continuum ($\mathrm{S/N}\approx2.5$--$3.7$ across the
 %three cameras, roughly five times fainter than the BGS example in
 %\S\ref{ssec:example_bgs}) tests \fastspecfit{}'s ability to recover
@@ -2228,20 +2230,25 @@ range, \fastspec{} does not test the narrow+broad model for this
 target (\S\ref{sssec:kinematic}). Instead, it models the UV emission
 lines using the global UV/AGN kinematic groups
 (Table~\ref{table:kinematic}), which allow line widths up to
-10{,}000~\kms{} and velocity shifts up to $\pm2500$~\kms{} regardless
-of the kinematic model. Averaged over these lines, we measure
-$\sigma_\mathrm{UV}\approx2700$~\kms{} and $\Delta
-v_\mathrm{UV}\approx-640$~\kms{}, although both measurements carry
-large uncertainties ($\approx1300$--$1500$~\kms). We attribute these
-large uncertainties to the poor match between a single Gaussian and
-the strong, often asymmetric UV broad lines visible in the bottom row
-of Figure~\ref{fig:example_qso}, especially \lya, whose blue side is
-clearly affected by absorption in the \lya{} forest. Users who require
-precise UV broad-line kinematics should therefore interpret these
-values as an effective width and centroid rather than as a complete
-decomposition of the line profile. We are addressing both the
-continuum and emission-line limitations illustrated by this example in
-a fast QSO-fitting mode currently under development
+10,000~\kms{} and velocity shifts up to $\pm2500$~\kms{} regardless of
+the kinematic model (\S\ref{sssec:kinematic}). Averaged over these
+lines, we measure $\sigma_\mathrm{UV}\approx2700\pm1500$~\kms{} and
+$\Delta v_\mathrm{UV}\approx-640\pm1300$~\kms, where the quoted
+uncertainties represent the spread among the measured lines, not the
+statistical uncertainties. These large variations in line-center (away
+from the Redrock redshift) and line-width mostly reflect the complex
+kinematics of the broad-line region, which affects different UV lines
+in a way that depends on ionization state and QSO luminosity
+\citep[e.g.,][]{shen16a}. However, the bottom row of
+Figure~\ref{fig:example_qso} also shows that a single Gaussian is a
+poor representation for the strong, often asymmetric UV lines,
+especially \lya, whose blue side is clearly affected by absorption in
+the \lya{} forest. Consequently, users who require precise UV
+broad-line kinematics for DESI QSOs should interpret these values as
+approximate widths and centroids rather than a complete decomposition
+of the individual line-profiles. We are addressing both the continuum
+and emission-line limitations illustrated by this example in a fast
+QSO-fitting mode currently under development
 (\S\ref{ssec:improvements}).
 
 %% ============================================================
@@ -2282,7 +2289,7 @@ DESI wavelength calibration.
 
 %We build the DR2 VAC by applying a uniform sample-selection criterion
 %to every DESI extragalactic target, correcting a subset of Redrock QSO
-%redshifts, and fitting the result with \fastspecfit{}.
+%redshifts, and fitting the result with \fastspecfit.
 
 The \fastspecfit{} VAC includes all extragalactic objects in
 \texttt{Loa} which satisfy the following minimal selection criteria:
@@ -2778,7 +2785,7 @@ observed-frame wavelength range, 3800--6000~\AA{}
   DESI target class along columns. In each row, we compare our
   measurements against (top) the DR2 (\texttt{Loa}) VAC of H.~Zou
   et~al. (in preparation; see also \citealt{zou24b, sui26a}), (middle)
-  the DR1 (\texttt{Iron}) CIGALE-AGN VAC of \citet{siudek25a}, and
+  the DR1 (\texttt{Iron}) CIGALE-AGN VAC of \citet{siudek24a}, and
   (bottom) the GSWLC-X2 catalog of \citet{salim16a, salim18a}. As in
   Figure~\ref{fig:compare-emlines-external}, the color map, contours,
   and markers show the two-dimensional density distribution and the
@@ -2786,11 +2793,12 @@ observed-frame wavelength range, 3800--6000~\AA{}
   offsets of $\Delta_\mathrm{med}=0.15$--$0.30$~dex (\fastspec{}
   systematically higher) with $\mathtt{NMAD}=0.09$--$0.17$~dex scatter
   for BGS and LRG targets, with the scatter increasing to
-  $\mathtt{NMAD}\approx0.4$~dex for ELG targets. The median offsets and scatter are consistent with
-  expectations from different (non-parametric versus parametric) SFH
-  priors \citep{leja19b, leja20a}, and, more generally, from the stellar-library,
+  $\mathtt{NMAD}\approx0.4$~dex for ELG targets. The median offsets
+  and scatter are consistent with expectations from different
+  (non-parametric versus parametric) SFH priors \citep{leja19b,
+    leja20a}, and, more generally, from the stellar-library,
   dust-attenuation, and other modeling choices that differ across
-  independent SED-fitting codes. \label{fig:compare-mstar-external}} 
+  independent SED-fitting codes. \label{fig:compare-mstar-external}}
 \end{figure*}
 
 For $N=80,693$ objects in common, we find a median offset and
@@ -2825,13 +2833,13 @@ unexplained systematic difference relative to existing measurements.
 Finally, in Figure~\ref{fig:compare-mstar-external} we compare the
 stellar masses from \fastspec{} against three independent,
 CIGALE-based \citep{boquien19a} SED-fitting catalogs, organized by
-DESI target class (BGS, LRG, and ELG; \S\ref{ssec:targets}). The
-top row compares our measurements against the DR2 (\texttt{Loa})
+DESI target class (BGS, LRG, and ELG; \S\ref{ssec:targets}). The top
+row compares our measurements against the DR2 (\texttt{Loa})
 SED-fitting VAC from H.~Zou et~al. (in preparation; see also
 \citealt{zou24b, sui26a}), while the middle and bottom rows compare
 our measurements to the DR1 (\texttt{Iron}) \textit{AGN Host Galaxies
   Physical Properties} VAC from
-\citet[\texttt{v1.2};][]{siudek25a}\footnote{\url{https://data.desi.lbl.gov/doc/releases/dr1/vac/cigale}}
+\citet[\texttt{v1.2};][]{siudek24a}\footnote{\url{https://data.desi.lbl.gov/doc/releases/dr1/vac/cigale}}
 and the GSWLC-X2\footnote{\url{https://salims.pages.iu.edu/gswlc}}
 catalog of \citet{salim16a, salim18a}, respectively. For the first two
 DESI catalogs, we compare against our combined SV3 bright plus dark
@@ -2851,10 +2859,10 @@ with 10-band top-hat filter photometry synthesized from the DESI
 optical spectrum and scaled for aperture bias using an achromatic
 aperture correction analogous to our own (\S\ref{sssec:apercorr}). In
 addition, all three catalogs adopt a parametric SFH---a delayed-$\tau$
-model, with an optional recent burst for \citet{siudek25a} and
+model, with an optional recent burst for \citet{siudek24a} and
 \citet{salim18a}, in contrast to \fastspec{}'s non-parametric,
 five-bin star-formation history
-(\S\ref{ssec:templates}). \citet{siudek25a} also include an AGN
+(\S\ref{ssec:templates}). \citet{siudek24a} also include an AGN
 component \citep{fritz06a} in their SED fits. In constructing these
 comparisons, we correct for differences in IMF and cosmology.
 
