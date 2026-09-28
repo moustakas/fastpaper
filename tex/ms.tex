@@ -3269,9 +3269,10 @@ publicly released in 2027.
 \begin{acknowledgements}
 JM gratefully acknowledges funding support for this work from the
 U.S. Department of Energy, Office of Science, Office of High Energy
-Physics under Award Number DE-SC0020086.
-
-We thank Ben Johnson for assistance constructing custom FSPS models.
+Physics under Award Number DE-SC0020086. We also thank Ben Johnson for
+assistance constructing custom FSPS models and Benjamin J. Weiner for
+the suggestion of fitting emission-line doublets as an amplitude and a
+line-ratio.
 
 This research used data obtained with the Dark Energy Spectroscopic
 Instrument (DESI). DESI construction and operations is managed by the
@@ -3374,6 +3375,29 @@ National Energy Research Scientific Computing Center, a DOE Office of
 Science User Facility under the same contract; and by the
 U.S. National Science Foundation, Division of Astronomical Sciences
 under Contract No. AST-0950945 to NOAO.
+
+Portions of the \fastspecfit{} code base, beginning with version
+\texttt{3.3.0}, were developed with the assistance of Anthropic's
+Claude (via Claude Code, models Sonnet~4.6 and 5). This assistance
+included documentation, unit and integration tests, packaging and
+automated testing and release workflows, parallel-processing and
+production scripts, and parts of the continuum and emission-line
+fitting code centered around optimization and speed. All AI-generated
+code was reviewed, tested, and validated by the authors, who take full
+responsibility for its correctness. In addition, Claude Code (models
+Sonnet~5 and Opus~5.5) was used in the preparation of this manuscript
+in the following ways: generating outlines; translating the technical
+implementation in the code into equations; developing and refactoring
+the figure-generation scripts and tables (all using author-provided
+data); suggesting candidate references for portions of the paper (all
+validated by the authors); checking the manuscript for internal
+consistency (including quoted numerical values, notation, and
+cross-references); and suggesting revisions to the text for clarity
+and conciseness. The text of this paper was written by the authors,
+who reviewed every AI-suggested revision and take full responsibility
+for its content.
+
+
 \end{acknowledgements}
 
 \software{
