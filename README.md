@@ -1,4 +1,4 @@
-# Fastpaper 1
+# Fastpaper
 
 The first paper documenting the spectral synthesis and emission-line
 fitting code FastSpecFit, plus its associated value-added catalogs

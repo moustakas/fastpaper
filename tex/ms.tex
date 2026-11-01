@@ -1668,7 +1668,10 @@ local continuum for the amplitude in equation~(\ref{eq:flux_phys}),
   \label{eq:fluxlimit}
 \end{equation}
 where $I_{F_c}$ is the inverse variance of $F_c$ (discussed in
-\S\ref{ssec:uncertainties}). For lines that are dropped during
+\S\ref{ssec:uncertainties}). \added{Because $I_{F_c}$ is the uncertainty on
+the mean continuum in the sidebands, $\Phi_\mathrm{lim}$ is only an
+approximate limit, and it does not capture noise variations at the
+wavelength of the line.} For lines that are dropped during
 fitting, we use a nominal $\sigma$ of 75~\kms{} for narrow lines and
 1200~\kms{} for broad lines, so that we can still report a limit for
 every line in the spectrum. We compute $\Phi_\mathrm{lim}$ as another
@@ -2037,7 +2040,8 @@ model QSO continua.
   $z=0.0813$ (\texttt{TARGETID=39628087574398347}; main survey, bright
   program, HEALPix~27851). Top: broadband SED showing the observed
   Legacy Surveys $grz$ and WISE $W1$--$W4$ photometry with $1\sigma$
-  uncertainties (filled orange circles), the best-fitting stellar
+  uncertainties (filled orange circles\added{; here, the uncertainties are
+  smaller than the symbols}), the best-fitting stellar
   continuum model (gray curve), and the synthesized model photometry
   (open diamonds). The top axis gives the rest-frame wavelength, and
   the gray bar below the photometry marks the observed DESI wavelength
@@ -2048,7 +2052,7 @@ model QSO continua.
   spectrum (light colors, one per camera) with the best-fitting
   stellar continuum (black), the stellar continuum plus
   smooth-continuum correction (dashed gray), and the total model
-  including emission lines (bold, per-camera colors). Light gray
+  including emission lines (bold, per-camera colors). \replaced{Light gray}{Gray}
   labels mark every emission line in the observed wavelength range
   included in the fit. Bottom: zooms on four representative line
   complexes---\oiidoublet, \hb+\oiiidoublet, \ha+\niidoublet, and
@@ -2327,8 +2331,8 @@ The \fastspecfit{} VAC includes all extragalactic objects in
 \texttt{Loa} which satisfy the following minimal selection criteria:
 (1) non-sky target (\texttt{OBJTYPE}~=~\texttt{TGT}; see
 \citealt{myers23a}); (2) valid spectrum
-(\texttt{ZWARN}~\&~\texttt{NODATA}~=~0, where the \texttt{NODATA} bit
-identifies spectra in which all extracted inverse-variance values are
+(\texttt{ZWARN}~\&~\textit{NODATA}~=~0, where the \textit{NODATA} bit
+\added{($2^9$) }identifies spectra in which all extracted inverse-variance values are
 zero; see S.~Bailey et~al., in preparation); and (3) spectroscopic
 redshift $z > 10^{-3}$ (applied after correcting a small fraction of
 QSO redshifts; see below). We do not impose any other cuts on
@@ -2514,14 +2518,14 @@ classes. First, we define
 \begin{equation}
   \begin{split}
     \mathcal{Q} \equiv {} & [\mathtt{COADD\_FIBERSTATUS} \;\&\;
-    \sim (\mathtt{RESTRICTED} \,|\, \mathtt{VARIABLE}) = 0] \;\&\; \\
-    & (\mathtt{SPECTYPE} \texttt{!=} \mathtt{STAR}) \;\&\; (\mathtt{Z} > 0.001),
+    \sim (\mathit{RESTRICTED} \,|\, \mathit{VARIABLE}) = 0] \;\&\; \\
+    & (\mathtt{SPECTYPE} \texttt{!=} \texttt{"STAR"}) \;\&\; (\mathtt{Z} > 0.001),
   \end{split}
   \label{eq:goodz_common}
 \end{equation}
-\noindent where the bracketed term is a bitwise \texttt{AND}
-restricting \texttt{COADD\_FIBERSTATUS} to the \texttt{RESTRICTED} and
-\texttt{VARIABLE} \texttt{FIBERSTATUS}
+\noindent where \added{italics denote bit names rather than catalog columns, }the bracketed term is a bitwise \texttt{AND}
+restricting \texttt{COADD\_FIBERSTATUS} to the \replaced{\texttt{RESTRICTED}}{\textit{RESTRICTED}} and
+\replaced{\texttt{VARIABLE}}{\textit{VARIABLE}} \texttt{FIBERSTATUS}
 bits\footnote{\url{https://desidatamodel.readthedocs.io/en/latest/bitmasks.html\#fiberstatus-bit-definitions}}---informational
 flags that do not by themselves indicate a data-quality problem---and
 two additional cuts intended to reject stellar contaminants. The

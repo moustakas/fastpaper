@@ -436,7 +436,7 @@ def make_figure(specdata, objmeta, specphot, fastspec, coadd_type, groups, outfi
     # ---- full spectrum panel ----
     specax.plot(fullwave/1e4, specmodels['fullcontinuum'], color='k', lw=0.8, alpha=0.7, zorder=2)
     specax.plot(fullwave/1e4, specmodels['fullcontinuum'] + specmodels['fullsmoothcontinuum'],
-               color='0.4', lw=0.8, ls='--', alpha=0.8, zorder=2)
+               color='0.25', lw=1.2, ls='--', alpha=0.9, zorder=2)
 
     # robust range, following qa_fastspec's own construction: a robust sigma
     # from the interquartile spread of the data-minus-model residuals, plus
@@ -481,7 +481,7 @@ def make_figure(specdata, objmeta, specphot, fastspec, coadd_type, groups, outfi
     # x-axis label is shared across the SED/spectrum/zoom-panel rows (see
     # the single fig.text call at the bottom of the figure)
 
-    # light-gray labels for every in-range emission-line group along the top
+    # gray labels for every in-range emission-line group along the top
     # of the spectrum panel, as in qa_fastspec
     specwave_lo, specwave_hi = np.min(fullwave), np.max(fullwave)
     for pgroup in sorted(set(linetable['plotgroup'])):
@@ -491,7 +491,7 @@ def make_figure(specdata, objmeta, specphot, fastspec, coadd_type, groups, outfi
             continue
         linename = pgrows['nicename'][0].replace('-', ' ')
         specax.text(meanwave_obs/1e4, spec_ymax*0.97, linename, ha='center', va='top',
-                   rotation=270, fontsize=10, alpha=0.5, zorder=6)
+                   rotation=270, fontsize=10, alpha=0.75, zorder=6)
 
     # connector lines tying the DESI wavelength range in the SED panel to
     # the full-spectrum panel below it, as in qa_fastspec
