@@ -317,12 +317,13 @@ objects that DESI observes (\S\ref{ssec:targets}).
 
 DESI is a highly multiplexed fiber spectrograph mounted on the Mayall
 4-m telescope at Kitt Peak National Observatory
-\citep{desi-collaboration16b, abareshi22a}.  A wide-field optical
+\citep{desi-collaboration16b, desi-collaboration22a}.  A wide-field optical
 corrector \citep{miller24a} provides a $3\fdg2$-diameter field of
-view. Within this field, 5000 robotically actuated, $1\farcs5$-diameter
-fibers \citep{poppett24a} are positioned onto target coordinates and
-feed ten three-arm spectrographs covering 3600--9824~\AA{} in the
-observed frame \citep{guy23a}. The focal plane is divided into ten
+view. Within this field, \replaced{5000 robotically actuated, $1\farcs5$-diameter
+fibers}{5000 robotically actuated positioners \citep{silber23a} place
+$1\farcs5$-diameter fibers} \citep{poppett24a} \replaced{are positioned onto target coordinates and
+feed}{onto target coordinates. These fibers feed} ten three-arm spectrographs covering 3600--9824~\AA{} in the
+observed frame \citep{desi-collaboration22a}. The focal plane is divided into ten
 wedge-shaped ``petals'', each of which routes its 500 fibers to one of
 the ten spectrographs. A single pointing of the full 5000-fiber focal plane
 defines a ``tile'', the basic unit of the survey's observing (tiling)
@@ -330,7 +331,7 @@ strategy \citep{schlafly23a}. The three cameras sense blue (B:
 3600--5930~\AA), red (R: 5600--7720~\AA), and near-IR (Z:
 7470--9824~\AA) light\deleted{,} at a spectral resolution of
 $\mathcal{R}\equiv\lambda/\Delta\lambda \approx 2000-3500$,
-$3400-4800$, and $3800-5200$, respectively \citep{guy23a}.
+$3400-4800$, and $3800-5200$, respectively \citep{desi-collaboration22a}.
 
 \citet{guy23a} describe the DESI spectroscopic pipeline in detail (see
 also \citealt{desi-collaboration24d, desi-collaboration26a} for
@@ -1801,7 +1802,7 @@ $z_0$. Table~\ref{table:absmag-bands} reports the default set of
 rest-frame bandpasses and band-shifts computed by \fastspecfit{} via
 the bundled \texttt{data/legacysurvey-dr9.yaml} parameter file, as
 well as the
-\texttt{speclite}\explain{Removed the duplicate speclite footnote.}
+\texttt{speclite}
 filter curve names and their respective rest-frame wavelengths.
 
 \input{tables/table-absmag-bands}
