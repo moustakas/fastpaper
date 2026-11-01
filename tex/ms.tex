@@ -585,16 +585,17 @@ Synthesis\footnote{\url{https://github.com/moustakas/fsps}}
 interface. We construct these models using a custom version of the
 \texttt{C3K} theoretical spectral library,
 \texttt{C3K\_R3K}\footnote{\url{https://github.com/moustakas/c3k}},
-the MIST \added{v1.0 }stellar isochrones \citep{choi16a, dotter16a}, and a
-\citet{chabrier03a} IMF from $0.08$--$120$~\msun. The \texttt{C3K\_R3K}
-library spans 100~\AA{} to 1000~$\mu$m. In the rest-frame optical
-(3500--9800~\AA) it has $\mathcal{R}_{\mathrm{C3K}} \approx 7065$,
-corresponding to a Gaussian line-spread function with
+the MIST stellar isochrones \citep[\added{v1.0;}][]{choi16a,
+  dotter16a}, and a \citet{chabrier03a} IMF from
+$0.08$--$120$~\msun. The \texttt{C3K\_R3K} library spans 100~\AA{} to
+1000~$\mu$m. In the rest-frame optical (3500--9800~\AA) it has
+$\mathcal{R}_{\mathrm{C3K}} \approx 7065$, corresponding to a Gaussian
+line-spread function with
 $\sigma_\mathrm{C3K}=c/\mathcal{R}_\mathrm{C3K}=42$~\kms{}
 ($\lambda/\mathrm{FWHM}=3000$), sampled in constant-velocity $\Delta
-v=50$~\kms{} pixels. At shorter and longer wavelengths\added{,} our models have
-lower resolution and sparser wavelength sampling, which keeps the
-UV-to-IR template lightweight for synthetic photometry and
+v=50$~\kms{} pixels. At shorter and longer wavelengths\added{,} our
+models have lower resolution and sparser wavelength sampling, which
+keeps the UV-to-IR template lightweight for synthetic photometry and
 dust-emission modeling (\S\ref{sssec:fitting}) without wasting
 resolution where the spectroscopic fit does not need it.
 
@@ -859,12 +860,12 @@ narrow+broad kinematic model described above.
 This section describes the steps \fastspec{} uses to find the
 best-fitting continuum model, $C(\lambda;\theta_C)$. Because speed and
 flexibility are paramount, the default fitting mode uses a minimal
-parameter set, $\theta_C = \{z,\mathbf{c},\tauv,\vdisp\}$, where $z$
-is the redshift, $\mathbf{c}$ are the non-negative template
+parameter set, $\theta_C = \{\mathbf{c},\tauv,\vdisp\}$, where \deleted{$z$
+is the redshift, }$\mathbf{c}$ are the non-negative template
 coefficients, $\tauv$ is the $V$-band dust optical depth, and $\vdisp$
 is the stellar velocity dispersion. We emphasize, however, that the
 fitting infrastructure can be easily extended to include additional
-parameters (e.g., a two-component dust model or QSO model spectra),
+parameters (e.g., \added{redshift, }a two-component dust model or QSO model spectra),
 which we discuss, in part, in \S\ref{ssec:improvements}.
 
 For each object, we determine $\theta_C$ in three stages. First, we
@@ -899,15 +900,16 @@ to measure \vdisp{} for every spectroscopic target.
 
 We determine whether a direct measurement of \vdisp{} is possible from
 two conditions: rest-frame wavelength coverage and ``fit
-significance.'' First, we require a given target to have at least
+significance.'' First, we require \replaced{a given target to have at least
 1100~\AA{} of (unmasked) rest-frame wavelength coverage between 3800
-and 4900~\AA, bridging Ca~H\&K, the 4000-\AA{} break, and H$\beta$. If
+and 4900~\AA}{the spectrum of a given target to span the full rest-frame
+range 3800--4900~\AA}, bridging Ca~H\&K, the 4000-\AA{} break, and H$\beta$. If
 this condition is satisfied, then we perform the actual fit using all
 unmasked pixels between 3800--6000~\AA{} (in the rest-frame). In
 practice, this requirement means that we can only estimate \vdisp{}
 for galaxies up to $z\approx1$. Second, we determine fit significance
 by performing a fast $\chi^2$ grid scan of six trial
-velocity-broadening widths spanning $[50,\,500]$~\kms,
+velocity-broadening widths \replaced{spanning $[50,\,500]$~\kms}{evenly spaced between 50 and 500~\kms},
 simultaneously solving for \tauv{} and the template coefficients by
 linear least-squares at each grid point
 (\S\ref{sssec:fitting}). If this scan yields a peak-to-peak
@@ -985,11 +987,11 @@ simplest possible model to account for aperture bias: we assume that
 the spectral shape within the fiber is representative of the galaxy as
 a whole, independent of wavelength or the magnitude of the aperture
 correction. We derive this correction by synthesizing $grz$ photometry
-from a fast initial fit to the DESI spectrum to get $C_k^\mathrm{fib}$
+from a fast initial fit to the DESI spectrum to get $P_k^\mathrm{fib}$
 for $k \in \{g,\,r,\,z\}$, and computing the per-band multiplicative
 factor
 \begin{equation}
-  \eta_k = \frac{D_k}{C_k^\mathrm{fib}},
+  \eta_k = \frac{D_k}{P_k^\mathrm{fib}},
   \label{eq:apercorr}
 \end{equation}
 where $D_k$ is the total Tractor flux of the object in bandpass
@@ -1060,7 +1062,7 @@ following energy balance. We scale the \citet{draine07a} dust emission
 template, $S_\mathrm{dust}(\lambda)$, by the luminosity absorbed by
 each template,
 \begin{equation}
-  L_{\mathrm{abs},n} = \int_0^\infty S_n(\lambda) (1 - e^{-\tauv
+  L_{\mathrm{abs},n} = \int_{100\,\text{\AA}}^{1000\,\mu\mathrm{m}} S_n(\lambda) (1 - e^{-\tauv
     k(\lambda)})\,d\lambda,
   \label{eq:labs}
 \end{equation}
@@ -1098,7 +1100,7 @@ well-conditioned non-negative least-squares (NNLS) solve (see below).
 %array (\texttt{zfactors}) evaluated once per object at initialization
 %and reused for all template evaluations during fitting.
 
-We restrict the dust optical depth to the physically motivated range
+We restrict the dust optical depth to the \deleted{physically motivated }range
 $\tauv \in [0,\,2]$, and by default we include coefficients for all
 five SPS age bins (\S\ref{ssec:templates}), even for stellar
 populations nominally older than the age of the universe at the
@@ -1136,7 +1138,7 @@ trapezoidal-resampling algorithm) onto the same $n_\mathrm{pix}$-pixel
 wavelength grid as $d$, giving $C_i \equiv C(\lambda_i;\theta_C)$; and
 (2) we convolve each template with the $n_\mathrm{band}$ filter
 response functions (\S\ref{ssec:photometry}) to derive the synthetic
-photometry $C_k$. Collecting these transformed templates as the
+photometry $P_k$. Collecting these transformed templates as the
 columns of a design matrix $\boldsymbol{\Psi}$, the continuum model at
 every pixel and bandpass becomes
 \begin{equation}
@@ -1149,7 +1151,7 @@ every pixel and bandpass becomes
   =
   \sum_{i=1}^{n_\mathrm{pix}} m_i I_i\left(d_i - \frac{C_i}{\bar\eta}\right)^2
   \;+\;
-  \sum_{k=1}^{n_\mathrm{band}} I_{D,k}\left(D_k - C_k\right)^2,
+  \sum_{k=1}^{n_\mathrm{band}} I_{D,k}\left(D_k - P_k\right)^2,
   \label{eq:chi2cont}
 \end{equation}
 where $\bar\eta$ is the scalar aperture correction described in
@@ -1184,7 +1186,7 @@ an \replaced{order-of-magnitude}{order of magnitude} faster than direct optimiza
 parameter vector, which would otherwise require finite-differencing
 across all template coefficients.
 
-With $\tauv$ and $\mathbf{c}$ now in hand, and $z$ and $\vdisp$ fixed
+With $\tauv$ and $\mathbf{c}$ now in hand, and \deleted{$z$ and }$\vdisp$ fixed
 from the earlier stages, every element of $\theta_C$ is determined,
 giving the best-fitting stellar continuum model
 $C(\lambda;\theta_C)$. From this model we derive several physical
@@ -1329,17 +1331,19 @@ communication).\footnote{\url{https://github.com/desihub/fastspecfit/issues/183}
 
 To contend with this bias, we adopt the deconvolution strategy devised
 by S.~Koposov for \texttt{RVSpecFit} \citep{koposov19b, koposov26a}.
-Rather than sampling $\phi(\lambda)$ at pixel centers, we pre-convolve
+\added{The key idea is that $\mathbf{R}$ samples a smooth underlying
+resolution function, which we can represent with Gaussian radial basis
+function (RBF) interpolation. }Rather than sampling $\phi(\lambda)$ at pixel centers, we pre-convolve
 our emission-line model with a fixed Gaussian kernel of width
 $\sigma_G = 0.5$\,\AA---narrow compared to the DESI resolution but
-wide enough to regularize the sub-pixel structure of the model---and
+wide enough to \replaced{regularize}{smooth} the sub-pixel structure of the model---and
 propagate the result through a correspondingly deconvolved resolution
 matrix
 \begin{equation}
   \mathbf{W} = \mathbf{R}\,\mathbf{M}^{-1},
   \label{eq:wmatrix}
 \end{equation}
-where $\mathbf{M}$ is the Gaussian design matrix, $\mathbf{M}_{ij} =
+where $\mathbf{M}$ is the Gaussian \added{RBF }design matrix, $\mathbf{M}_{ij} =
 G(\lambda_i - \lambda_j;\,0,\,\sigma_G)$. The predicted line model is
 then $\mathbf{m} \approx \mathbf{W}\,\mathbf{F}$, where $\mathbf{F}$
 is the $\sigma_G$-pre-convolved profile evaluated at pixel
@@ -1474,7 +1478,9 @@ second group anchored on narrow \ha; and the broad Balmer lines to a
 third group anchored on broad \ha. The \oiii{} doublet gets its own
 kinematic group because of the frequency with which this doublet shows
 an asymmetric or complex line-profile in AGN, which can bias the
-fitting of the fainter forbidden lines.
+fitting of the fainter forbidden lines. \added{In both models, the lines
+in the global groups of Table~\ref{table:kinematic} have a single
+component, with no narrow+broad decomposition.}
 
 Within each kinematic group, select emission-line doublets carry an
 additional amplitude constraint, set in the same constraints file as
@@ -1488,8 +1494,8 @@ spontaneous-transition-probability value \citep{osterbrock89a}, while
 \mgii~$\lambda$2796\,/\,$\lambda$2803, carry a free (but bounded)
 amplitude ratio. In the fitting engine, we parameterize each doublet
 as a reference-line amplitude and a bounded (or fixed) amplitude
-ratio, which is a better-constrained optimization problem than fitting
-two amplitudes independently. Moreover, for \oiidoublet{} and
+ratio, which \replaced{is a better-constrained optimization problem than fitting
+two amplitudes independently}{lets us keep each ratio within its bounds during the fit}. Moreover, for \oiidoublet{} and
 \siidoublet{} the fitted ratio, \texttt{OII\_DOUBLET\_RATIO} and
 \texttt{SII\_DOUBLET\_RATIO}, respectively, carries physical
 significance as tracers of the local electron density
@@ -1610,7 +1616,7 @@ $A_\mathrm{obs}$, the peak flux density of the fully pixelized,
 resolution-matrix-convolved model $\mathbf{E}=\mathbf{W}\mathbf{F}$
 (equation~\ref{eq:emline_pixel}) as it actually appears on the DESI
 pixel grid. In general (but especially for lines narrower than one
-pixel), the pre-convolution regularization of
+pixel), the pre-convolution \deleted{regularization }of
 \S\ref{sssec:emline_model} means $A$ can substantially exceed
 $A_\mathrm{obs}$; $A_\mathrm{obs}$, not $A$, is what one would measure
 by eye in the spectrum and is therefore one of the quantities we can
@@ -1701,6 +1707,9 @@ observed-frame \AA, \AA$^2$, and
 \AA$^3$, respectively), together with their Monte Carlo-derived inverse
 variances, as \texttt{MOMENT1}, \texttt{MOMENT2}, and \texttt{MOMENT3}
 columns prefixed by each line's name (e.g., \texttt{OIII\_5007\_MOMENT1}).
+\added{We do not correct these moments for the instrumental resolution, so
+$M_2$ includes instrumental broadening and is most useful for
+well-resolved lines.}
 
 In \S\ref{ssec:uncertainties} we describe how we derive
 the companion inverse-variance columns listed in

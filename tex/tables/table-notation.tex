@@ -41,7 +41,7 @@ $I$, $I_i$ & DESI inverse-variance array; value at spectral pixel $i$ & \S\ref{s
 $m$, $m_i$ & Binary emission-line mask array (\S\ref{ssec:patches}); value at pixel $i$ ($1$=retained, $0$=masked) & \S\ref{sssec:fitting} \\
 $D$, $D_k$ & Tractor total-flux photometry array; value at band $k$ (all 7 bands in the fit; restricted to $grz$ in \S\ref{sssec:apercorr}) & \S\ref{sssec:fitting} \\
 $I_D$, $I_{D,k}$ & Photometric inverse-variance array; value at band $k$ & \S\ref{sssec:fitting} \\
-$C_i$, $C_k$ & Continuum model evaluated at spectral pixel $i$ / photometric band $k$ & \S\ref{sssec:fitting} \\
+$C_i$, $P_k$ & Continuum model evaluated at spectral pixel $i$ / photometric band $k$ & \S\ref{sssec:fitting} \\
 $\boldsymbol{\Psi}$ & Continuum design matrix (NNLS) & \S\ref{sssec:fitting} \\
 $\mathbf{C}$ & Continuum model evaluated at all pixels/bands, $\mathbf{C}=\boldsymbol{\Psi}\mathbf{c}$ & \S\ref{sssec:fitting} \\
 $\mathbf{b}$ & Stacked, weighted spectroscopic$+$photometric data vector (NNLS right-hand side) & \S\ref{sssec:fitting} \\
@@ -51,7 +51,7 @@ $\vdisp$, $\vdisp^\mathrm{kern}$ & Stellar velocity dispersion; fitted Gaussian 
 $\sigma_\mathrm{C3K}$ & Intrinsic velocity resolution of the SPS templates & \S\ref{sssec:vdisp} \\
 $\Mstar$ & Stellar mass (preliminary estimate used for the $\vdisp$ fallback) & \S\ref{sssec:vdisp} \\
 $\eta_k$, $\bar\eta$ & Per-band / scalar aperture-correction factor & \S\ref{sssec:apercorr} \\
-$C_k^\mathrm{fib}$ & Fiber-normalized continuum model, synthesized in band $k$ & \S\ref{sssec:apercorr} \\
+$P_k^\mathrm{fib}$ & Fiber-normalized continuum model, synthesized in band $k$ & \S\ref{sssec:apercorr} \\
 \cutinhead{Emission-Line Profile and Kinematics}
 $\phi(\lambda)$ & Intrinsic log-Gaussian emission-line profile & \S\ref{sssec:emline_model} \\
 $A$ & Emission-line peak amplitude & \S\ref{sssec:emline_model} \\
