@@ -1,99 +1,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  AASTEX7.cls                                   %%
-%%  March, 2024                                   %% 
+%%  AASTEX702.cls                                 %%
+%%  2025/05/09                                    %% 
 %%                                                %%
-%%  Copyright 2024 American Astronomical Society  %%
+%%  Copyright 2025 American Astronomical Society  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \def\currversion{7}
 %
-%%
 %%    These files are distributed
 %%    WITHOUT ANY WARRANTY; without even the implied warranty of
 %%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 %% 
-%% \CharacterTable
-%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
-%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
-%%   Digits        \0\1\2\3\4\5\6\7\8\9
-%%   Exclamation   \!     Double quote  \"     Hash (number) \#
-%%   Dollar        \$     Percent       \%     Ampersand     \&
-%%   Acute accent  \'     Left paren    \(     Right paren   \)
-%%   Asterisk      \*     Plus          \+     Comma         \,
-%%   Minus         \-     Point         \.     Solidus       \/
-%%   Colon         \:     Semicolon     \;     Less than     \<
-%%   Equals        \=     Greater than  \>     Question mark \?
-%%   Commercial at \@     Left bracket  \[     Backslash     \\
-%%   Right bracket \]     Circumflex    \^     Underscore    \_
-%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
-%%   Right brace   \}     Tilde         \~}%
-%%
-%%%     date            = "9/19/2016",
-%%%     author          = "Amy Hendrickson (mailto:amyh@texnology.com)" 
-%%%                            including 
-%%%                       1) code from emulateapj.cls, version 01/23/15(marked below)
-%%%                            written by Alexey Vikhlinin, which relies on RevTeX4-1
-%%%                            for much functionality;
-%%%                       2) some code from aastex (marked below)
-%%%                       3) Original work by Amy Hendrickson (marked below) for
-%%%                       extensive table tools, including easy decimal entry and splitting
-%%%                       tables horizontally into 2 or 3 pieces, for tabular and deluxetable
-%%%                       environments; rotate tables; gridlines for use in positioning figures, 
-%%%                       track changes.
-
 %%% This work may be distributed and/or modified under the 
 %%% conditions of the LaTeX Project Public License, either version 1.3c 
 %%% of this license or (at your option) any later version.
 %%% The latest version of this license is in
 %%%  http://www.latex-project.org/lppl.txt
 %%% and version 1.3 or later is part of all distributions of LaTeX 
-%%% version 2005/12/01 or later.
-%
-%%% This work has the LPPL maintenance status `maintained'.
-%
-%%% The Current Maintainer of this work is Greg Schwarz <greg.schwarz@aas.org> 
-%%% This work consists of the file aastex.cls
-%
-%%%     copyright       = "Copyright (C) 2016--2020 American Astronomical Society
-%%%
-%%%                        This work may be distributed and/or modified under the
-%%%                        conditions of the LaTeX Project Public License, either version 1.3
-%%%                        of this license or (at your option) any later version.
-%%%                        The latest version of this license is in
-%%%                        http://www.latex-project.org/lppl.txt
-%%%                        and version 1.3 or later is part of all distributions of LaTeX
-%%%                        version 2003/12/01 or later.
-%%%
-%%%                        This work has the LPPL maintenance status "maintained".
-%%%
-%%%                        The Current Maintainer of this work is the American Astronomical Society.
-%%%
-%%%                        This work consists of all files listed in the document README.
-%%%
-%%%     address         = "American Astronomical Society
-%%%                        USA",
-%%%     telephone       = "+1 ???",
-%%%     FAX             = "",
-%%%     email           = "aastex-help@aas.org",
-%%%     codetable       = "ISO/ASCII",
-%%%     keywords        = "latex, AAS, journal",
-%%%     supported       = "yes",
-%%%     abstract        = "formatter for AAS journal submissions",
-%%%  }
-%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%
-%%%     date            = "04/27/2024",
+%%
+%%%     date            = "2025/05/09",
 %%%     author          = "Aptara Technology Team" including 
-%%%                       1) Based on aastex631.cls, version 01/23/15(marked below)
-%%%                            written by Amy Hendrickson, which relies on RevTeX4-1
-%%%                            for much functionality;
-%%%                       2) To support the existing functionalities utilized the RevTeX4-2 macros 
+%%%                       1) Based on aastex631.cls, written by 
+%%%                          Amy Hendrickson, which relies on RevTeX4-1
+%%%                          for much functionality;
+%%%                       2) To support the existing functionalities 
+%%%                          utilized the RevTeX4-2 macros 
 %%%
-\ProvidesClass{aastex7}%%%
- [2025/05/09 Version 7.0.1/AAS markup document class]%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{aastex702}[2025/05/09 Version 7.0.2/AAS markup document class]%
 {}
-\ClassInfo{aastex}{%
+\ClassInfo{aastex702}{%
 ^^J^^J
  Original \protect\LaTeX2.09 style
  by Chris Biemesderfer (chris@seagoat.com).
@@ -101,7 +37,7 @@
  Adapted to \protect\LaTeXe\space
  by A. Ogawa (ogawa@teleport.com)%
 ^^J
-emulateapj.cls included, Copyright 2000-2015 Alexey Vikhlinin
+emulateapj.cls included, Copyright Alexey Vikhlinin.
 ^^J
 Rewrite and update of emulateapj.cls,
 revised and enhanced with table macros, gridlines, draft watermark,^^J
@@ -109,15 +45,11 @@ track changes, new `modern' style and much more, by Amy Hendrickson,%
 ^^J
  (amyh@texnology.com, http://www.texnology.com)
 ^^J
+Updated by Aptara. No longer depends on Revtex4-1 classfile^^J
 ^^J
 }%
 
 \let\class@name\@gtempa
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% aastex.cls version 2.0 is a based on emulateapj.cls, version January 23, 2015,
-%% and an older version of aastex.cls, with many additional functionalities.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Options. Document style options, and additional feature options.
 
@@ -157,7 +89,6 @@ track changes, new `modern' style and much more, by Amy Hendrickson,%
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%%
 \newif\iftwelvepoint
 \newif\ifmodern
 \newif\ifdoublespace
@@ -170,7 +101,6 @@ track changes, new `modern' style and much more, by Amy Hendrickson,%
 \newif\ifresetfootnote
 \newif\ifletteredappendix
 \newif\if@number@appendix@floats
-
 
 \DeclareOption{twocolappendix}{\@two@col@apptrue}
 \DeclareOption{onecolappendix}{\@two@col@appfalse}%% this is default
@@ -233,11 +163,6 @@ access fonts for the \string\astro\space command
 
 %%%%%%%%%%%%%
 %
-
-\iftimes
-  \usepackage{times}
-\fi
-
 %%%%%%%%%%%%%
 
 \if@compatibility
@@ -632,13 +557,13 @@ access fonts for the \string\astro\space command
   \protect\contentsline{#2}{#3}{\thepage}{}%
  }%
 }%
-\def\label#1{%
- \@bsphack
-  \protected@write\@auxout{}{%
-   \string\newlabel{#1}{{\@currentlabel}{\thepage}{}{}{}}%
-  }%
- \@esphack
-}%
+%% \def\label#1{%
+%%  \@bsphack
+%%   \protected@write\@auxout{}{%
+%%    \string\newlabel{#1}{{\@currentlabel}{\thepage}{}{}{}}%
+%%   }%
+%%  \@esphack
+%% }%
 \def\ltx@contentsline#1{%
  \expandafter\@ifnotrelax\csname l@#1\endcsname{}{%
   \expandafter\let\csname l@#1\endcsname\@gobbletwo
@@ -1472,6 +1397,8 @@ access fonts for the \string\astro\space command
  \@lastchclass\f@ur
  \@firstamptrue
  \let\@sharp\relax
+ \def\@startpbox##1{\unexpanded\expandafter{\expandafter
+                      \@startpbox\expandafter{##1}}}\let\@endpbox\relax
  \@mkpream@relax
  \@temptokena{#1}\@tempswatrue
  \@whilesw\if@tempswa\fi{\@tempswafalse\the\NC@list}%
@@ -1506,10 +1433,10 @@ access fonts for the \string\astro\space command
   \@lastchclass\@chclass
  }%
  \ifcase\@lastchclass
-  \@acolr % right-hand column
+  \@acolr% right-hand column
  \or
  \or
-  \@acolr % right-hand column
+  \@acolr% right-hand column
  \or
   \@preamerr\thr@@
  \or
@@ -2520,9 +2447,10 @@ ltxfront%
 \ifnumlines\nolinenumbers\fi
   \frontmatter@title@above
 \ifnumlines\linenumbers\fi
-\def\thempfn{\hskip-12pt}
+\def\thempfn{\hskip-12pt}%
  \ifx\@@email\@empty\else
- \footnotetext{\hskip-11ptEmail: \@@email}\fi%
+ \begin{NoHyper}\footnotetext{\hskip-11ptEmail: \@@email}\end{NoHyper}\fi%
+% \footnotetext{\hskip-11ptEmail: \@@email}\fi%
   \frontmatter@title@format
   \@title
   \@ifx{\@title@aux\@title@aux@cleared}{}{%
@@ -6702,7 +6630,8 @@ ltxgrid%
 \def\title@column#1{%
  \minipagefootnote@init
  #1%
- \minipagefootnote@foot
+\ifsuppressAffiliations\else\minipagefootnote@foot\fi%
+% \minipagefootnote@foot
 }%
 \def\close@column{%
  \newpage
@@ -6993,7 +6922,7 @@ ltxgrid%
 %% needed?
 \def\raggedcolumn@sw#1#2{#2}  % implement flushbottom as it was in revtex4
 
-\RequirePackage{epsf,graphicx}
+\RequirePackage{epsfig,graphicx}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% tighten only works with two column styles:
@@ -7003,24 +6932,50 @@ ltxgrid%
 %% Modified bk12.clo
 \iftwelvepoint
 
+%% \renewcommand\normalsize{%
+%% \ifdoublespace% manuscript
+%%   \iftighten%
+%%     \@setfontsize\normalsize\@xiipt{20}%
+%%   \else%
+%%     \@setfontsize\normalsize\@xiipt{24}%
+%%   \fi%
+%% \else%
+%%   \iftighten%
+%%      \@setfontsize\normalsize\@xiipt{13}%
+%%    \else%
+%%       \ifmodern%
+%%         \@setfontsize\normalsize\@xiipt{16}%
+%%       \else%
+%%          \@setfontsize\normalsize\@xiipt{15}%
+%%       \fi%
+%%    \fi%
+%% \fi%% end doublespace/no double space
+%%    \abovedisplayskip 12\p@ \@plus3\p@ \@minus7\p@
+%%    \abovedisplayshortskip \z@ \@plus3\p@
+%%    \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
+%%    \belowdisplayskip \abovedisplayskip
+%%    \let\@listi\@listI}
+
+\usepackage{ifthen}
+
 \renewcommand\normalsize{%
-\ifdoublespace % manuscript
-  \iftighten
-   \@setfontsize\normalsize\@xiipt{20}%
-  \else
-   \@setfontsize\normalsize\@xiipt{24}%
-  \fi
-\else
-  \iftighten
-   \@setfontsize\normalsize\@xiipt{13}%
-   \else
-      \ifmodern
-      \@setfontsize\normalsize\@xiipt{16}%
-      \else
-        \@setfontsize\normalsize\@xiipt{15}%
-      \fi
-   \fi
-\fi %% end doublespace/no double space
+\ifthenelse{\ifdoublespace\boolean{true}\else\boolean{false}\fi}{%
+  \ifthenelse{\iftighten\boolean{true}\else\boolean{false}\fi}{%
+    \@setfontsize\normalsize\@xiipt{20}%
+  }{%
+    \@setfontsize\normalsize\@xiipt{24}%
+  }%
+}{%
+  \ifthenelse{\iftighten\boolean{true}\else\boolean{false}\fi}{%
+     \@setfontsize\normalsize\@xiipt{13}%
+  }{%
+      \ifthenelse{\ifmodern\boolean{true}\else\boolean{false}\fi}{%
+        \@setfontsize\normalsize\@xiipt{16}%
+      }{%
+         \@setfontsize\normalsize\@xiipt{15}%
+      }%
+   }%
+}%
    \abovedisplayskip 12\p@ \@plus3\p@ \@minus7\p@
    \abovedisplayshortskip \z@ \@plus3\p@
    \belowdisplayshortskip 6.5\p@ \@plus3.5\p@ \@minus3\p@
@@ -7317,7 +7272,7 @@ ltxgrid%
 \raggedright
 {\sc Draft version \today}\\[2pt]
 {\footnotesize
-Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.1}
+Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.2}
 \par\vspace*{-\baselineskip}\vspace*{0.625in}
 }
 \else
@@ -7326,7 +7281,7 @@ Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.1}
 \vspace*{-\headsep}\vspace*{\headheight}
 \footnotesize
 {\footnotesize\textsc{\@journalinfo}}\par
-{\footnotesize Typeset using \LaTeX\ {\bf preprint2} style in AASTeX7.0.1}
+{\footnotesize Typeset using \LaTeX\ {\bf preprint2} style in AASTeX7.0.2}
 \par\vspace*{-\baselineskip}\vspace*{0.625in}
 \else
 %%
@@ -7335,28 +7290,28 @@ Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.1}
 \vspace*{-\headsep}\vspace*{\headheight}
 \footnotesize
 {\footnotesize\textsc{\@journalinfo}}\par
-{\footnotesize Typeset using \LaTeX\ {\bf twocolumn} style in AASTeX7.0.1}
+{\footnotesize Typeset using \LaTeX\ {\bf twocolumn} style in AASTeX7.0.2}
 \par\vspace*{-\baselineskip}\vspace*{0.625in}
 \else
 \preprintsty@sw{
 \vspace*{-\headsep}\vspace*{\headheight}
 \footnotesize
 {\footnotesize\textsc{\@journalinfo}}\par
-{\footnotesize Typeset using \LaTeX\ {\bf preprint} style in AASTeX7.0.1}
+{\footnotesize Typeset using \LaTeX\ {\bf preprint} style in AASTeX7.0.2}
 \par\vspace*{-\baselineskip}\vspace*{0.625in}
 }{
   \manuscriptsty@sw{%
     \vspace*{-\headsep}\vspace*{\headheight}
     \footnotesize
         {\footnotesize\textsc{\@journalinfo}}\par
-        {\footnotesize Typeset using \LaTeX\ {\bf manuscript} style in AASTeX7.0.1}
+        {\footnotesize Typeset using \LaTeX\ {\bf manuscript} style in AASTeX7.0.2}
         \par\vspace*{-\baselineskip}\vspace*{0.625in}
   }{
 %% Default
 \vspace*{-\headsep}\vspace*{\headheight}
 \footnotesize
 {\footnotesize\textsc{\@journalinfo}}\par
-{\footnotesize Typeset using \LaTeX\ {\bf default} style in AASTeX7.0.1}%% default style
+{\footnotesize Typeset using \LaTeX\ {\bf default} style in AASTeX7.0.2}%% default style
 \par\vspace*{-\baselineskip}\vspace*{0.625in}
 }}
 \fi\fi\fi
@@ -7436,9 +7391,9 @@ Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.1}
 \newcounter{front@matter@foot@note}\setcounter{front@matter@foot@note}{0}
 
 
-\def\affil@error#1{\@latex@error{^^J^^J^^J^^JThe compiler quit because AASTeX v7.0.1 requires all authors to have an affiliation. Please edit your latex file to include a \string\affiliation\space command with  author "#1".^^J^^J^^J^^J}\@ehc\stop}
+\def\affil@error#1{\@latex@error{^^J^^J^^J^^JThe compiler quit because AASTeX v7.0.2 requires all authors to have an affiliation. Please edit your latex file to include a \string\affiliation\space command with  author "#1".^^J^^J^^J^^J}\@ehc\stop}
 
-\def\email@error#1{\@latex@error{^^J^^J^^J^^JThe compiler quit because AASTeX v7.0.1 requires all authors to have an email address. Please edit your latex file to include a \string\email\space command with author "#1".^^J^^J^^J^^J}\@ehc\stop}
+\def\email@error#1{\@latex@error{^^J^^J^^J^^JThe compiler quit because AASTeX v7.0.2 requires all authors to have an email address. Please edit your latex file to include a \string\email\space command with author "#1".^^J^^J^^J^^J}\@ehc\stop}
 
 
 \iflongauthor%
@@ -7681,6 +7636,7 @@ Typeset using \LaTeX\ {\bf modern} style in AASTeX7.0.1}
 \advance\tempsectnum by 1
 \xdef\cref@currentlabel{section \the\tempsectnum}%
     \@startsection{section}{1}{\z@}{9pt plus 1pt minus 1pt}{4pt}{\apjsecfont\center}} 
+
 
 \def\subsection{\@startsection{subsection}{2}{\z@}{9pt plus 1pt minus 1pt}{4pt}%
   {\normalsize\itshape \center}}
@@ -8153,8 +8109,9 @@ For more details, see:\\
  \noalign{\vskip 1.5ex}% 
  \hline 
  \@ptabularcr 
- \noalign{\vskip -1.5ex}% 
- \multicolumn{\pt@ncol}{c}{#1}% 
+ \noalign{\vskip -1.5ex}%
+ \multicolumn{\totcolnum}{c}{#1}% 
+%% \multicolumn{\pt@ncol}{c}{#1}% 
  \@ptabularcr 
  \noalign{\vskip .8ex}% 
  \hline 
@@ -8163,18 +8120,18 @@ For more details, see:\\
 }% 
 
 \newcommand\sidehead[1]{% 
- \noalign{\vskip 1.5ex}% 
-%  \hline 
-%  \@ptabularcr 
-%  \noalign{\vskip -1.5ex}% 
- \multicolumn{\pt@ncol}{l}{#1}% 
+\noalign{\vskip 1.5ex}% 
+\hline 
+\@ptabularcr
+\noalign{\vskip -1.5ex}% 
+\multicolumn{\totcolnum}{l}{#1}%
+%\multicolumn{\pt@ncol}{l}{#1}% 
  \@ptabularcr 
  \noalign{\vskip .8ex}% 
-%  \hline 
-%  \@ptabularcr 
-%  \noalign{\vskip -2ex}% 
+  \hline 
+  \@ptabularcr 
+  \noalign{\vskip -2ex}% 
 }% 
-
 
 %% these don't seem to be relevant:
 \newcommand\figcaption{\@testopt{\@xfigcaption}{}}% 
@@ -8269,23 +8226,47 @@ For more details, see:\\
  ]{#1}% 
 }%
 
+\def\getFirstChar#1{%
+    \ifx\@empty#1\else\expandafter\@getFirstChar#1\relax\fi%
+}
+
+\def\@getFirstChar#1#2\relax{\gdef\@@getFirstChar{#1}}%
+
 \gdef\get@fig@number#1:->#2#3\@nil{%
 \ifnum\catcode`#2=12\relax%
   \def\thefigure{#2#3}%
   \let\@currentlabel\thefigure% 
-  \setcounter{figure}{\thefigure}%
-  \global\advance\c@figure\m@ne\relax%
-  \addtocounter{figure}{\m@ne}% 
+  \def\theHfigure{\thefigure}%
+  \global\advance\c@figure\m@ne%
 \else%
+\ifnum\catcode`#2=11\relax%
   \def\thefigure{#2#3}%
+  \let\@currentlabel\thefigure%
+  \def\theHfigure{\thefigure}%
+  \global\advance\c@figure\m@ne%
+\else%
+  \def\thefigure{\temp}%
+  \let\@currentlabel\thefigure%
+  \def\theHfigure{\thefigure}%
+  \global\advance\c@figure\m@ne%
+\fi%
+\fi%
+}
+%   
+\newcommand\Fignum[1]{%\figurenum{A1}%
+  \edef\temp{#1}%%
+  \gdef\@FigNum{\temp}%
+  \getFirstChar{\@FigNum}%
+  \def\theHfigure{\@@getFirstChar}%
   \let\@currentlabel\thefigure% 
-\fi}
+  \addtocounter{figure}{\m@ne}% 
+}% 
 %
 \newcommand\figurenum[1]{%\figurenum{A1}
   \edef\temp{#1}%
   \expandafter\get@fig@number\meaning\temp\@empty\@nil%
 }% 
-
+%
 \newcommand\phn{\phantom{0}}% 
 \newcommand\phd{\phantom{.}}% 
 \newcommand\phs{\phantom{$-$}}% 
@@ -8439,7 +8420,7 @@ For more details, see:\\
 \newcommand\aas{\ref@jnl{AAS Meeting Abstracts}}% American Astronomical Society Meeting Abstracts
 \newcommand\dps{\ref@jnl{AAS/DPS Meeting Abstracts}}% American Astronomical Society/Division for Planetary Sciences Meeting Abstracts
 
-
+\newcommand\raa{\ref@jnl{RA\&A}}%  % Research in Astronomy and Astrophysics 
 
 \let\astap=\aap 
 \let\apjlett=\apjl 
@@ -8460,13 +8441,22 @@ For more details, see:\\
   
 \gdef\get@table@number#1:->#2#3\@nil{%
 \ifnum\catcode`#2=12\relax%
-  \def\thetable{#2#3}%
-  \let\@currentlabel\thetable% 
-   \setcounter{table}{\thetable}%
-   \global\advance\c@table\m@ne\relax%
+   \def\thetable{#2#3}%
+   \let\@currentlabel\thetable% 
+   \def\theHtable{\thetable}%
+%   \setcounter{table}{\thetable}%
+   \global\advance\c@table\m@ne%\relax%
 \else%
-  \def\thetable{#2#3}%
-  \let\@currentlabel\thetable% 
+  \ifnum\catcode`#2=11\relax%
+   \def\thetable{#2#3}%
+   \let\@currentlabel\thetable% 
+   \def\theHtable{\thetable}%
+%   \setcounter{table}{\thetable}%
+   \global\advance\c@table\m@ne%\relax%
+  \else%
+    \def\thetable{#2#3}%
+    \let\@currentlabel\thetable%
+  \fi%
 \fi}
 %
 \def\tablenum#1{% Clashing with siunitx
@@ -8500,7 +8490,7 @@ For more details, see:\\
 \xdef \@currentlabel{\thetable}
      \sbox\@tempboxa{\small #2. 
 %% disable trackchanges commands here, so they aren't entered 2 times:
-\let\added\relax
+%\let\added\relax %
 #3}%
      \ifdim\wd\@tempboxa>\hsize
       \small#2. #3%
@@ -8521,7 +8511,7 @@ For more details, see:\\
 %% \small added to keep currtabletypesize from determining size of caption
   \sbox\@tempboxa{\small
 %% disable trackchanges commands here, so they aren't entered 2 times:
-\let\added\relax
+%\let\added\relax %
 {\bf #1.} #2}%
   \ifdim \wd\@tempboxa >\hsize
 \small
@@ -8758,10 +8748,12 @@ width0pt\relax#1$}\ignorespaces}
 % hyperref link defaults to "blue" (0000ff) as this matches our publisher produced pdf style
 \definecolor{xlinkcolor}{cmyk}{1,1,0,0}
 
+%\RequirePackage[safe,save]{silence}%
+%\WarningsOff[nameref,hyperref]%
 
 %% \PassOptionsToPackage{hyphens}{url}
 %% In response to request from AAS
- \usepackage[bookmarks=true,         % show bookmarks bar?/ Changed March 22, 2019 for
+\usepackage[bookmarks=true,         % show bookmarks bar?/ Changed March 22, 2019 for
                                      % improved accessibility
     pdfnewwindow=true,      % links in new window
    colorlinks=true,    % false: boxed links; true: colored links
@@ -11415,7 +11407,7 @@ Thank you!^^J}\fi%
 \@ifundefined{total@deluxe@table@width@\romannumeral\the\deluxetablecnt}{\global\deluxesidewaystablefalse}{%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>465\p@%
     \ifdeluxestar\else\global\deluxestarfalse\fi%
-    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystabletrue\fi%
+    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystablefalse\fi%\global\deluxesidewaystabletrue
     \else%
       \global\deluxestartrue\global\deluxesidewaystablefalse%
     \fi%
@@ -11425,7 +11417,7 @@ Thank you!^^J}\fi%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>255\p@%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>516\p@%
     \ifdeluxestar\global\deluxestartrue\else\global\deluxestarfalse\fi%
-    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystabletrue\fi%
+    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystablefalse\fi%\global\deluxesidewaystabletrue
     \else%
       \global\deluxestartrue\global\deluxesidewaystablefalse%
     \fi%
@@ -11455,6 +11447,7 @@ Thank you!^^J}\fi%
 \currtabletypesize
 \setbox0=\hbox{
 \begin{tabular}{#1}
+\countcolnum%
 \pt@head
 ##1\end{tabular}}
 \expandafter\ifx\csname @tablecaption\endcsname\empty\else
@@ -11511,7 +11504,7 @@ Thank you!^^J}\fi%
 \@ifundefined{total@deluxe@table@width@\romannumeral\the\deluxetablecnt}{\global\deluxesidewaystablefalse}{%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>465\p@%
     \ifdeluxestar\else\global\deluxestarfalse\fi%
-    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystabletrue\fi%
+    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystablefalse\fi%\global\deluxesidewaystabletrue
     \else%
       \global\deluxestartrue\global\deluxesidewaystablefalse%
     \fi%
@@ -11521,7 +11514,7 @@ Thank you!^^J}\fi%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>255\p@%
     \expandafter\ifdim\csname total@deluxe@table@width@\romannumeral\the\deluxetablecnt\endcsname>516\p@%
     \ifdeluxestar\global\deluxestartrue\else\global\deluxestarfalse\fi%
-    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystabletrue\fi%
+    \ifcenterwidetable\global\centerwidetablefalse\else\global\deluxesidewaystablefalse\fi%\global\deluxesidewaystabletrue
     \else%
       \global\deluxestartrue\global\deluxesidewaystablefalse%
     \fi%
@@ -11552,7 +11545,8 @@ Thank you!^^J}\fi%
 \currtabletypesize
 \setbox0=\hbox{\colnumbersonfalse
 \begin{tabular}{#1}
-\pt@head %% 
+\countcolnum%%
+\pt@head%% 
 ##1\end{tabular}}% not here
 \expandafter\ifx\csname @tablecaption\endcsname\empty\else
   \ifdigitasset
@@ -11606,6 +11600,7 @@ to\hsize{\hss\vtop{\hsize=\wd0
 \global\setbox\longtablebox=\hbox{\currtabletypesize
 \tabcolsep=3pt
 \begin{tabular}{#1}
+\countcolnum%%
 \pt@head
 ##1\end{tabular}}
 %%%
@@ -12484,24 +12479,23 @@ by 1\relax}\ignorespaces}%
    \frontmatter@author@produce@script
   }%
   \frontmatter@RRAPformat{%
-\vskip12pt
+  \vskip12pt%
    \expandafter\produce@RRAP\expandafter{\@date}%
    \expandafter\produce@RRAP\expandafter{\@received}%
    \expandafter\produce@RRAP\expandafter{\@revised}%
    \expandafter\produce@RRAP\expandafter{\@accepted}%
    \expandafter\produce@RRAP\expandafter{\@published}%
   }%
-\expandafter\ifx\csname @submitted\endcsname\relax\else
-\vskip6pt
-\expandafter\produce@RRAP\expandafter{\centerline{\@submitted\hbox
-to 20pt{\hfill}}\vskip12pt}%
-\fi
+\expandafter\ifx\csname @submitted\endcsname\relax\else%
+\vskip6pt%
+\expandafter\produce@RRAP\expandafter{\centerline{\@submitted\hbox to 20pt{\hfill}}\vskip12pt}%
+\fi%
   \frontmatter@abstract@produce
   \@ifx@empty\@keywords{}{%
    \@keywords@produce\@keywords
   }%
-  \par
-  \frontmatter@finalspace
+  \par%
+  \frontmatter@finalspace%
   \tempallauthorcnt\allauthorcnt%
   \ifnum\tempallauthorcnt>\z@%
    \@whilenum\tempallauthorcnt>\z@\do{%
@@ -12760,12 +12754,12 @@ changenum\the\refchangenumber\endcsname{\bf
  \else%
 \ifthenelse{\equal{#3}{yes}}{%
   \expandafter\gdef\csname author@data@\romannumeral\the\allauthorcnt\endcsname{#2}%
- \protected@xdef\@author{{\href{http://orcid.org/#1}{#2\protect\IfFileExists{Orcid-ID.png}{\hskip2pt\protect\includegraphics[width=9pt]{Orcid-ID.png}}{}}{\protect\IfFileExists{CoFirstAuthor.png}{\hskip2pt\leavevmode\protect\includegraphics[width=9pt]{CoFirstAuthor}}{}%
+ \protected@xdef\@author{{\href{http://orcid.org/#1}{#2\protect\IfFileExists{orcid-ID.png}{\hskip2pt\protect\includegraphics[width=9pt]{orcid-ID.png}}{}}{\protect\IfFileExists{CoFirstAuthor.png}{\hskip2pt\leavevmode\protect\includegraphics[width=9pt]{CoFirstAuthor}}{}%
 }}{}}}{%
 \expandafter\gdef\csname author@data@\romannumeral\the\allauthorcnt\endcsname{#2}%
  \protected@xdef\@author{{\href{http://orcid.org/#1}{#2%
-\protect\IfFileExists{Orcid-ID.png}{%
-\hskip2pt\protect\includegraphics[width=9pt]{Orcid-ID.png}}{}%
+\protect\IfFileExists{orcid-ID.png}{%
+\hskip2pt\protect\includegraphics[width=9pt]{orcid-ID.png}}{}%
 }}{}}}\fi%
 }%
 
@@ -12780,7 +12774,7 @@ Please fix, or don't use square bracket argument with
 ^^J^^J}%
 }
 
-%% Tests to see if author gave reasonable Orcid number;
+%% Tests to see if author gave reasonable orcid number;
 %% if not, stops processing and gives error message.
 \newif\ifbadOrcid
 \def\lookatOrcid #1-#2-#3-#4-{%
@@ -12892,7 +12886,8 @@ Please fix, or don't use square bracket argument with
 \@for\@audata:=#1\do{%
   \expandafter\filter@audata\@audata=\@nil}
  \ifx\@orcid\@empty%
-   \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{}{#2}{yes}}{\new@author@def{}{#2}{no}}%
+%   \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{}{#2}{yes}}{\new@author@def{}{#2}{no}}%
+   \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{}{#2}{no}}{\new@author@def{}{#2}{no}}%
  \else%
 \edef\testone{\@orcid-}\edef\firstarg{\@orcid}%
 \setbox0=\hbox{\expandafter\lookatOrcid\testone {}-{}-{}-{}-
@@ -12904,7 +12899,8 @@ Please fix, or don't use square bracket argument with
 \ifbadOrcid\let\go\orciderrormessage
 \else\let\go\relax\fi\go%
 \ifbadOrcid\let\go\stop\else\let\go\relax\fi\go%
- \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{\@orcid}{#2}{yes}}{\new@author@def{\@orcid}{#2}{no}}%
+% \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{\@orcid}{#2}{yes}}{\new@author@def{\@orcid}{#2}{no}}%
+ \ifthenelse{\equal{\@cofirstauthor}{yes}}{\new@author@def{\@orcid}{#2}{no}}{\new@author@def{\@orcid}{#2}{no}}%
 \fi
 }%% oct 7, this doesn't seem to work
 
@@ -13392,7 +13388,8 @@ Please fix, or don't use square bracket argument with
  \else\global\@correspauthortrue\global\correspauthortrue%
 \renewcommand\thefootnote{}%
 \gdef\@correspondingauthor{#1}%
-\footnotetext{\hskip-11ptCorresponding author: #1\ifmodern\vrule depth 5pt width 0pt\relax\fi}%
+\begin{NoHyper}\footnotetext{\hskip-11ptCorresponding author: #1\ifmodern\vrule depth 5pt width 0pt\relax\fi}\end{NoHyper}%%
+%\footnotetext{\hskip-11ptCorresponding author: #1\ifmodern\vrule depth 5pt width 0pt\relax\fi}%
 \fi}%
 }
 
@@ -13668,7 +13665,10 @@ Affiliations\vrule depth 18pt width0pt}\nobreak
 %\largestAffilNum=10000 <<== not needed
 {\vskip6pt\vskip1sp\centerline{\large\bf All Authors and
 Affiliations\vrule depth 18pt width0pt}\nobreak
-\maketitle
+\maketitle%
+ \let\@TBN@opr\present@FM@footnote%
+ \@FMN@list%
+ \minipagefootnote@foot%
 }}
 \let\AllAuthors\allauthors
 
@@ -13820,9 +13820,34 @@ by-18pt\relax#1}}
 \newcommand{\uat}[2]{\@ifx{!#2!}{#1}{\href{http://astrothesaurus.org/uat/#2}{#1 (#2)}}}
 
 \def\altcaption#1{}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\def\@countcolnum#1#2&#3{%
+\ifx\@countcolnum#3#1\expandafter\@gobble\else%
+\expandafter\@firstofone%
+\fi%
+{\@countcolnum{\the\numexpr#1+1\relax}#3}}
+%
+\def\countcolnum{\noalign{%
+\xdef\totcolnum{\expandafter\@countcolnum\expandafter1\@preamble&\@countcolnum}%
+}}
 
+\iftimes%%
+%\usepackage{times}
+%\usepackage{newtxtext,newtxmath}
+\usepackage{newtx}
+\fi
+
+\@ifpackageloaded{amsmath}{\AtBeginDocument{%
+\def\env@cases{%
+  \let\@ifnextchar\new@ifnextchar
+  \left\lbrace
+  \def\arraystretch{1.2}%
+  \array{@{}ll@{}}%
+}}}{}
 
 \endinput
 
-%% End of aastex7.cls
+%% End of aastex702.cls
 

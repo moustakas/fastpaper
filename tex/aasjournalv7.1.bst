@@ -1,4 +1,4 @@
-%% aasjournalv7.bst March 4, 2025
+%% aasjournalv8.bst March 4, 2025
 %%
 %% Revision 1.19: Aptara 
 %% Modified to include first initials for inline citations.
@@ -1591,12 +1591,19 @@ FUNCTION {surname.format.string}
 FUNCTION {jnrname.format.string}
 { "{, jj}" }
 
+FUNCTION {add.space.if.nonempty}
+{ duplicate$ empty$
+    { pop$ "{}" }      % if top-of-stack is empty, push empty (no space)
+    { " " * }        % else append a space
+  if$
+}
+
 INTEGERS { labnameptr }
 
 FUNCTION {format.lab.names}
 { 's :=
   #1 'labnameptr :=
-  s labnameptr forname.format.string format.name$ add.blank%first.initial 
+  s labnameptr forname.format.string format.name$ add.space.if.nonempty%add.blank%first.initial 
   s labnameptr surname.format.string format.name$  *   
   s num.names$ duplicate$
   #2 >
@@ -1609,9 +1616,9 @@ FUNCTION {format.lab.names}
             {
               " {et~al.}" *
             }
-            { " \& " * 
+            { " {\&} " * 
 	      #2 'labnameptr :=
-	      s labnameptr forname.format.string format.name$ add.blank%first.initial  
+	      s labnameptr forname.format.string format.name$ add.space.if.nonempty%add.blank%first.initial  
 	      s labnameptr surname.format.string format.name$  *  
               * }
           if$
@@ -1823,13 +1830,57 @@ FUNCTION {initialize.extra.label.stuff}
   #0 'number.label :=
 }
 
+INTEGERS { alphaLen alphaCarry alphaCode }
+STRINGS  { alphaStr alphaNewCh }
+FUNCTION {alphalabel.next}
+{ 'alphaStr :=
+  alphaStr text.length$ 'alphaLen :=
+  alphaLen #0 =
+    { "a" }
+    {
+      #1 'alphaCarry :=
+      { alphaCarry #0 > }
+      {
+        alphaStr alphaLen alphaLen substring$ chr.to.int$ 'alphaCode :=
+        alphaCode "z" chr.to.int$ =
+          { alphaStr #1 alphaLen #1 - substring$ "a" * 'alphaStr :=
+            alphaLen #1 - 'alphaLen :=
+            alphaLen #0 =
+              { "a" alphaStr * 'alphaStr :=
+                #0 'alphaCarry :=
+              }
+              { #1 'alphaCarry := }
+            if$
+          }
+          { alphaCode #1 + int.to.chr$ 'alphaNewCh :=
+            alphaStr #1 alphaLen #1 - substring$ alphaNewCh * 'alphaStr :=
+            #0 'alphaCarry :=
+          }
+        if$
+      }
+      while$
+      alphaStr
+    }
+  if$
+}
+
 FUNCTION {forward.pass}
-{ last.label label =
-    { last.extra.num #1 + 'last.extra.num :=
-      last.extra.num int.to.chr$ 'extra.label :=
+% { last.label label =
+%     { last.extra.num #1 + 'last.extra.num :=
+%       last.extra.num int.to.chr$ 'extra.label :=
+{
+  last.label label =
+    { % same author+year group: assign next suffix and advance it
+      next.extra empty$
+        { "b" 'next.extra := }
+        'skip$
+      if$
+      next.extra 'extra.label :=
+      next.extra alphalabel.next 'next.extra :=
     }
     { "a" chr.to.int$ 'last.extra.num :=
       "" 'extra.label :=
+      "b" 'next.extra :=
       label 'last.label :=
     }
   if$
