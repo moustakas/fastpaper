@@ -119,7 +119,7 @@ lines. We describe these algorithms in detail, validate the
 measurements against independent codes, and present the resulting
 value-added catalog for DESI Data Release 2, which provides
 spectrophotometric and physical properties for 38 million
-extragalactic targets. We also release a companion photometry-only
+extragalactic targets\added{ at $0<z\lesssim4$}. We also release a companion photometry-only
 catalog and document the catalogs previously released for the DESI
 Early Data Release and Data Release 1.
 \end{abstract}
@@ -199,8 +199,8 @@ introducing off-diagonal terms into the pixel covariance matrix.
 
 \fastspecfit\footnote{\url{https://fastspecfit.readthedocs.io/en/latest}}
 has been developed to meet both these challenges, scaling efficiently
-to tens of millions of spectra while fully exploiting DESI's native,
-optimally extracted spectral resolution. Using a forward-modeling
+to tens of millions of spectra while fully exploiting DESI's \replaced{native,
+optimally extracted}{native} spectral resolution. Using a forward-modeling
 fitting approach, \fastspecfit{} convolves physically motivated
 stellar continuum and emission-line templates with each fiber's
 resolution matrix and compares the result directly to the observed
@@ -340,7 +340,7 @@ from this pipeline: the one-dimensional spectrum, its corresponding
 inverse-variance spectrum, and the resolution matrix $\mathbf{R}$, a
 band-diagonal, sparse matrix that quantifies the effective,
 wavelength-dependent instrumental resolution. $\mathbf{R}$ is a
-natural output of the optimal, ``spectroperfectionism'' algorithm of
+natural output of the \deleted{optimal, }``spectroperfectionism'' algorithm of
 \citet{bolton10a}, which the DESI pipeline uses to extract
 one-dimensional spectra with uncorrelated pixels. It is also a key
 ingredient of \fastspecfit's forward-modeling philosophy: convolving a
@@ -352,7 +352,7 @@ The per-fiber spectra are extracted onto an 0.8\,\AA{} linearly
 spaced\deleted{,} wavelength grid (in vacuum and in the Solar System barycentric
 frame of reference), flux-calibrated using a network of F-type
 standard stars (typically 10 standard stars per petal), and repeat
-exposures are coadded using optimal (inverse-variance)
+exposures are coadded using \replaced{optimal (inverse-variance)}{inverse-variance}
 weights. \citet{guy23a} and \citet{koposov26a} report the residual
 wavelength-calibration uncertainty to be $\approx0.025$~\AA{} per sky
 line, or $\approx1$\,\kms{} at 7000~\AA. Meanwhile, comparison of the
@@ -471,8 +471,10 @@ emission-line fitter (\texttt{emlinefit}; \citealt{raichoor23a,
   desi-collaboration24d}) used to validate ELG redshifts; a
 \mgiidoublet{} doublet fitter \citep{chaussidon23a}; and the
 \texttt{QuasarNET} neural-network QSO classifier \citep{busca18a,
-  green25a}. The latter two after-burners are essential for correctly
-classifying and measuring accurate redshifts for QSOs
+  green25a}. The latter two after-burners \replaced{are essential for correctly
+classifying and measuring accurate redshifts for QSOs}{improve the
+completeness of the QSO sample, but all QSO redshifts ultimately come
+from Redrock}
 (\S\ref{ssec:catalog}).
 
 %% ============================================================
@@ -885,9 +887,9 @@ fitter.
 
 The line-of-sight stellar velocity dispersion \vdisp{} traces the
 depth of a galaxy's gravitational potential well; it is a key
-observable for several galaxy scaling relations---the Fundamental
+observable for several galaxy scaling relations\replaced{---the Fundamental}{ (the Fundamental}
 Plane, the black hole mass--\vdisp{} relation, and the
-halo-mass--stellar-mass relation---and a fundamental ingredient for
+halo-mass--stellar-mass \replaced{relation---and}{relation) and} a fundamental ingredient for
 most theoretical models of galaxy formation \citep[and references
   therein]{renzini06a, blanton09a, kormendy13a, vegetti24a}. A
 reliable measurement, however, requires adequate rest-frame wavelength
@@ -929,7 +931,7 @@ stellar-mass--velocity-dispersion relation,
 \end{equation}
 with $(a,b) = (2.30,\,0.25)$ using a fast, preliminary estimate of the
 stellar mass, \Mstar{} (\S\ref{sssec:fitting}). If our estimate of
-\Mstar{} fails---for whatever reason---we instead adopt a fallback
+\Mstar{} fails\replaced{---for whatever reason---we}{, we} instead adopt a fallback
 $\vdisp = 150$~\kms{} (\texttt{VDISP\_NOMINAL}), close to the
 characteristic ``knee'' of the velocity dispersion function
 \citep{bezanson11a, taylor22a}. In either fallback case we set
@@ -937,7 +939,7 @@ characteristic ``knee'' of the velocity dispersion function
 independently measured.
 
 When a direct measurement is possible, we determine \vdisp{} by
-finding the optimal Gaussian kernel dispersion, $\vdisp^\mathrm{kern}
+finding the \replaced{optimal}{best-fitting} Gaussian kernel dispersion, $\vdisp^\mathrm{kern}
 \in [50,\,500]$~\kms, using \texttt{scipy.optimize.least\_squares}
 with a Trust-Region Reflective minimization algorithm
 \citep{branch99a}, fitting for $\vdisp^\mathrm{kern}$ and \tauv{}
@@ -2352,13 +2354,14 @@ Unfortunately, the Redrock redshift-fitting pipeline assigns an
 incorrect redshift to a small but astrophysically important fraction
 of QSO targets \citep{chaussidon23a, adame25e}. The default
 \fastspecfit{} pipeline corrects these redshifts using the
-\texttt{QuasarNet} afterburner catalog \citep{green25a} distributed
+\texttt{QuasarNet} afterburner catalog \citep{green25a}\added{, which
+reruns Redrock with a \texttt{QuasarNet} redshift prior and is} distributed
 alongside each Redrock output file \citep{desi-collaboration24d,
   desi-collaboration26a}.\footnote{This option can be easily disabled
 by invoking the \texttt{--ignore-quasarnet} command-line argument; see
 \S\ref{sec:modes} for more options.}  For primary QSO targets and QSO
 targets observed as part of the WISE variability secondary program
-\citep{chaussidon23a, myers23a}, we replace the Redrock redshift when
+\citep{chaussidon23a, myers23a}, we replace the \added{original }Redrock redshift \added{with this result }when
 \texttt{QuasarNet} independently classifies the object as a QSO and
 when the maximum line-confidence across six diagnostic transitions
 (Ly$\alpha$, \ion{C}{4}, \ion{C}{3}, \mgii, \hb, and \ha) exceeds
@@ -2702,7 +2705,7 @@ added in quadrature), \oiiilam, \hb, and \ha{} against the
   Line
   Catalog}\footnote{\url{https://data.desi.lbl.gov/doc/releases/dr1/vac/stellar-mass-emline}}
 (\texttt{v1.0}) from H.~Zou et~al. (in preparation; see also
-\citealt{zou24b, sui26a}) \todo{Correct ref?}. The line-fluxes in all
+\citealt{zou24b, sui26a}). The line-fluxes in all
 these catalogs have been corrected for foreground Galactic
 extinction. We require $\mathrm{S/N}>3$ for each line in both
 catalogs, and combine the SV3 bright and dark programs to maximize the
@@ -2735,20 +2738,24 @@ biases its line flux high.
 Meanwhile, the agreement with the VAC from H.~Zou et~al.\ (in
 preparation) is excellent in terms of median offset
 ($|\Delta_\textrm{med}|<0.005$~dex) and scatter
-($\mathtt{NMAD}<0.04$~dex) for all four lines. The most striking
+($\mathtt{NMAD}<0.04$~dex) for all four lines. \replaced{The most striking
 result is that the pull distributions for all four lines are narrower
 than a unit Gaussian, particularly for \oii{} (also true for the
 \texttt{emlinefit} \oii{} comparison), which indicates that the
 uncertainties from one or both catalogs have been over-estimated. In
 the Zou et~al. VAC the \oii{} lines are fit independently
-\citep{zou24b}, while in \fastspec{} and \texttt{emlinefit} the two
+\mbox{\citep{zou24b}}, while in \fastspec{} and \texttt{emlinefit} the two
 components of the \oii{} doublet share a fitted line-width and
 velocity, so their flux uncertainties are not strictly
 independent. However, neglecting this covariance would make the
 resulting \oii{} pull too wide rather than too narrow. The upshot is
 that emission-line uncertainties are notoriously difficult to measure,
 so analyses should carefully assess how they evaluate the statistical
-significance of individual lines.
+significance of individual lines.}{The pull distributions for all four
+lines are narrower than a unit Gaussian, as expected because both
+catalogs measure the same spectra and therefore share the same
+noise. Consequently, this comparison validates the line fluxes, but it
+does not test their uncertainties.}
 
 %\begin{figure*}
 %\includegraphics[width=1.0\textwidth]{compare-sfr-external.pdf}
