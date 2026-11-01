@@ -16,6 +16,13 @@
 \newcommand{\JM}[1]{{\color{blue}#1}}
 \newcommand{\todo}[1]{{\color{red}\textbf{TODO:} #1}}
 
+% track-changes macros; aastex702 disables \deleted and \replaced and
+% replaces ulem's \sout with an unbreakable box
+\definecolor{trackchange}{rgb}{0,0,1}
+\newcommand{\cwrsout}{\leavevmode\bgroup\ULdepth=-.55ex\ULset}
+\renewcommand{\deleted}[1]{\iftrack{\color{red}\cwrsout{#1}}\fi}
+\renewcommand{\replaced}[2]{\deleted{#1}\added{#2}} % {old}{new}
+
 % frequently used symbols
 \newcommand{\fastspecfit}{\texttt{FastSpecFit}}
 \newcommand{\fastspec}{\texttt{fastspec}}
@@ -80,9 +87,8 @@
 
 \author[0000-0002-4159-4226]{Jeremy Buhler}
 \email{jbuhler@wustl.edu}
-\affiliation{Department of Computer Science and Engineering and
-  Genetics, Washington University in St. Louis, One Brookings Drive
-  St. Louis, MO 63130, USA}
+\affiliation{Department of Computer Science and Engineering,
+  Washington University, One Brookings Drive, St. Louis, MO 63130, USA}
 
 \author[0000-0002-6867-1244]{Dirk Scholte}
 \email{dscholte@roe.ac.uk}
@@ -185,7 +191,7 @@ physical realism, and computational speed, but none were designed to
 be run efficiently on the tens of millions of spectra acquired by
 DESI. Existing codes also do not take advantage of the DESI resolution
 matrix, which compactly encodes the instrumental resolution and
-guarantees uncorrelated uncertainties from pixel-to-pixel
+guarantees uncorrelated uncertainties from \replaced{pixel-to-pixel}{pixel to pixel}
 \citep{bolton10a, guy23a}; instead, they generally resample spectra
 onto a common wavelength grid or into the rest frame, which violates
 one of the core assumptions underpinning maximum-likelihood fitting by
@@ -229,8 +235,7 @@ kinematic components and capturing the broad Balmer-line emission that
 distinguishes type~1 AGN whenever the data require it. Unlike codes
 that target a specific class or spectral type, \fastspecfit{} applies
 this same machinery uniformly to every spectrum, without assuming in
-advance whether the target is quiescent, star-forming, a
-post-starburst, or hosts an AGN. This flexibility minimizes
+advance whether the target is quiescent, star-forming, \deleted{a }post-starburst, or hosts an AGN. This flexibility minimizes
 classification-driven selection effects and maximizes the discovery
 potential of a dataset as large and diverse as DESI, where unusual or
 physically ambiguous objects emerge naturally from the fit rather than
@@ -275,7 +280,7 @@ full detail; as noted there, readers who want the output before the
 machinery can skip this section. In \S\ref{sec:casestudy} we ground
 that machinery in three worked examples spanning the DESI
 extragalactic classes, a natural starting point for readers who want
-to see spectra and their best-fitting models and to help build
+to see spectra and their best-fitting models \deleted{and }to help build
 intuition first. In \S\ref{sec:vac} we present the DR2 catalog
 itself---its construction and organization, recommended quality cuts,
 computational performance, and validation against independent
@@ -323,7 +328,7 @@ the ten spectrographs. A single pointing of the full 5000-fiber focal plane
 defines a ``tile'', the basic unit of the survey's observing (tiling)
 strategy \citep{schlafly23a}. The three cameras sense blue (B:
 3600--5930~\AA), red (R: 5600--7720~\AA), and near-IR (Z:
-7470--9824~\AA) light, at a spectral resolution of
+7470--9824~\AA) light\deleted{,} at a spectral resolution of
 $\mathcal{R}\equiv\lambda/\Delta\lambda \approx 2000-3500$,
 $3400-4800$, and $3800-5200$, respectively \citep{guy23a}.
 
@@ -343,7 +348,7 @@ the equivalent model at DESI's effective spectral resolution
 (\S\ref{sec:modeling}).
 
 The per-fiber spectra are extracted onto an 0.8\,\AA{} linearly
-spaced, wavelength grid (in vacuum and in the Solar System barycentric
+spaced\deleted{,} wavelength grid (in vacuum and in the Solar System barycentric
 frame of reference), flux-calibrated using a network of F-type
 standard stars (typically 10 standard stars per petal), and repeat
 exposures are coadded using optimal (inverse-variance)
@@ -395,7 +400,7 @@ unWISE coadds\footnote{\url{https://unwise.me}} produced by
 \citet{meisner21a} for $W1$ and $W2$ (based on the six-year WISE plus
 NEOWISE-Reactivation imaging; \citealt{mainzer14a}) and
 \citet{lang14a} for $W3$ and $W4$. \fastspecfit{} fits this total
-photometry, in all seven $grz$ and WISE $W1$--$W4$ bands, together
+photometry\deleted{,} in all seven $grz$ and WISE $W1$--$W4$ bands\deleted{,} together
 with the DESI spectrum in a joint spectrophotometric fit
 (\S\ref{sec:modeling}); in any band where a source is undetected, the
 reported $1\sigma$ flux uncertainty is used as an upper limit.
@@ -422,7 +427,7 @@ completeness \citep{desi-collaboration24e,
 assigned to the ``bright'' program (moonlight or reduced
 transparency), the ``dark'' program (nominal dark-sky conditions), or
 the ``backup'' program \citep[twilight and poor-weather
-  time;][]{dey26a}, on the basis of sky conditions. A small fraction
+  time;][]{dey26a}\deleted{,} on the basis of sky conditions. A small fraction
 of observations that do not fit any of these three categories are
 assigned to an ``other'' program \citep{desi-collaboration26a}.
 
@@ -435,7 +440,7 @@ to $r \lesssim 20.2$~mag in the bright program; the luminous red
 galaxy \citep[LRG, $0.4 < z \lesssim 1.1$;][]{zhou23a}, emission-line
 galaxy \citep[ELG, $0.6 < z \lesssim 1.6$;][]{raichoor23a}, and quasar
 \citep[QSO, $0.9 < z \lesssim 4$;][]{chaussidon23a} samples are all
-observed in the dark program; and finally secondary or tertiary
+observed in the dark program; and finally\added{,} secondary or tertiary
 (special) targets are observed as part of a wide range of bespoke
 science programs and can be assigned to any program \citep{myers23a,
   desi-collaboration26a}.
@@ -522,7 +527,7 @@ continuum model is a poor fit to the data due to, for example,
 residual calibration errors (\S\ref{sssec:smooth}).
 
 We prepare the spectroscopic and photometric data for fitting in two
-ways. First, we correct both for Galactic extinction using the
+ways. First, we correct both \added{datasets }for Galactic extinction using the
 \citet{schlegel98a} dust map, recalibrated following
 \citet{schlafly11a}, and the \citet{fitzpatrick99a} extinction curve
 with $R_V\equiv A_V/E(B-V)=3.1$. We evaluate the extinction curve at
@@ -584,7 +589,7 @@ library spans 100~\AA{} to 1000~$\mu$m. In the rest-frame optical
 corresponding to a Gaussian line-spread function with
 $\sigma_\mathrm{C3K}=c/\mathcal{R}_\mathrm{C3K}=42$~\kms{}
 ($\lambda/\mathrm{FWHM}=3000$), sampled in constant-velocity $\Delta
-v=50$~\kms{} pixels. At shorter and longer wavelengths our models have
+v=50$~\kms{} pixels. At shorter and longer wavelengths\added{,} our models have
 lower resolution and sparser wavelength sampling, which keeps the
 UV-to-IR template lightweight for synthetic photometry and
 dust-emission modeling (\S\ref{sssec:fitting}) without wasting
@@ -604,7 +609,7 @@ including and one excluding nebular emission (continuum and lines)
 from the FSPS built-in nebular photoionization grid \citep{byler17a}.
 
 We index the resulting rest-frame templates $S_n(\lambda)$, $n =
-1,\ldots,n_\mathrm{template}$ (with $n_\mathrm{template}=5$), by
+1,\ldots,n_\mathrm{template}$ (with $n_\mathrm{template}=5$)\deleted{,} by
 star-formation history (SFH) age bin, separately for each
 nebular-emission variant, and
 normalize each to the flux density produced at 10~pc by one solar mass
@@ -629,7 +634,7 @@ distribution of starlight intensities (up to a fixed maximum
 $U_\mathrm{max}$) representing photodissociation regions. Because most
 DESI targets do not have adequately deep IR photometry to constrain a
 large number of dust emission parameters, we adopt fiducial values of
-$q_\mathrm{PAH} = 3.5$, $U_\mathrm{min} = 1.0$, and $\gamma = 0.01$,
+$q_\mathrm{PAH} = 3.5$, $U_\mathrm{min} = 1.0$, and $\gamma = 0.01$\deleted{,}
 and normalize our IR template to unit bolometric luminosity.
 
 There is no AGN-like emission (either continuum or emission lines) in
