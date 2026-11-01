@@ -297,7 +297,7 @@ earlier EDR and DR1 catalogs.
 We adopt a flat $\Lambda$CDM cosmology with $\Omega_m = 0.315$,
 consistent with \citet{planck-collaboration20a}, and a
 \citet{chabrier03a} initial mass function (IMF) spanning
-$0.1$--$100$~\msun; we define $h \equiv H_0 / (100~\kms\,\textrm{Mpc}^{-1})$
+$0.08$--$120$~\msun; we define $h \equiv H_0 / (100~\kms\,\textrm{Mpc}^{-1})$
 and express stellar masses and other derived quantities
 in units with $h=1$.
 
@@ -585,8 +585,8 @@ Synthesis\footnote{\url{https://github.com/moustakas/fsps}}
 interface. We construct these models using a custom version of the
 \texttt{C3K} theoretical spectral library,
 \texttt{C3K\_R3K}\footnote{\url{https://github.com/moustakas/c3k}},
-the MIST stellar isochrones \citep{choi16a, dotter16a}, and a
-\citet{chabrier03a} IMF from $0.1$--$100$~\msun. The \texttt{C3K\_R3K}
+the MIST \added{v1.0 }stellar isochrones \citep{choi16a, dotter16a}, and a
+\citet{chabrier03a} IMF from $0.08$--$120$~\msun. The \texttt{C3K\_R3K}
 library spans 100~\AA{} to 1000~$\mu$m. In the rest-frame optical
 (3500--9800~\AA) it has $\mathcal{R}_{\mathrm{C3K}} \approx 7065$,
 corresponding to a Gaussian line-spread function with
@@ -603,9 +603,11 @@ templates spanning fixed lookback-time bins, each assuming a constant
 star-formation rate over its duration. The two youngest bins span
 0--30~Myr and 30--100~Myr (with upper edges at
 $\log_{10}(t/\mathrm{yr}) = 7.48$ and $8.0$, respectively),
-while the three oldest bins are logarithmically spaced between 100~Myr
+while the \replaced{three oldest bins are logarithmically spaced between 100~Myr
 and 13.7~Gyr with binning 0.1--1.1~Gyr, 1.1--11.6~Gyr, and
-11.6--13.7~Gyr (Figure~\ref{fig:sps}). We generate templates at fixed
+11.6--13.7~Gyr}{next two bins are logarithmically spaced between 100~Myr
+and 11.6~Gyr (0.1--1.1~Gyr and 1.1--11.6~Gyr) and the oldest bin spans
+11.6--13.7~Gyr, the last 15\% of a 13.7~Gyr cosmic age} (Figure~\ref{fig:sps}). We generate templates at fixed
 solar metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no
 $\alpha$-element enhancement), in two parallel variants---one
 including and one excluding nebular emission (continuum and lines)
@@ -743,8 +745,8 @@ in the final fitting pass, described in \S\ref{sssec:kinematic}).
   patch label. For this particular object, a significant broad \ha{}
   Balmer line was correctly identified, resulting in patches ``m'' and
   ``p'' and patches ``t'' and ``u'' merging into larger patches ``mp''
-  and ``tu'', respectively, and more aggressive (conservative)
-  line-masking. \label{fig:linemasker}}
+  and ``tu'', respectively, and \replaced{more aggressive (conservative)
+  line-masking}{wider line masks}. \label{fig:linemasker}}
 \end{figure*}
 
 %Each patch groups lines whose wavelength windows overlap or nearly
@@ -767,7 +769,7 @@ lines are tied together into a single kinematic group (shared velocity
 width and velocity center) anchored on \oiiilam, while all the narrow
 Balmer and \hei{} lines are anchored on \ha{} in a second
 kinematic group (see \S\ref{sssec:kinematic} for more details). Then,
-we define a pixel window of $\pm2.5\,\sigma_\mathrm{line}$ centered on
+we define a pixel window of $\pm5\,\sigma_\mathrm{line}$ centered on
 each line's expected observed-frame wavelength, where
 $\sigma_\mathrm{line}$ is that line's current velocity-width
 estimate. We iteratively update $\sigma_\mathrm{line}$, beginning with
@@ -777,7 +779,9 @@ and grow a surrounding continuum window until at least 11 unmasked
 pixels are available. When this adaptive growth causes two spectrally
 adjacent patches' continuum windows to overlap by more than 11 pixels,
 we merge them into a single patch, sharing one local continuum and the
-union of both patches' lines.
+union of both patches' lines. \added{We run two such iterations in total,
+updating the line-pixel windows with the best-fit velocity shifts and
+widths before the second pass.}
 
 %We run two such iterations in total, updating the line-pixel windows
 %with the best-fit velocity shifts and widths before the second pass.
@@ -804,20 +808,27 @@ at 1000~\kms. In this fitting mode, all the ``strong'' broad Balmer
 lines are kinematically tied together, separately from the two
 previously described narrow-line kinematic groups (see also
 \S\ref{sssec:kinematic}). After this fitting pass, if any broad Balmer
-line reaches $\mathrm{S/N} > 1.5$ we adopt the narrow+broad
-line-widths for masking, and otherwise retain the narrow-only widths.
+line reaches $\mathrm{S/N} > 1.5$\added{,} we adopt the narrow+broad
+line-widths for masking\replaced{, and otherwise retain}{; otherwise, we
+retain} the narrow-only widths. \added{Here, S/N is the fitted peak
+amplitude divided by the robust standard deviation of the
+line-subtracted residuals in that patch.}
 
 With the robustly estimated line-widths, we can now build the complete
 line-mask. Iterating over all the lines in the observed spectral range
 (not just the initial set of candidate strong lines), we robustly
 estimate each line's signal-to-noise ratio by comparing its peak
-amplitude against the variance of the pixels in its surrounding local
+amplitude against the \replaced{variance of the pixels}{robust standard
+deviation of the line-subtracted residuals} in its surrounding local
 continuum, and discard ``weak'' lines with $\mathrm{S/N} < 3.5$ from
 further consideration, in order to avoid over-masking the continuum
 spectrum. For the surviving lines, we adopt a
 $\pm5\,\sigma_\mathrm{line}$ window, centered on each line's expected
 wavelength and sized using its converged velocity width and velocity
-shift, to build the final pixel mask.
+shift, to build the final pixel mask. \added{Regardless of the outcome
+of the broad-line test, we floor the broad Balmer line-width at
+1000~\kms{} when building this mask, so that the final emission-line
+fit (\S\ref{sssec:kinematic}) can remeasure any broad component.}
 
 %We keep this pass deliberately fast and approximate---fitting a simple
 %linear local continuum per patch rather than the full SPS template,
@@ -835,7 +846,7 @@ single ``mp'' patch, and the ``t'' (\ha{} and \niidoublet) and ``u''
 (\siidoublet) patches merge into ``tu'', because their adaptive
 continuum windows overlap by more than 11 pixels. The line-masker also
 detects broad Balmer line-emission in this target, so the
-corresponding patches are masked more conservatively, using the
+corresponding patches are masked \replaced{more conservatively}{with wider windows}, using the
 narrow+broad kinematic model described above.
 
 %This object-by-object sensitivity to broad-line emission is precisely

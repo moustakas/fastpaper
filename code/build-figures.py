@@ -68,7 +68,7 @@ def sps_models(verbose=False):
     #    return f'{age_yr/1e6:.0f} Myr' if age_yr < 1e9 else f'{age_yr/1e9:.0f} Gyr'
 
     agebins = ['0\u201330 Myr', '30\u2013100 Myr', '0.1\u20131.1 Gyr',
-               '1.1\u20131.6 Gyr', '11.6\u201313.7 Gyr']
+               '1.1\u201311.6 Gyr', '11.6\u201313.7 Gyr']
 
     plot_style(talk=True, font_scale=1.1, palette='colorblind')
 
