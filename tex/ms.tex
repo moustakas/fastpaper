@@ -598,7 +598,7 @@ defines a ``tile'', the basic unit of the survey's observing (tiling)
 strategy \citep{schlafly23a}. The three cameras sense blue (B:
 3600--5930~\AA), red (R: 5600--7720~\AA), and near-IR (Z:
 7470--9824~\AA) light\deleted{,} at a spectral resolution of
-$\mathcal{R}\equiv\lambda/\Delta\lambda \approx 2000-3500$,
+$\mathcal{R}\equiv\lambda/\Delta\lambda_\mathrm{FWHM} \approx 2000-3500$,
 $3400-4800$, and $3800-5200$, respectively \citep{desi-collaboration22a}.
 
 \citet{guy23a} describe the DESI spectroscopic pipeline in detail (see
@@ -859,10 +859,10 @@ the MIST stellar isochrones \citep[\added{v1.0;}][]{choi16a,
   dotter16a}, and a \citet{chabrier03a} IMF from
 $0.08$--$120$~\msun. The \texttt{C3K\_R3K} library spans 100~\AA{} to
 1000~$\mu$m. In the rest-frame optical (3500--9800~\AA) it has
-$\mathcal{R}_{\mathrm{C3K}} \approx 7065$, corresponding to a Gaussian
+$\mathcal{R}_{\mathrm{C3K}} \approx 3000$, corresponding to a Gaussian
 line-spread function with
-$\sigma_\mathrm{C3K}=c/\mathcal{R}_\mathrm{C3K}=42$~\kms{}
-($\lambda/\mathrm{FWHM}=3000$), sampled in constant-velocity $\Delta
+$\sigma_\mathrm{C3K}=c/(2.355\,\mathcal{R}_\mathrm{C3K})=42$~\kms{},
+sampled in constant-velocity $\Delta
 v=50$~\kms{} pixels. At shorter and longer wavelengths\added{,} our
 models have lower resolution and sparser wavelength sampling, which
 keeps the UV-to-IR template lightweight for synthetic photometry and
@@ -1358,15 +1358,15 @@ conserves bolometric luminosity,
   \label{eq:ftot}
 \end{equation}
 
-For an object at redshift $z$ with luminosity distance $D_L$ (in Mpc),
-we relate each rest-frame template to its observed-frame counterpart
-via
+For an object at redshift $z$ with luminosity distance
+$D_L$\deleted{ (in Mpc)}, we relate each rest-frame template to its
+observed-frame counterpart via
 \begin{equation}
   S_n^\mathrm{obs}(\lambda)
   =
   T_\mathrm{IGM}(\lambda,z)\,
-  \frac{\mathcal{F}_0\,\mathcal{M}_0}
-       {4\pi\,(3.086\times10^{24}\,D_L)^2}
+  \mathcal{F}_0\,\mathcal{M}_0
+  \left(\frac{10\,\mathrm{pc}}{D_L}\right)^{2}
   \,\frac{S_n^\mathrm{tot}(\lambda/(1+z))}{1+z},
   \label{eq:zfactor}
 \end{equation}
@@ -3108,7 +3108,7 @@ spectrum with \texttt{pPXF} \citep[v8.2.4;][]{cappellari23a} using the
 empirical Indo-US Coud\'e Feed stellar library
 \citep[$\sigma_{\mathrm{Indo-US}}=30$~\kms;][]{valdes04a}, restricted
 to the DESI B camera ($\approx$3600--5550~\AA,
-$\sigma_{\mathrm{B}}\approx 85-150$~\kms; see
+$\sigma_{\mathrm{B}}\approx 35-65$~\kms; see
 \S\ref{ssec:spectra}). By comparison, our theoretical
 \texttt{C3K\_R3K} templates have $\sigma_\mathrm{C3K}=42$~\kms{}
 (\S\ref{ssec:templates}) and we fit \vdisp{} over a slightly different
@@ -3133,7 +3133,7 @@ $\sigma_{\mathrm{B}}\approx 85-150$~\kms; see
   $\mathtt{NMAD}\approx0.4$~dex for ELG targets. The median offsets
   and scatter are consistent with expectations from different
   (non-parametric versus parametric) SFH priors \citep{leja19b,
-    leja20a}, and, more generally, from the stellar-library,
+    leja20a}\deleted{,} and, more generally, from the stellar-library,
   dust-attenuation, and other modeling choices that differ across
   independent SED-fitting codes. \label{fig:compare-mstar-external}}
 \end{figure*}
@@ -3220,6 +3220,10 @@ between \fastspec{} and three independent, CIGALE-based stellar-mass
 catalogs is very good, particularly given the different data
 (photometry only versus spectrophotometry), templates, and
 star-formation-history parameterizations involved.
+
+\todo{Add a sentence pointing to the PROVABGS comparison in the GQP
+  DR2 Key Paper (Saulder CWR comment; the response says this was
+  added).}
 
 %\todo{Could also check K-corrections against k-correct?}
 
