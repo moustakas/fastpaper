@@ -454,9 +454,12 @@ DESI. Existing codes also do not take advantage of the DESI resolution
 matrix, which compactly encodes the instrumental resolution and
 guarantees uncorrelated uncertainties from \replaced{pixel-to-pixel}{pixel to pixel}
 \citep{bolton10a, guy23a}; instead, they generally resample spectra
-onto a common wavelength grid or into the rest frame, which violates
-one of the core assumptions underpinning maximum-likelihood fitting by
-introducing off-diagonal terms into the pixel covariance matrix.
+onto a common wavelength grid or into the rest frame, which
+\replaced{violates one of the core assumptions underpinning
+maximum-likelihood fitting by introducing off-diagonal terms into the
+pixel covariance matrix}{correlates the uncertainties of neighboring
+pixels, correlations that most codes then ignore by treating each
+pixel as independent}.
 
 \fastspecfit\footnote{\url{https://fastspecfit.readthedocs.io/en/latest}}
 has been developed to meet both these challenges, scaling efficiently
@@ -487,20 +490,24 @@ imposes only minimal priors: non-negative stellar population
 coefficients, an energy-conserving dust model, and a freely fitted
 stellar velocity dispersion bounded widely enough to accommodate the
 full spectral diversity of DESI targets. In exchange for speed and
-robustness at low signal-to-noise (S/N) ratio, we deliberately fix
-other ingredients, including the stellar metallicity, the slope of the
-attenuation curve, and the infrared (IR) dust-emission parameters
-(\S\ref{ssec:templates}, \S\ref{sssec:fitting}). The emission-line
-model is similarly flexible, supporting independent narrow and broad
-kinematic components and capturing the broad Balmer-line emission that
-distinguishes type~1 AGN whenever the data require it. Unlike codes
-that target a specific class or spectral type, \fastspecfit{} applies
-this same machinery uniformly to every spectrum, without assuming in
-advance whether the target is quiescent, star-forming, \deleted{a }post-starburst, or hosts an AGN. This flexibility minimizes
-classification-driven selection effects and maximizes the discovery
-potential of a dataset as large and diverse as DESI, where unusual or
-physically ambiguous objects emerge naturally from the fit rather than
-requiring special-case handling.
+robustness at low signal-to-noise (S/N) ratio, \replaced{we
+  deliberately fix}{the default configuration we adopt deliberately
+  fixes} other ingredients, including the stellar metallicity, the
+slope of the attenuation curve, and the infrared (IR) dust-emission
+parameters (\S\ref{ssec:templates}, \S\ref{sssec:fitting})\added{,
+  although users can relax most of these choices with custom templates
+  (\S\ref{sec:modes})}. The emission-line model is similarly flexible,
+supporting independent narrow and broad kinematic components and
+capturing the broad Balmer-line emission that distinguishes type~1 AGN
+whenever the data require it. Unlike codes that target a specific
+class or spectral type, \fastspecfit{} applies this same machinery
+uniformly to every spectrum, without assuming in advance whether the
+target is quiescent, star-forming, \deleted{a }post-starburst, or
+hosts an AGN. This flexibility minimizes classification-driven
+selection effects and maximizes the discovery potential of a dataset
+as large and diverse as DESI, where unusual or physically ambiguous
+objects emerge naturally from the fit rather than requiring
+special-case handling.
 
 Although this paper presents the first comprehensive description of
 \fastspecfit{}'s algorithms, measurements from the earlier EDR and DR1
@@ -874,8 +881,22 @@ and 11.6~Gyr (0.1--1.1~Gyr and 1.1--11.6~Gyr) and the oldest bin spans
 11.6--13.7~Gyr, the last 15\% of a 13.7~Gyr cosmic age} (Figure~\ref{fig:sps}). We generate templates at fixed
 solar metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no
 $\alpha$-element enhancement), in two parallel variants---one
-including and one excluding nebular emission (continuum and lines)
-from the FSPS built-in nebular photoionization grid \citep{byler17a}.
+\replaced{including and one excluding nebular emission (continuum and
+lines)}{with and one without nebular emission lines, both including
+the nebular continuum}---from the FSPS built-in nebular
+photoionization grid \citep{byler17a}. \added{We need both variants
+because the broadband photometry includes any nebular line emission,
+whereas we model the emission lines in the spectrum separately
+(\S\ref{ssec:emlines}). We therefore use the variant with emission
+lines in the joint spectrophotometric fit (\S\ref{sssec:fitting}),
+where masking line-contaminated pixels restricts its effect to the
+synthetic photometry, and for K-corrections
+(\S\ref{ssec:quantities}). We use the variant without emission lines
+everywhere else, including the velocity-dispersion fit
+(\S\ref{sssec:vdisp}), the continuum model we subtract before fitting
+the emission lines, and continuum-derived quantities such as
+$D_n(4000)$ and the monochromatic luminosities
+(\S\ref{ssec:quantities}).}
 
 We index the resulting rest-frame templates $S_n(\lambda)$, $n =
 1,\ldots,n_\mathrm{template}$ (with $n_\mathrm{template}=5$)\deleted{,} by
@@ -1550,8 +1571,16 @@ peculiar ($\Delta v$) motion of the line-emitting gas,
   \label{eq:lstar}
 \end{equation}
 and $\sigma_\ell = \sigma/c$ is the line width in ln-$\lambda$ units,
-where $\sigma$ (in \kms) is the physical (Doppler) line-width. With
-this parameterization, the total flux of each line (in \flux) is
+where $\sigma$ (in \kms) is the physical (Doppler) line-width.
+\added{Because $\Delta v$ enters equation~(\ref{eq:lstar}) additively,
+it equals $c\,\Delta\lambda/\lambda_\mathrm{rest}$, where
+$\Delta\lambda = \lambda^*-\lambda_\mathrm{rest}(1+z)$ is the
+observed-frame offset of the line, and so exceeds the rest-frame
+velocity $v$ of the gas relative to the systemic redshift by a factor
+of $1+z$, $\Delta v = (1+z)\,v$; users should therefore divide
+\texttt{VSHIFT} by $1+z$ to recover $v$. By contrast, $\sigma$ requires
+no such correction because redshifting the line only translates it in
+$\ln\lambda$.} With this parameterization, the total flux of each line (in \flux) is
 \begin{equation}
   \Phi = \sqrt{2\pi}\,A\,\lambda^*\,\sigma_\ell
        = \sqrt{2\pi}\,A\,\lambda^*\,\frac{\sigma}{c},
@@ -2045,9 +2074,11 @@ coefficient-weighted average of the age-bin midpoints $t_n$ (in Gyr),
   \label{eq:age}
 \end{equation}
 Because the coefficients $c_n$ represent formed stellar mass rather
-than surviving mass or luminosity, $\langle t_\star\rangle$ is neither
-a strictly light-weighted nor a strictly (surviving-)mass-weighted
-age, but falls between the two.
+than surviving mass or luminosity, $\langle t_\star\rangle$
+\replaced{is neither a strictly light-weighted nor a strictly
+(surviving-)mass-weighted age, but falls between the two}{weights
+older stellar populations more heavily than either a light-weighted
+or a surviving-mass-weighted age, and so is at least as old as both}.
 
 Next, we compute K-corrections and rest-frame absolute magnitudes by
 synthesizing photometry from the best-fitting continuum model
