@@ -374,6 +374,8 @@
 \email{a.saintonge@ucl.ac.uk}
 \affiliation{Department of Physics and Astronomy, University College
   London, Gower Street, London, WC1E 6BT, UK}
+\affiliation{Max-Planck-Institut f\"{u}r Radioastronomie, Auf dem
+  H\"{u}gel 69, 53121 Bonn, Germany}
 
 \author[0000-0002-9646-8198]{Eusebio Sanchez}
 \email{eusebio.sanchez@ciemat.es}
@@ -437,34 +439,33 @@ Early Data Release and Data Release 1.
 \keywords{\uat{Astronomy software}{1855} --- \uat{Catalogs}{205} ---
   \uat{Redshift surveys}{1378} --- \uat{Spectrophotometry}{1556}}
 
-\todo{Author list issues (need to confirm everything):
-  \begin{itemize}
-  \item No ORCID (probably correct, but need to double-check): Brooks,
-    Claybaugh, Doel, Gutierrez, Miquel, Rossi, Schlegel, Weaver.
-  \item Saintonge: dropped second affiliation of ``None''
-  \item Hagen: Utah affiliation but a uwlax.edu email (??)
-  \item Leauthaud: two near-identical affiliations; dropped the UCSC
-    95065 entry, kept UCO/Lick 95064. ---confirmed---
-  \item Honscheid and Martini: dropped the third, incomplete (no
-    department listed) OSU affiliation.
-  \item Hahn: missing city (added ``Austin'').
-  \item Ahlen: added a comma before ``USA''.
-  \item Hadzhiyska: missing department name (added ``Department of
-    Physics'') and added missing comma after ``\#5800''; both
-    affiliations have Princeton alumni email address (correct??).
-  \item Lamman: missing department and street address (adopted Martini
-    and Honscheid OSU entries).
-  \item Kirkby: missing street address, including city and state
-    (added ``2115 Frederick Reines Hall, Irvine, CA''). ---confirmed---
-  \item de la Macorra: added missing comma before ``C.~P.~04510''
-    (??)
-  \item Rosell: one affiliation has ``E-38206, La Laguna'' and the
-    other has ``E-38205 La Laguna'', but I'm not sure which one is
-    right??
-  \item Font-Ribera, Manera, Miquel: removed stray comma after
-    ``08193`` in IFAE affiliation, but need to confirm. ---confirmed---
-  \end{itemize}}
-
+%\todo{Author list issues (need to confirm everything):
+%  \begin{itemize}
+%  \item No ORCID (probably correct, but need to double-check): Brooks,
+%    Claybaugh, Doel, Gutierrez, Miquel, Rossi, Schlegel, Weaver.
+%  \item Saintonge: dropped second affiliation of ``None''
+%  \item Hagen: Utah affiliation but a uwlax.edu email (??)
+%  \item Leauthaud: two near-identical affiliations; dropped the UCSC
+%    95065 entry, kept UCO/Lick 95064. ---confirmed---
+%  \item Honscheid and Martini: dropped the third, incomplete (no
+%    department listed) OSU affiliation.
+%  \item Hahn: missing city (added ``Austin'').
+%  \item Ahlen: added a comma before ``USA''.
+%  \item Hadzhiyska: missing department name (added ``Department of
+%    Physics'') and added missing comma after ``\#5800''; both
+%    affiliations have Princeton alumni email address (correct??).
+%  \item Lamman: missing department and street address (adopted Martini
+%    and Honscheid OSU entries).
+%  \item Kirkby: missing street address, including city and state
+%    (added ``2115 Frederick Reines Hall, Irvine, CA''). ---confirmed---
+%  \item de la Macorra: added missing comma before ``C.~P.~04510''
+%    (??)
+%  \item Rosell: one affiliation has ``E-38206, La Laguna'' and the
+%    other has ``E-38205 La Laguna'', but I'm not sure which one is
+%    right??
+%  \item Font-Ribera, Manera, Miquel: removed stray comma after
+%    ``08193`` in IFAE affiliation, but need to confirm. ---confirmed---
+%  \end{itemize}}
 
 %% ============================================================
 \section{Introduction}
@@ -3943,6 +3944,8 @@ in this paper) since 2022 August. In \S\ref{sec:intro} we cite just a
 small fraction of the publications which have resulted from these
 datasets.
 
+\input{tables/table-vac-history}
+
 In Table~\ref{table:vac-history} we document this history by listing
 the current set of \fastspec{} and \fastphot{} VACs, the date they
 were released, and the templates and version of \fastspecfit{} which
@@ -3952,7 +3955,6 @@ algorithmic changes, major bug fixes, and much more, we refer to the
 detailed \fastspecfit{} change log and release
 notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/changes.rst}}
 
-\input{tables/table-vac-history}
 
 %An earlier Loa (DR2) build (\texttt{v1.0}, \fastspecfit{}~v3.1.4) was
 %released internally to DESI collaboration members via NERSC---and

@@ -1696,6 +1696,228 @@ def broadhalpha_fraction_bgs(survey='sv3', specprod=DEFAULT_SPECPROD,
 
 
 # ---------------------------------------------------------------------------
+# vac-compare-table
+# ---------------------------------------------------------------------------
+
+# Earlier fastspec VACs compared to Loa/v2.0, in table-column order. Must
+# match VAC_COMPARE in prepare-external.py.
+VAC_COMPARE_COLUMNS = [
+    ('iron', 'v3.0', r'\texttt{Iron/v3.0}'),
+    ('iron', 'v2.1', r'\texttt{Iron/v2.1}'),
+    ('fuji', 'v3.2', r'\texttt{Fuji/v3.2}'),
+]
+
+VAC_COMPARE_SNRMIN  = 3.0     # minimum S/N (both catalogs) for line fluxes and VDISP
+VAC_COMPARE_MINN    = 20      # minimum number of objects to report a statistic
+VAC_COMPARE_OUTLIER = 0.3     # |Δ| threshold for the printed outlier fraction
+
+
+def _vac_col(cat, col, tag=None):
+    """Return a column from the Loa side (tag=None) or an earlier VAC as float64."""
+    name = col if tag is None else f'{col}_{tag}'
+    return np.asarray(cat[name], dtype=np.float64)
+
+
+def _vac_delta_diff(col, positive=False):
+    """Δ = Loa - earlier VAC, for a quantity that is already logarithmic or a magnitude."""
+    def _delta(cat, tag):
+        new, old = _vac_col(cat, col), _vac_col(cat, col, tag)
+        ok = np.isfinite(new) & np.isfinite(old) & (new != 0) & (old != 0)
+        if positive:
+            ok &= (new > 0) & (old > 0)
+        return new - old, ok
+    return _delta
+
+
+def _vac_delta_log(col, ivar=False):
+    """Δ = log10(Loa / earlier VAC); if `ivar`, also require S/N > VAC_COMPARE_SNRMIN in both."""
+    def _delta(cat, tag):
+        new, old = _vac_col(cat, col), _vac_col(cat, col, tag)
+        ok = (new > 0) & (old > 0)
+        if ivar:
+            snr_new = new * np.sqrt(np.clip(_vac_col(cat, f'{col}_IVAR'), 0., None))
+            snr_old = old * np.sqrt(np.clip(_vac_col(cat, f'{col}_IVAR', tag), 0., None))
+            ok &= (snr_new > VAC_COMPARE_SNRMIN) & (snr_old > VAC_COMPARE_SNRMIN)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            delta = np.log10(new / old)
+        return delta, ok & np.isfinite(delta)
+    return _delta
+
+
+def _vac_delta_oii(cat, tag):
+    """Δ = log10(Loa / earlier VAC) for the summed [OII] 3726,29 doublet flux."""
+    def _oii(t):
+        flux = _vac_col(cat, 'OII_3726_FLUX', t) + _vac_col(cat, 'OII_3729_FLUX', t)
+        ia = np.clip(_vac_col(cat, 'OII_3726_FLUX_IVAR', t), 0., None)
+        ib = np.clip(_vac_col(cat, 'OII_3729_FLUX_IVAR', t), 0., None)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            ivar = np.where(ia + ib > 0, ia * ib / (ia + ib), 0.)
+        return flux, flux * np.sqrt(ivar)
+
+    new, snr_new = _oii(None)
+    old, snr_old = _oii(tag)
+    ok = ((new > 0) & (old > 0) &
+          (snr_new > VAC_COMPARE_SNRMIN) & (snr_old > VAC_COMPARE_SNRMIN))
+    with np.errstate(divide='ignore', invalid='ignore'):
+        delta = np.log10(new / old)
+    return delta, ok & np.isfinite(delta)
+
+
+# (table label, target classes, delta function). Each delta function returns
+# (Δ, ok) with Δ = Loa minus the earlier VAC.
+VAC_COMPARE_QUANTITIES = [
+    (r'$\Delta\log_{10}\Mstar$',          ['BGS', 'LRG', 'ELG'], _vac_delta_diff('LOGMSTAR', positive=True)),
+    (r'$\Delta\log_{10}\mathrm{SFR}$',    ['BGS', 'LRG', 'ELG'], _vac_delta_log('SFR')),
+    (r'$\Delta D_n(4000)$',               ['BGS', 'LRG', 'ELG'], _vac_delta_diff('DN4000', positive=True)),
+    (r'$\Delta\,{}^{0.1}\!M_r$',          ['BGS', 'LRG', 'ELG'], _vac_delta_diff('ABSMAG01_SDSS_R')),
+    (r'$\Delta\log_{10}\vdisp$',          ['BGS', 'LRG'],        _vac_delta_log('VDISP', ivar=True)),
+    (r'$\Delta\log_{10}F$(\ha)',          ['BGS'],               _vac_delta_log('HALPHA_FLUX', ivar=True)),
+    (r'$\Delta\log_{10}F$(\oiiilam)',     ['BGS', 'ELG'],        _vac_delta_log('OIII_5007_FLUX', ivar=True)),
+    (r'$\Delta\log_{10}F$(\oiidoublet)',  ['ELG'],               _vac_delta_oii),
+]
+
+
+def _read_vaccompare(specprod, version):
+    """Read and stack the sv3 bright+dark matched catalogs from prepare-external.py --vacs."""
+    extdir = os.path.join(REPODIR, 'external')
+    cats = []
+    for program in ['bright', 'dark']:
+        infile = os.path.join(extdir, f'vaccompare-{specprod}-{version}-sv3-{program}.fits')
+        if not os.path.isfile(infile):
+            raise FileNotFoundError(f'{infile} not found; run '
+                                    f'prepare-external.py --vacs first.')
+        cats.append(Table.read(infile))
+    return vstack(cats, metadata_conflicts='silent')
+
+
+def vac_compare_table(verbose=False):
+    """Appendix B table: Loa/v2.0 minus earlier fastspec VACs for SV3 targets.
+
+    For each earlier VAC (VAC_COMPARE_COLUMNS) and each target class, keep
+    objects that pass that class's redshift-quality cut
+    (good_redshift_by_class) in *both* catalogs and whose redshifts agree to
+    |Δv| < 1000 km/s, then report the median and NMAD of Δ = Loa - earlier
+    VAC for each quantity in VAC_COMPARE_QUANTITIES.
+
+    The fraction of objects whose redshift changed by more than 1000 km/s
+    (per class, including QSO targets) is printed and recorded as a comment
+    block at the top of the output table, along with N and the outlier
+    fraction for every cell.
+
+    Writes tex/tables/table-vac-compare.tex.
+
+    """
+    from desitarget.sv3.sv3_targetmask import desi_mask
+    C_LIGHT, MAX_DV_KMS = 2.998e5, 1000.
+
+    zcols = ['Z', 'ZWARN', 'DELTACHI2', 'SPECTYPE', 'COADD_FIBERSTATUS',
+             'OII_3726_FLUX', 'OII_3729_FLUX', 'OII_3726_FLUX_IVAR', 'OII_3729_FLUX_IVAR']
+    targcols = ['SV3_DESI_TARGET', 'SV3_BGS_TARGET', 'SV3_MWS_TARGET']
+
+    # stats[(label, cls)][vac index] = (N, median, NMAD, outlier fraction)
+    stats = {}
+    log = []
+
+    for ivac, (specprod, version, _) in enumerate(VAC_COMPARE_COLUMNS):
+        tag = f"{specprod.upper()}_{version.upper().replace('.', '')}"
+        cat = _read_vaccompare(specprod, version)
+        if verbose:
+            print(f'{specprod}/{version}: {len(cat):,} matched sv3 objects')
+
+        # Redshift-quality masks for both catalogs; the earlier VAC's view
+        # borrows the (unchanged) SV3 targeting bits from the Loa side.
+        old = Table({col: cat[f'{col}_{tag}'] for col in zcols})
+        for col in targcols:
+            old[col] = cat[col]
+        masks_new = good_redshift_by_class(cat, 'sv3')
+        masks_old = good_redshift_by_class(old, 'sv3')
+
+        dv = np.abs(_vac_col(cat, 'Z') - _vac_col(cat, 'Z', tag)) * C_LIGHT
+        z_ok = dv < MAX_DV_KMS
+
+        log.append(f'{specprod}/{version}: fraction with |dv| > {MAX_DV_KMS:.0f} km/s '
+                   f'(good redshift in both)')
+        samples = {}
+        for cls in ['BGS', 'LRG', 'ELG']:
+            both = masks_new[cls] & masks_old[cls]
+            nboth = int(both.sum())
+            frac = (both & ~z_ok).sum() / max(nboth, 1)
+            log.append(f'  {cls}: {100. * frac:.2f}% of {nboth:,}')
+            samples[cls] = both & z_ok
+
+        is_qso = (cat['SV3_DESI_TARGET'] & int(desi_mask['QSO'])) != 0
+        qso = is_qso & (cat['ZWARN'] == 0) & (old['ZWARN'] == 0)
+        nqso = int(qso.sum())
+        frac = (qso & ~z_ok).sum() / max(nqso, 1)
+        log.append(f'  QSO (ZWARN=0 in both): {100. * frac:.2f}% of {nqso:,}')
+
+        for label, classes, deltafn in VAC_COMPARE_QUANTITIES:
+            delta, ok = deltafn(cat, tag)
+            for cls in classes:
+                sel = samples[cls] & ok
+                d = delta[sel]
+                if len(d) < VAC_COMPARE_MINN:
+                    stats.setdefault((label, cls), {})[ivac] = (len(d), np.nan, np.nan, np.nan)
+                    continue
+                med = np.median(d)
+                stats.setdefault((label, cls), {})[ivac] = (
+                    len(d), med, nmad(d), np.mean(np.abs(d) > VAC_COMPARE_OUTLIER))
+
+    # per-cell detail, printed and recorded in the table file
+    log.append(f'Per-cell N, median, NMAD, f(|delta| > {VAC_COMPARE_OUTLIER})')
+    for label, classes, _ in VAC_COMPARE_QUANTITIES:
+        for cls in classes:
+            for ivac, (specprod, version, _) in enumerate(VAC_COMPARE_COLUMNS):
+                n, med, sig, fout = stats[(label, cls)][ivac]
+                log.append(f'  {label} {cls} {specprod}/{version}: N={n:,} '
+                           f'median={med:+.4f} NMAD={sig:.4f} fout={fout:.4f}')
+    print('\n'.join(log))
+
+    def _fmt(med, sig):
+        if not np.isfinite(med):
+            return r'\nodata & \nodata'
+        return f'${med:+.3f}$ & ${sig:.3f}$'
+
+    ncomp = len(VAC_COMPARE_COLUMNS)
+    lines = ['% Generated by code/build-figures.py --vac-compare-table; do not edit by hand.']
+    lines += [f'% {line}' for line in log]
+    lines += [
+        r'\begin{deluxetable*}{ll' + 'rr' * ncomp + '}',
+        r'\tablecaption{Comparison of \texttt{Loa/v2.0} with Earlier \fastspec{} VACs\label{table:vac-compare}}',
+        r'\tablewidth{0pt}',
+        r'\tablehead{',
+        r'  \colhead{} & \colhead{} & ' +
+        ' & '.join(rf'\multicolumn2c{{{name}}}' for _, _, name in VAC_COMPARE_COLUMNS) + r' \\',
+        '  ' + ' '.join(rf'\cline{{{3 + 2 * i}-{4 + 2 * i}}}' for i in range(ncomp)),
+        r'  \colhead{Quantity} & \colhead{Class} & ' +
+        ' & '.join([r'\colhead{$\Delta$} & \colhead{$\sigma$}'] * ncomp),
+        r'}',
+        r'\startdata',
+    ]
+    for iq, (label, classes, _) in enumerate(VAC_COMPARE_QUANTITIES):
+        if iq > 0:
+            lines.append(r'\hline')
+        for icls, cls in enumerate(classes):
+            cells = [_fmt(*stats[(label, cls)][ivac][1:3]) for ivac in range(ncomp)]
+            lines.append(f"{label if icls == 0 else ''} & {cls} & " + ' & '.join(cells) + r' \\')
+    lines += [
+        r'\enddata',
+        r'\tablecomments{Median difference ($\Delta$; \texttt{Loa/v2.0} minus the earlier VAC) '
+        r'and normalized median absolute deviation ($\sigma$) for SV3 targets with a '
+        r'good redshift (\S\ref{ssec:cuts}) in both catalogs and redshifts that agree '
+        rf'to within {MAX_DV_KMS:.0f}~\kms{{}}. Line fluxes and \vdisp{{}} require '
+        rf'$\mathrm{{S/N}}>{VAC_COMPARE_SNRMIN:.0f}$ in both catalogs.}}',
+        r'\end{deluxetable*}',
+    ]
+
+    tabledir = os.path.join(REPODIR, 'tex', 'tables')
+    outfile = os.path.join(tabledir, 'table-vac-compare.tex')
+    with open(outfile, 'w') as F:
+        F.write('\n'.join(lines) + '\n')
+    print(f'Wrote {outfile}')
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -1743,6 +1965,9 @@ def main():
                         help='Broad Hα detection fraction vs. stellar mass for BGS targets.')
     parser.add_argument('--binwidth', type=float, default=0.1,
                         help='Stellar mass bin width for broadhalpha-fraction-bgs [dex].')
+    parser.add_argument('--vac-compare-table', action='store_true',
+                        help='Appendix B table: Loa/v2.0 vs. earlier fastspec VACs (sv3; '
+                             'requires prepare-external.py --vacs).')
     #parser.add_argument('--no-flag-agn', dest='flag_agn', action='store_false',
     #                    help='Skip AGN flagging in sfr-mstar-bgs (include all objects).')
     parser.add_argument('--specprod', default=DEFAULT_SPECPROD,
@@ -1800,6 +2025,9 @@ def main():
     if args.broadhalpha_fraction_bgs:
         broadhalpha_fraction_bgs(specprod=args.specprod,
                                  binwidth=args.binwidth, verbose=args.verbose)
+
+    if args.vac_compare_table:
+        vac_compare_table(verbose=args.verbose)
 
 
 if __name__ == '__main__':

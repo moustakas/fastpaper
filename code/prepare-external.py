@@ -19,6 +19,7 @@ converted to h=1 and Chabrier IMF, ready for direct comparison.
 
 Usage (from repo root or code/):
     python code/prepare-external.py --zouhu [--specprod loa|iron] [--verbose]
+    python code/prepare-external.py --vacs [--verbose]   # earlier FastSpecFit VACs (Appendix B)
 
 """
 import os, sys, argparse
@@ -962,6 +963,110 @@ def prepare_emlinefit(survey=None, verbose=False, apply_mw_correction=False):
 
 
 # ---------------------------------------------------------------------------
+# Earlier FastSpecFit VACs (Appendix B release-to-release comparison)
+# ---------------------------------------------------------------------------
+
+# (specprod, version) of each earlier public fastspec VAC compared to Loa/v2.0.
+# Iron/v4.0 is omitted because it was built with the same code and templates
+# as Loa/v2.0.
+VAC_COMPARE = [
+    ('iron', 'v3.0'),
+    ('iron', 'v2.1'),
+    ('fuji', 'v3.2'),
+]
+
+# Columns read from every VAC (the reference and each earlier VAC). The
+# redshift-quality columns are carried through for the earlier VACs so that
+# good_redshift_by_class can be applied to both sides of each match.
+_VAC_COMPARE_COLS = [
+    'TARGETID', 'Z', 'ZWARN', 'DELTACHI2', 'SPECTYPE', 'COADD_FIBERSTATUS',
+    'LOGMSTAR', 'SFR', 'DN4000', 'DN4000_IVAR', 'VDISP', 'VDISP_IVAR',
+    'ABSMAG01_SDSS_R',
+    'OII_3726_FLUX', 'OII_3729_FLUX', 'OII_3726_FLUX_IVAR', 'OII_3729_FLUX_IVAR',
+    'HBETA_FLUX', 'HBETA_FLUX_IVAR', 'OIII_5007_FLUX', 'OIII_5007_FLUX_IVAR',
+    'HALPHA_FLUX', 'HALPHA_FLUX_IVAR',
+]
+
+
+def vac_tag(specprod, version):
+    """Column suffix for an earlier VAC, e.g. ('iron', 'v3.0') -> 'IRON_V30'."""
+    return f"{specprod.upper()}_{version.upper().replace('.', '')}"
+
+
+def prepare_vacs(verbose=False):
+    """Match the Loa/v2.0 fastspec VAC to earlier public fastspec VACs.
+
+    Sources (all read-only; see util._ARCHIVE_FASTSPEC):
+        Iron/v3.0 (fastspecfit 3.1.5, ftemplates-chabrier-2.0.0)
+        Iron/v2.1 (fastspecfit 2.5.0, ftemplates-chabrier-1.3.0)
+        Fuji/v3.2 (fastspecfit 2.5.0, ftemplates-chabrier-1.3.0)
+
+    Only SV3 (bright and dark) is used: the same targets appear in every
+    release, and the SV3 coadds draw on the same exposures in each specprod,
+    so the comparison is not confounded by changes in depth.
+
+    Objects are matched on TARGETID only; no redshift-consistency cut is
+    applied here, so that the fraction of objects whose redshift changed
+    between releases can be measured downstream (build-figures.py
+    --vac-compare-table). Every column in _VAC_COMPARE_COLS (other than
+    TARGETID) from the earlier VAC is copied through with a ``_{TAG}`` suffix
+    (see vac_tag), e.g. LOGMSTAR_IRON_V30.
+
+    Output files are named external/vaccompare-{specprod}-{version}-sv3-{program}.fits.
+
+    """
+    survey = 'sv3'
+    refcols = _VAC_COMPARE_COLS + _SV_TARGET_COLS[survey]
+
+    for program in ['bright', 'dark']:
+        try:
+            ref = read_fastspec(survey, program, specprod=DEFAULT_SPECPROD,
+                                columns=refcols, verbose=verbose)
+        except (FileNotFoundError, ValueError) as exc:
+            print(f'  {survey}/{program}: cannot read reference — {exc}, skipping')
+            continue
+
+        for specprod, version in VAC_COMPARE:
+            tag = vac_tag(specprod, version)
+            outfile = os.path.join(EXTDIR, f'vaccompare-{specprod}-{version}-{survey}-{program}.fits')
+            try:
+                old = read_fastspec(survey, program, specprod=specprod, version=version,
+                                    columns=_VAC_COMPARE_COLS, verbose=verbose)
+            except (FileNotFoundError, ValueError) as exc:
+                print(f'  {specprod}/{version} {survey}/{program}: cannot read — {exc}, skipping')
+                continue
+
+            # TARGETIDs should be unique within a merged survey/program
+            # catalog; drop any duplicates rather than match them ambiguously.
+            for name, cat in [('Loa/v2.0', ref), (f'{specprod}/{version}', old)]:
+                ndup = len(cat) - len(np.unique(cat['TARGETID']))
+                if ndup:
+                    print(f'    WARNING: {ndup:,} duplicate TARGETIDs in {name} {survey}/{program}')
+
+            _, i_ref, i_old = np.intersect1d(ref['TARGETID'], old['TARGETID'],
+                                             return_indices=True)
+            print(f'  {specprod}/{version} {survey}/{program}: {len(ref):,} Loa, '
+                  f'{len(old):,} {specprod}/{version}, {len(i_ref):,} matched → {outfile}')
+
+            out   = ref[i_ref].copy()
+            old_m = old[i_old]
+            for col in _VAC_COMPARE_COLS:
+                if col == 'TARGETID':
+                    continue
+                if col in old_m.colnames:
+                    out[f'{col}_{tag}'] = old_m[col]
+                else:
+                    print(f'    WARNING: {col} missing from {specprod}/{version}')
+
+            out.meta['REFVAC'] = f'{DEFAULT_SPECPROD}/v2.0'
+            out.meta['OLDVAC'] = f'{specprod}/{version}'
+            out.meta['OLDTAG'] = tag
+            out.write(outfile, overwrite=True)
+
+    print('Done.')
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -982,6 +1087,9 @@ def main():
                         help='Prepare the Ross et al. fundamental-plane catalog (DR1/iron only).')
     parser.add_argument('--emlinefit', action='store_true',
                         help='Prepare the DESI emission-line afterburner catalog (DR2/loa).')
+    parser.add_argument('--vacs', action='store_true',
+                        help='Match Loa/v2.0 to the Iron/v3.0, Iron/v2.1, and Fuji/v3.2 '
+                             'fastspec VACs (sv3 only).')
     parser.add_argument('--specprod', default=DEFAULT_SPECPROD,
                         help='Spectroscopic production name.')
     parser.add_argument('--survey', default=None, choices=['sv3', 'main'],
@@ -1007,6 +1115,9 @@ def main():
 
     if args.emlinefit:
         prepare_emlinefit(survey=args.survey, verbose=args.verbose)
+
+    if args.vacs:
+        prepare_vacs(verbose=args.verbose)
 
 
 if __name__ == '__main__':

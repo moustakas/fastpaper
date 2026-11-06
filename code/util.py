@@ -61,6 +61,19 @@ else:
 
 DEFAULT_SPECPROD = 'loa'
 
+# Earlier public fastspec VACs, read only for the release-to-release comparison
+# in Appendix B (see prepare-external.py --vacs). Keyed by (specprod, version);
+# values are (catalog directory, FITS extensions to join). Catalogs made with
+# fastspecfit<3.0 (data model 2.5.0) have no SPECPHOT extension.
+_ARCHIVE_FASTSPEC = {
+    ('iron', 'v3.0'): ('/dvs_ro/cfs/cdirs/desi/vac/dr1/fastspecfit/iron/v3.0/catalogs',
+                       ['METADATA', 'SPECPHOT', 'FASTSPEC']),
+    ('iron', 'v2.1'): ('/dvs_ro/cfs/cdirs/desi/vac/dr1/fastspecfit/iron/v2.1/catalogs',
+                       ['METADATA', 'FASTSPEC']),
+    ('fuji', 'v3.2'): ('/dvs_ro/cfs/cdirs/desi/vac/edr/fastspecfit/fuji/v3.2/catalogs',
+                       ['METADATA', 'FASTSPEC']),
+}
+
 # survey+program combinations split into 12 nside=1 healpix files
 _SPLIT_COMBOS = {('main', 'bright'), ('main', 'dark')}
 
@@ -89,16 +102,21 @@ _DEFAULT_COLUMNS = frozenset({
 })
 
 
-def _catfiles(specprod, vactype, survey, program):
-    """Return sorted list of catalog paths for a specprod/survey/program combination."""
-    cfg = _SPECPROD_CONFIG.get(specprod)
-    if cfg is None:
-        raise ValueError(f'Unknown specprod {specprod!r}. '
-                         f'Known specprods: {list(_SPECPROD_CONFIG)}')
-    vacdir = cfg[vactype]
+def _catfiles(specprod, vactype, survey, program, vacdir=None):
+    """Return sorted list of catalog paths for a specprod/survey/program combination.
+
+    If `vacdir` is given, it overrides the directory from _SPECPROD_CONFIG.
+
+    """
     if vacdir is None:
-        raise ValueError(f'VAC path not yet configured for specprod={specprod!r}, '
-                         f'vactype={vactype!r}')
+        cfg = _SPECPROD_CONFIG.get(specprod)
+        if cfg is None:
+            raise ValueError(f'Unknown specprod {specprod!r}. '
+                             f'Known specprods: {list(_SPECPROD_CONFIG)}')
+        vacdir = cfg[vactype]
+        if vacdir is None:
+            raise ValueError(f'VAC path not yet configured for specprod={specprod!r}, '
+                             f'vactype={vactype!r}')
 
     basename = f'{vactype}-{specprod}-{survey}-{program}'
     if (survey, program) in _SPLIT_COMBOS:
@@ -162,9 +180,10 @@ def _read_extensions(filepath, extensions, columns=None):
     return hstack(parts) if len(parts) > 1 else parts[0]
 
 
-def _read_vac(specprod, vactype, extensions, survey, program, columns, verbose):
+def _read_vac(specprod, vactype, extensions, survey, program, columns, verbose,
+              vacdir=None):
     """Internal driver: read and vstack all catalog files for a survey/program."""
-    files = _catfiles(specprod, vactype, survey, program)
+    files = _catfiles(specprod, vactype, survey, program, vacdir=vacdir)
     chunks = []
     for f in files:
         if verbose:
@@ -181,7 +200,7 @@ def _read_vac(specprod, vactype, extensions, survey, program, columns, verbose):
 # ---------------------------------------------------------------------------
 
 def read_fastspec(survey='main', program='dark', specprod=DEFAULT_SPECPROD,
-                  columns=None, verbose=False):
+                  columns=None, version=None, verbose=False):
     """Read the fastspec VAC for a given specprod, survey, and program.
 
     Joins the METADATA, SPECPHOT, and FASTSPEC extensions into a single Table.
@@ -200,6 +219,9 @@ def read_fastspec(survey='main', program='dark', specprod=DEFAULT_SPECPROD,
     columns : list of str, optional
         Columns to load from SPECPHOT and FASTSPEC. METADATA is always read
         in full. If None, all columns from all three extensions are returned.
+    version : str, optional
+        Read an earlier public VAC listed in _ARCHIVE_FASTSPEC (e.g., 'v3.0'
+        with specprod='iron') instead of the default catalog for `specprod`.
     verbose : bool
         Print file names and row counts while reading.
 
@@ -215,10 +237,17 @@ def read_fastspec(survey='main', program='dark', specprod=DEFAULT_SPECPROD,
     """
     if columns is not None:
         columns = list(set(columns) | _DEFAULT_COLUMNS)
+    vacdir = None
+    extensions = ['METADATA', 'SPECPHOT', 'FASTSPEC']
+    if version is not None:
+        key = (specprod, version)
+        if key not in _ARCHIVE_FASTSPEC:
+            raise ValueError(f'Unknown VAC {specprod}/{version}. '
+                             f'Known: {list(_ARCHIVE_FASTSPEC)}')
+        vacdir, extensions = _ARCHIVE_FASTSPEC[key]
     return _read_vac(
-        specprod, 'fastspec',
-        ['METADATA', 'SPECPHOT', 'FASTSPEC'],
-        survey, program, columns, verbose,
+        specprod, 'fastspec', extensions,
+        survey, program, columns, verbose, vacdir=vacdir,
     )
 
 
