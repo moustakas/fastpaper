@@ -42,6 +42,10 @@ make            # runs lualatex, bibtex, lualatex, lualatex (see tex/Makefile)
 
 The bibliography file is `refs.bib`; `ms.tex` references it as `\bibliography{refs}`.
 
+## Author List
+
+The author order in `tex/ms.tex` is: John Moustakas, Jeremy Buhler, Dirk Scholte (fixed, in that order), then everyone else alphabetically by last name. Accents are ignored when sorting (Pérez-Ràfols comes before Prada) and spaces count (Le Guillou comes before Leauthaud). New DESI author-list exports (`DESI-*_author_list.csv`) must be merged into this order. Do not use the CSV's own order: it puts Moustakas first, sorts accented names after `z`, and leaves out Buhler. Use one `\author[ORCID]` and one `\email` per author, and one `\affiliation` for each CSV row. Skip rows whose affiliation is `"None"`.
+
 ## Running the Analysis Scripts
 
 Figure-generation and QA scripts run on NERSC (Perlmutter) and require the DESI software environment and data paths (`$DESI_ROOT`, `/pscratch/`, `/global/cfs/cdirs/desi/`). Each script documents its exact invocation in its module docstring; see `code/README.md` for the full flag reference.
