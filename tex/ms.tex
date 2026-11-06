@@ -154,7 +154,7 @@
 \email{macorra@fisica.unam.mx}
 \affiliation{Instituto de F\'{\i}sica, Universidad Nacional
   Aut\'{o}noma de M\'{e}xico, Circuito de la Investigaci\'{o}n
-  Cient\'{\i}fica, Ciudad Universitaria, Cd. de M\'{e}xico,
+  Cient\'{\i}fica, Ciudad Universitaria, Cd. de M\'{e}xico
   C.~P.~04510, M\'{e}xico}
 
 \author[0000-0002-5665-7912]{Biprateep Dey}
@@ -305,7 +305,7 @@
 \email{aaron.meisner@noirlab.edu}
 \affiliation{NSF NOIRLab, 950 N. Cherry Ave., Tucson, AZ 85719, USA}
 
-\author{Ramon Miquel}
+\author[0000-0002-6610-4836]{Ramon Miquel}
 \email{rmiquel@ifae.es}
 \affiliation{Instituci\'{o} Catalana de Recerca i Estudis
   Avan\c{c}ats, Passeig de Llu\'{\i}s Companys, 23, 08010 Barcelona,
@@ -441,28 +441,27 @@ Early Data Release and Data Release 1.
 
 %\todo{Author list issues (need to confirm everything):
 %  \begin{itemize}
-%  \item No ORCID (probably correct, but need to double-check): Brooks,
-%    Claybaugh, Doel, Gutierrez, Miquel, Rossi, Schlegel, Weaver.
-%  \item Saintonge: dropped second affiliation of ``None''
 %  \item Hagen: Utah affiliation but a uwlax.edu email (??)
-%  \item Leauthaud: two near-identical affiliations; dropped the UCSC
-%    95065 entry, kept UCO/Lick 95064. ---confirmed---
 %  \item Honscheid and Martini: dropped the third, incomplete (no
 %    department listed) OSU affiliation.
-%  \item Hahn: missing city (added ``Austin'').
-%  \item Ahlen: added a comma before ``USA''.
 %  \item Hadzhiyska: missing department name (added ``Department of
 %    Physics'') and added missing comma after ``\#5800''; both
 %    affiliations have Princeton alumni email address (correct??).
 %  \item Lamman: missing department and street address (adopted Martini
 %    and Honscheid OSU entries).
+%  \item de la Macorra: missing comma before ``C.~P.~04510'' (??)
+%  \item No ORCID (probably correct, but need to double-check): Brooks,
+%    Claybaugh, Doel, Gutierrez, Rossi, Schlegel, Weaver. ---confirmed---
+%  \item Saintonge: second affiliation (``None'') is incorrected;
+%    should be Max-Planck. ---confirmed---
+%  \item Leauthaud: two near-identical affiliations; dropped the UCSC
+%    95065 entry, kept UCO/Lick 95064. ---confirmed---
+%  \item Hahn: missing city (added ``Austin''). ---confirmed---
+%  \item Ahlen: added a comma before ``USA''. ---confirmed---
 %  \item Kirkby: missing street address, including city and state
 %    (added ``2115 Frederick Reines Hall, Irvine, CA''). ---confirmed---
-%  \item de la Macorra: added missing comma before ``C.~P.~04510''
-%    (??)
 %  \item Rosell: one affiliation has ``E-38206, La Laguna'' and the
-%    other has ``E-38205 La Laguna'', but I'm not sure which one is
-%    right??
+%    other has ``E-38205 La Laguna''. Both are correct. ---confirmed---
 %  \item Font-Ribera, Manera, Miquel: removed stray comma after
 %    ``08193`` in IFAE affiliation, but need to confirm. ---confirmed---
 %  \end{itemize}}
@@ -530,14 +529,18 @@ physical realism, and computational speed, but none were designed to
 be run efficiently on the tens of millions of spectra acquired by
 DESI. Existing codes also do not take advantage of the DESI resolution
 matrix, which compactly encodes the instrumental resolution and
-guarantees uncorrelated uncertainties from \replaced{pixel-to-pixel}{pixel to pixel}
-\citep{bolton10a, guy23a}; instead, they generally resample spectra
-onto a common wavelength grid or into the rest frame, which
-\replaced{violates one of the core assumptions underpinning
-maximum-likelihood fitting by introducing off-diagonal terms into the
-pixel covariance matrix}{correlates the uncertainties of neighboring
-pixels, correlations that most codes then ignore by treating each
-pixel as independent}.
+guarantees uncorrelated uncertainties from
+\replaced{pixel-to-pixel}{pixel to pixel} \citep{bolton10a,
+  guy23a}\deleted{; instead, they generally resample spectra onto a
+  common wavelength grid or into the rest frame, which correlates the
+  uncertainties of neighboring pixels, correlations that most codes
+  then ignore by treating each pixel as independent}.
+
+%\replaced{violates one of the core assumptions underpinning
+%  maximum-likelihood fitting by introducing off-diagonal terms into
+%  the pixel covariance matrix}{correlates the uncertainties of
+%  neighboring pixels, correlations that most codes then ignore by
+%  treating each pixel as independent}.
 
 \fastspecfit\footnote{\url{https://fastspecfit.readthedocs.io/en/latest}}
 has been developed to meet both these challenges, scaling efficiently
@@ -574,18 +577,18 @@ robustness at low signal-to-noise (S/N) ratio, \replaced{we
 slope of the attenuation curve, and the infrared (IR) dust-emission
 parameters (\S\ref{ssec:templates}, \S\ref{sssec:fitting})\added{,
   although users can relax most of these choices with custom templates
-  (\S\ref{sec:modes})}. The emission-line model is similarly flexible,
-supporting independent narrow and broad kinematic components and
-capturing the broad Balmer-line emission that distinguishes type~1 AGN
-whenever the data require it. Unlike codes that target a specific
-class or spectral type, \fastspecfit{} applies this same machinery
-uniformly to every spectrum, without assuming in advance whether the
-target is quiescent, star-forming, \deleted{a }post-starburst, or
-hosts an AGN. This flexibility minimizes classification-driven
-selection effects and maximizes the discovery potential of a dataset
-as large and diverse as DESI, where unusual or physically ambiguous
-objects emerge naturally from the fit rather than requiring
-special-case handling.
+  and fitting options (\S\ref{sec:modes})}. The emission-line model is
+similarly flexible, supporting independent narrow and broad kinematic
+components and capturing the broad Balmer-line emission that
+distinguishes type~1 AGN whenever the data require it. Unlike codes
+that target a specific class or spectral type, \fastspecfit{} applies
+this same machinery uniformly to every spectrum, without assuming in
+advance whether the target is quiescent, star-forming, \deleted{a
+}post-starburst, or hosts an AGN. This flexibility minimizes
+classification-driven selection effects and maximizes the discovery
+potential of a dataset as large and diverse as DESI, where unusual or
+physically ambiguous objects emerge naturally from the fit rather than
+requiring special-case handling.
 
 Although this paper presents the first comprehensive description of
 \fastspecfit{}'s algorithms, measurements from the earlier EDR and DR1
@@ -663,21 +666,24 @@ objects that DESI observes (\S\ref{ssec:targets}).
 
 DESI is a highly multiplexed fiber spectrograph mounted on the Mayall
 4-m telescope at Kitt Peak National Observatory
-\citep{desi-collaboration16b, desi-collaboration22a}.  A wide-field optical
-corrector \citep{miller24a} provides a $3\fdg2$-diameter field of
-view. Within this field, \replaced{5000 robotically actuated, $1\farcs5$-diameter
-fibers}{5000 robotically actuated positioners \citep{silber23a} place
-$1\farcs5$-diameter fibers} \citep{poppett24a} \replaced{are positioned onto target coordinates and
-feed}{onto target coordinates. These fibers feed} ten three-arm spectrographs covering 3600--9824~\AA{} in the
-observed frame \citep{desi-collaboration22a}. The focal plane is divided into ten
+\citep{desi-collaboration16b, desi-collaboration22a}.  A wide-field
+optical corrector \citep{miller24a} provides a $3\fdg2$-diameter field
+of view. Within this field, \replaced{5000 robotically actuated,
+  $1\farcs5$-diameter fibers}{5000 robotically actuated positioners
+  \citep{silber23a} place $1\farcs5$-diameter fibers}
+\citep{poppett24a} \replaced{are positioned onto target coordinates
+  and feed}{onto target coordinates. These fibers feed} ten three-arm
+spectrographs covering 3600--9824~\AA{} in the observed frame
+\citep{desi-collaboration22a}. The focal plane is divided into ten
 wedge-shaped ``petals'', each of which routes its 500 fibers to one of
-the ten spectrographs. A single pointing of the full 5000-fiber focal plane
-defines a ``tile'', the basic unit of the survey's observing (tiling)
-strategy \citep{schlafly23a}. The three cameras sense blue (B:
-3600--5930~\AA), red (R: 5600--7720~\AA), and near-IR (Z:
+the ten spectrographs. A single pointing of the full 5000-fiber focal
+plane defines a ``tile'', the basic unit of the survey's observing
+(tiling) strategy \citep{schlafly23a}. The three cameras sense blue
+(B: 3600--5930~\AA), red (R: 5600--7720~\AA), and near-IR (Z:
 7470--9824~\AA) light\deleted{,} at a spectral resolution of
-$\mathcal{R}\equiv\lambda/\Delta\lambda_\mathrm{FWHM} \approx 2000-3500$,
-$3400-4800$, and $3800-5200$, respectively \citep{desi-collaboration22a}.
+$\mathcal{R}\equiv\lambda/\Delta\lambda_\mathrm{FWHM} \approx
+2000-3500$, $3400-4800$, and $3800-5200$, respectively
+\citep{desi-collaboration22a}.
 
 \citet{guy23a} describe the DESI spectroscopic pipeline in detail (see
 also \citealt{desi-collaboration24d, desi-collaboration26a} for
@@ -686,13 +692,13 @@ from this pipeline: the one-dimensional spectrum, its corresponding
 inverse-variance spectrum, and the resolution matrix $\mathbf{R}$, a
 band-diagonal, sparse matrix that quantifies the effective,
 wavelength-dependent instrumental resolution. $\mathbf{R}$ is a
-natural output of the \deleted{optimal, }``spectroperfectionism'' algorithm of
-\citet{bolton10a}, which the DESI pipeline uses to extract
-one-dimensional spectra with uncorrelated pixels. It is also a key
-ingredient of \fastspecfit's forward-modeling philosophy: convolving a
-perfect, infinite-resolution model spectrum with $\mathbf{R}$ yields
-the equivalent model at DESI's effective spectral resolution
-(\S\ref{sec:modeling}).
+natural output of the \deleted{optimal,} ``spectroperfectionism''
+algorithm of \citet{bolton10a}, which the DESI pipeline uses to
+extract one-dimensional spectra with uncorrelated pixels. It is also a
+key ingredient of \fastspecfit's forward-modeling philosophy:
+convolving a perfect, infinite-resolution model spectrum with
+$\mathbf{R}$ yields the equivalent model at DESI's effective spectral
+resolution (\S\ref{sec:modeling}).
 
 The per-fiber spectra are extracted onto an 0.8\,\AA{} linearly
 spaced\deleted{,} wavelength grid (in vacuum and in the Solar System barycentric
@@ -734,7 +740,8 @@ telescope. The Bok and Mayall telescopes are both located at Kitt Peak
 National Observatory (KPNO). Following \citet{myers23a}, we track the
 imaging system for each DESI target via the \texttt{PHOTSYS} flag
 (\texttt{N} or \texttt{S}) to assign the appropriate filter
-curves\added{ from \texttt{speclite} \citep{kirkby24a}}.\footnote{\url{https://speclite.readthedocs.io/en/latest}}
+curves\added{ from
+  \texttt{speclite}}.\footnote{\url{https://speclite.readthedocs.io/en/latest}}
 
 The Legacy Survey catalogs are generated using the Tractor
 forward-modeling photometry pipeline \citep{lang16b, lang16a}, which
@@ -817,10 +824,9 @@ emission-line fitter (\texttt{emlinefit}; \citealt{raichoor23a,
   desi-collaboration24d}) used to validate ELG redshifts; a
 \mgiidoublet{} doublet fitter \citep{chaussidon23a}; and the
 \texttt{QuasarNET} neural-network QSO classifier \citep{busca18a,
-  green25a}. The latter two after-burners \replaced{are essential for correctly
-classifying and measuring accurate redshifts for QSOs}{improve the
-completeness of the QSO sample, but all QSO redshifts ultimately come
-from Redrock}
+  green25a}. The latter two after-burners are essential for
+\replaced{correctly classifying and measuring accurate redshifts for
+  QSOs}{improving the completeness of the QSO sample}
 (\S\ref{ssec:catalog}).
 
 %% ============================================================
@@ -951,30 +957,33 @@ Following \citet{leja17a}, we build five ``continuity age'' basis
 templates spanning fixed lookback-time bins, each assuming a constant
 star-formation rate over its duration. The two youngest bins span
 0--30~Myr and 30--100~Myr (with upper edges at
-$\log_{10}(t/\mathrm{yr}) = 7.48$ and $8.0$, respectively),
-while the \replaced{three oldest bins are logarithmically spaced between 100~Myr
-and 13.7~Gyr with binning 0.1--1.1~Gyr, 1.1--11.6~Gyr, and
-11.6--13.7~Gyr}{next two bins are logarithmically spaced between 100~Myr
-and 11.6~Gyr (0.1--1.1~Gyr and 1.1--11.6~Gyr) and the oldest bin spans
-11.6--13.7~Gyr, the last 15\% of a 13.7~Gyr cosmic age} (Figure~\ref{fig:sps}). We generate templates at fixed
-solar metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no
-$\alpha$-element enhancement), in two parallel variants---one
-\replaced{including and one excluding nebular emission (continuum and
-lines)}{with and one without nebular emission lines, both including
-the nebular continuum}---from the FSPS built-in nebular
-photoionization grid \citep{byler17a}. \added{We need both variants
-because the broadband photometry includes any nebular line emission,
-whereas we model the emission lines in the spectrum separately
-(\S\ref{ssec:emlines}). We therefore use the variant with emission
-lines in the joint spectrophotometric fit (\S\ref{sssec:fitting}),
-where masking line-contaminated pixels restricts its effect to the
-synthetic photometry, and for K-corrections
-(\S\ref{ssec:quantities}). We use the variant without emission lines
-everywhere else, including the velocity-dispersion fit
-(\S\ref{sssec:vdisp}), the continuum model we subtract before fitting
-the emission lines, and continuum-derived quantities such as
-$D_n(4000)$ and the monochromatic luminosities
-(\S\ref{ssec:quantities}).}
+$\log_{10}(t/\mathrm{yr}) = 7.48$ and $8.0$, respectively), while the
+\replaced{three oldest bins are logarithmically spaced between 100~Myr
+  and 13.7~Gyr with binning 0.1--1.1~Gyr, 1.1--11.6~Gyr, and
+  11.6--13.7~Gyr}{next two bins are logarithmically spaced between
+  100~Myr and 11.6~Gyr (0.1--1.1~Gyr and 1.1--11.6~Gyr) and the oldest
+  bin spans 11.6--13.7~Gyr, the last 15\% of a 13.7~Gyr cosmic age}
+(Figure~\ref{fig:sps}). We generate templates at fixed solar
+metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no $\alpha$-element
+enhancement), \replaced{in two parallel variants---one including and
+  one excluding nebular emission (continuum and lines) from the FSPS
+  built-in nebular photoionization grid \citep{byler17a}}{with and
+  without nebular emission lines \citep{byler17a}. We use the SPS
+  models with emission lines when computing K-corrections
+  (\S\ref{ssec:quantities}).}
+
+%\added{We need both variants because the broadband photometry includes
+%  any nebular line emission, whereas we model the emission lines in
+%  the spectrum separately (\S\ref{ssec:emlines}). We therefore use the
+%  variant with emission lines in the joint spectrophotometric fit
+%  (\S\ref{sssec:fitting}), where masking line-contaminated pixels
+%  restricts its effect to the synthetic photometry, and for
+%  K-corrections (\S\ref{ssec:quantities}). We use the variant without
+%  emission lines everywhere else, including the velocity-dispersion
+%  fit (\S\ref{sssec:vdisp}), the continuum model we subtract before
+%  fitting the emission lines, and continuum-derived quantities such as
+%  $D_n(4000)$ and the monochromatic luminosities
+%  (\S\ref{ssec:quantities}).}
 
 We index the resulting rest-frame templates $S_n(\lambda)$, $n =
 1,\ldots,n_\mathrm{template}$ (with $n_\mathrm{template}=5$)\deleted{,} by
@@ -1299,17 +1308,18 @@ characteristic ``knee'' of the velocity dispersion function
 independently measured.
 
 When a direct measurement is possible, we determine \vdisp{} by
-finding the \replaced{optimal}{best-fitting} Gaussian kernel dispersion, $\vdisp^\mathrm{kern}
-\in [50,\,500]$~\kms, using \texttt{scipy.optimize.least\_squares}
-with a Trust-Region Reflective minimization algorithm
-\citep{branch99a}, fitting for $\vdisp^\mathrm{kern}$ and \tauv{}
-simultaneously over the same range as above. At each trial value of
-$\vdisp^\mathrm{kern}$ we convolve the templates with a Gaussian
-broadening kernel using a Fast Fourier Transform (FFT), which
-multiplies the templates' precomputed Fourier transforms by the
-kernel's and is markedly faster than a direct pixel-space
-convolution. We then recover the physical velocity dispersion by
-adding back the intrinsic resolution of our SPS models in quadrature,
+finding the \replaced{optimal}{best-fitting} Gaussian kernel
+dispersion, $\vdisp^\mathrm{kern} \in [50,\,500]$~\kms, using
+\texttt{scipy.optimize.least\_squares} with a Trust-Region Reflective
+minimization algorithm \citep{branch99a}, fitting for
+$\vdisp^\mathrm{kern}$ and \tauv{} simultaneously over the same range
+as above. At each trial value of $\vdisp^\mathrm{kern}$ we convolve
+the templates with a Gaussian broadening kernel using a Fast Fourier
+Transform (FFT), which multiplies the templates' precomputed Fourier
+transforms by the kernel's and is markedly faster than a direct
+pixel-space convolution. We then recover the physical velocity
+dispersion by adding back the intrinsic resolution of our SPS models
+in quadrature,
 \begin{equation}
   \vdisp = \sqrt{(\vdisp^\mathrm{kern})^2 + \sigma_\mathrm{C3K}^2},
   \label{eq:vdisptot}
