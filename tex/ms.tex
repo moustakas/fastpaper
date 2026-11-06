@@ -222,8 +222,8 @@
 
 \author[0009-0007-2936-1124]{Tyler Hagen}
 \email{thagen@uwlax.edu}
-\affiliation{Department of Physics and Astronomy, The University of
-  Utah, 115 South 1400 East, Salt Lake City, UT 84112, USA}
+\affiliation{Department of Physics, University of Wisconsin-La Crosse,
+  La Crosse, WI 54601, USA}
 
 \author[0000-0003-1197-0902]{ChangHoon Hahn}
 \email{changhoon.hahn@utexas.edu}
@@ -441,7 +441,6 @@ Early Data Release and Data Release 1.
 
 %\todo{Author list issues (need to confirm everything):
 %  \begin{itemize}
-%  \item Hagen: Utah affiliation but a uwlax.edu email (??)
 %  \item Honscheid and Martini: dropped the third, incomplete (no
 %    department listed) OSU affiliation.
 %  \item Hadzhiyska: missing department name (added ``Department of
@@ -450,8 +449,12 @@ Early Data Release and Data Release 1.
 %  \item Lamman: missing department and street address (adopted Martini
 %    and Honscheid OSU entries).
 %  \item de la Macorra: missing comma before ``C.~P.~04510'' (??)
+%
+%
 %  \item No ORCID (probably correct, but need to double-check): Brooks,
 %    Claybaugh, Doel, Gutierrez, Rossi, Schlegel, Weaver. ---confirmed---
+%  \item Hagen: Utah affiliation but a uwlax.edu email ---UWLAX is
+%    confirmed (databased is wrong)---
 %  \item Saintonge: second affiliation (``None'') is incorrected;
 %    should be Max-Planck. ---confirmed---
 %  \item Leauthaud: two near-identical affiliations; dropped the UCSC
@@ -504,7 +507,7 @@ strength of an active galactic nucleus (AGN) \citep[and references
 scale---and combining them with broadband photometry to normalize the
 overall spectral energy distribution (SED)---requires a fitting code
 that is fast, robust, and automated across an enormous range of
-signal-to-noise ratios, redshifts, and galaxy types.
+signal-to-noise ratios\added{ (S/N)}, redshifts, and galaxy types.
 
 Various publicly available codes already perform this kind of
 spectrophotometric modeling. Full-spectrum fitting codes---among them
@@ -571,7 +574,7 @@ imposes only minimal priors: non-negative stellar population
 coefficients, an energy-conserving dust model, and a freely fitted
 stellar velocity dispersion bounded widely enough to accommodate the
 full spectral diversity of DESI targets. In exchange for speed and
-robustness at low signal-to-noise (S/N) ratio, \replaced{we
+robustness at low \replaced{signal-to-noise (S/N) ratio,}{S/N,} \replaced{we
   deliberately fix}{the default configuration we adopt deliberately
   fixes} other ingredients, including the stellar metallicity, the
 slope of the attenuation curve, and the infrared (IR) dust-emission
@@ -967,7 +970,7 @@ $\log_{10}(t/\mathrm{yr}) = 7.48$ and $8.0$, respectively), while the
 metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no $\alpha$-element
 enhancement), \replaced{in two parallel variants---one including and
   one excluding nebular emission (continuum and lines) from the FSPS
-  built-in nebular photoionization grid \citep{byler17a}}{with and
+  built-in nebular photoionization grid \mbox{\citep{byler17a}}}{with and
   without nebular emission lines \citep{byler17a}. We use the SPS
   models with emission lines when computing K-corrections
   (\S\ref{ssec:quantities}).}
@@ -1189,7 +1192,7 @@ line-subtracted residuals in that patch.}
 With the robustly estimated line-widths, we can now build the complete
 line-mask. Iterating over all the lines in the observed spectral range
 (not just the initial set of candidate strong lines), we robustly
-estimate each line's signal-to-noise ratio by comparing its peak
+estimate each line's \replaced{signal-to-noise ratio}{S/N} by comparing its peak
 amplitude against the \replaced{variance of the pixels}{robust standard
 deviation of the line-subtracted residuals} in its surrounding local
 continuum, and discard ``weak'' lines with $\mathrm{S/N} < 3.5$ from
@@ -1231,13 +1234,14 @@ narrow+broad kinematic model described above.
 This section describes the steps \fastspec{} uses to find the
 best-fitting continuum model, $C(\lambda;\theta_C)$. Because speed and
 flexibility are paramount, the default fitting mode uses a minimal
-parameter set, $\theta_C = \{\mathbf{c},\tauv,\vdisp\}$, where \deleted{$z$
-is the redshift, }$\mathbf{c}$ are the non-negative template
-coefficients, $\tauv$ is the $V$-band dust optical depth, and $\vdisp$
-is the stellar velocity dispersion. We emphasize, however, that the
-fitting infrastructure can be easily extended to include additional
-parameters (e.g., \added{redshift, }a two-component dust model or QSO model spectra),
-which we discuss, in part, in \S\ref{ssec:improvements}.
+parameter set, $\theta_C = \{\mathbf{c},\tauv,\vdisp\}$, where
+\deleted{$z$ is the redshift, }$\mathbf{c}$ are the non-negative
+template coefficients, $\tauv$ is the $V$-band dust optical depth, and
+$\vdisp$ is the stellar velocity dispersion. We emphasize, however,
+that the fitting infrastructure can be easily extended to include
+additional parameters (e.g., \added{redshift, }a two-component dust
+model or QSO model spectra), which we discuss\deleted{, in part,} in
+\S\ref{ssec:improvements}.
 
 For each object, we determine $\theta_C$ in three stages. First, we
 measure $\vdisp$ from stellar absorption features
@@ -1256,18 +1260,20 @@ fitter.
 
 The line-of-sight stellar velocity dispersion \vdisp{} traces the
 depth of a galaxy's gravitational potential well; it is a key
-observable for several galaxy scaling relations\replaced{---the Fundamental}{ (the Fundamental}
-Plane, the black hole mass--\vdisp{} relation, and the
-halo-mass--stellar-mass \replaced{relation---and}{relation) and} a fundamental ingredient for
+observable for several galaxy scaling relations\replaced{---the
+  Fundamental}{, such as the Fundamental} Plane, the black hole
+mass--\vdisp{} relation, and the halo-mass--stellar-mass
+\replaced{relation---and}{relation, and} a fundamental ingredient for
 most theoretical models of galaxy formation \citep[and references
   therein]{renzini06a, blanton09a, kormendy13a, vegetti24a}. A
 reliable measurement, however, requires adequate rest-frame wavelength
-coverage and relatively high signal-to-noise spectroscopy of the
-absorption-line features most sensitive to dynamical broadening (e.g.,
-Ca~H\&K, the $G$-band, H$\beta$, Mg~$b$). In DESI, these conditions
-are generally met only for BGS and LRG targets; however, because
-\fastspec{} does not use targeting information as a prior, we attempt
-to measure \vdisp{} for every spectroscopic target.
+coverage and relatively \replaced{high signal-to-noise}{high-S/N}
+spectroscopy of the absorption-line features most sensitive to
+dynamical broadening (e.g., Ca~H\&K, the $G$-band, H$\beta$,
+Mg~$b$). In DESI, these conditions are generally met only for BGS and
+LRG targets; however, because \fastspec{} does not use targeting
+information as a prior, we attempt to measure \vdisp{} for every
+spectroscopic target.
 
 We determine whether a direct measurement of \vdisp{} is possible from
 two conditions: rest-frame wavelength coverage and ``fit
@@ -1287,7 +1293,7 @@ linear least-squares at each grid point
 $\Delta\chi^2 \geq 25$ (and with the minimum value away from either
 boundary) then we proceed with a direct measurement. In general,
 $\Delta\chi^2 < 25$ implies that the spectrum has inadequate
-signal-to-noise ratio in the stellar continuum (e.g., a faint ELG
+\replaced{signal-to-noise ratio}{S/N} in the stellar continuum (e.g., a faint ELG
 target) to accommodate \vdisp{} as an additional free parameter.
 
 Most DESI targets in DR2 fail one or both of the preceding conditions;
@@ -1398,18 +1404,16 @@ spectrophotometric fit (\S\ref{sssec:fitting}).
 \subsubsection{Fitting the Stellar Continuum}
 \label{sssec:fitting}
 
-To fit the stellar continuum we use a forward-modeling approach.
-We carry each rest-frame SPS template (\S\ref{ssec:templates}) through
-a sequence of physical and instrumental
-transformations\replaced{---dust attenuation, redshifting, and
-instrumental broadening (or filter convolution)---into a prediction
-that can be compared directly to the observed spectrophotometry, and
-then solve}{ (dust attenuation, redshifting, and instrumental
-broadening or filter convolution) to produce a prediction that we can
-compare directly to the observed spectrophotometry. We then solve} for
-the template weights
-and dust attenuation (at fixed \vdisp; \S\ref{sssec:vdisp}) that
-minimize the inverse-variance-weighted residuals.
+To fit the stellar continuum we use a forward-modeling approach.  We
+carry each rest-frame SPS template (\S\ref{ssec:templates}) through a
+sequence of physical and instrumental transformations---dust
+attenuation, redshifting, and instrumental broadening (or filter
+convolution)---\replaced{into a prediction that can be compared
+  directly to the observed spectrophotometry, and then solve}{ to
+  produce a prediction that we can compare directly to the observed
+  spectrophotometry. We then solve} for the template weights and dust
+attenuation (at fixed \vdisp; \S\ref{sssec:vdisp}) that minimize the
+inverse-variance-weighted residuals.
 
 First, we model the attenuation of each template as a
 uniform foreground screen,
@@ -1446,9 +1450,9 @@ conserves bolometric luminosity,
   \label{eq:ftot}
 \end{equation}
 
-For an object at redshift $z$ with luminosity distance
-$D_L$\deleted{ (in Mpc)}, we relate each rest-frame template to its
-observed-frame counterpart via
+For an object at redshift $z$ with luminosity distance $D_L$ (in pc),
+we relate each rest-frame template to its observed-frame counterpart
+via
 \begin{equation}
   S_n^\mathrm{obs}(\lambda)
   =
@@ -1659,16 +1663,16 @@ peculiar ($\Delta v$) motion of the line-emitting gas,
   \label{eq:lstar}
 \end{equation}
 and $\sigma_\ell = \sigma/c$ is the line width in ln-$\lambda$ units,
-where $\sigma$ (in \kms) is the physical (Doppler) line-width.
-\added{Because $\Delta v$ enters equation~(\ref{eq:lstar}) additively,
-it equals $c\,\Delta\lambda/\lambda_\mathrm{rest}$, where
-$\Delta\lambda = \lambda^*-\lambda_\mathrm{rest}(1+z)$ is the
-observed-frame offset of the line, and so exceeds the rest-frame
-velocity $v$ of the gas relative to the systemic redshift by a factor
-of $1+z$, $\Delta v = (1+z)\,v$; users should therefore divide
-\texttt{VSHIFT} by $1+z$ to recover $v$. By contrast, $\sigma$ requires
-no such correction because redshifting the line only translates it in
-$\ln\lambda$.} With this parameterization, the total flux of each line (in \flux) is
+where $\sigma$ (in \kms) is the physical (Doppler)
+line-width.\footnote{\added{During internal (DESI Collaboration)
+  review, it was noted that this definition of $\Delta v$ is not a
+  rest-frame quantity, as originally intended. Consequently, users
+  should divide the reported \texttt{VSHIFT} (\S\ref{sssec:lines}) by
+  $1+z$ to recover the rest-frame velocity of the line-emitting
+  gas. The next version of the code will use a multiplicative
+  parameterization of $\lambda^*$ so that $\Delta v$ is in the
+  rest-frame, matching $\sigma$.}}  With this parameterization, the
+total flux of each line (in \flux) is
 \begin{equation}
   \Phi = \sqrt{2\pi}\,A\,\lambda^*\,\sigma_\ell
        = \sqrt{2\pi}\,A\,\lambda^*\,\frac{\sigma}{c},
@@ -2935,9 +2939,9 @@ associated data-release papers for the most recent
 recommendations.\footnote{\url{https://data.desi.lbl.gov/doc}}
 
 For individual emission lines, we recommend selecting on
-line-amplitude signal-to-noise,
+line-amplitude \replaced{signal-to-noise}{S/N},
 \texttt{AMP}$\times\sqrt{\texttt{AMP\_IVAR}}$, rather than
-integrated-flux signal-to-noise,
+integrated-flux \replaced{signal-to-noise}{S/N},
 \texttt{FLUX}$\times\sqrt{\texttt{FLUX\_IVAR}}$. Amplitude directly
 tests whether a line rises above the local continuum noise, while flux
 is a derived quantity (given by equation~\ref{eq:flux_phys})\deleted{,} whose
@@ -3301,8 +3305,8 @@ $\approx0.1$--$0.3$~dex systematic differences to the additional
 flexibility of a non-parametric model accommodating more mass in old,
 high-mass-to-light-ratio stellar populations \citep{leja19b, leja20a,
   lower20a}. The difference for ELG targets is higher ($\mathtt{NMAD}
-\approx 0.4$~dex), likely reflecting the fainter, lower
-signal-to-noise broadband photometry available for these star-forming
+\approx 0.4$~dex), likely reflecting the fainter, \replaced{lower
+signal-to-noise}{lower-S/N} broadband photometry available for these star-forming
 targets, especially in the WISE IR bands. Overall, the agreement
 between \fastspec{} and three independent, CIGALE-based stellar-mass
 catalogs is very good, particularly given the different data
@@ -3704,12 +3708,13 @@ publicly released in 2027.
 
 %% ============================================================
 \begin{acknowledgements}
-JM gratefully acknowledges funding support for this work from the
-U.S. Department of Energy, Office of Science, Office of High Energy
-Physics under Award Number DE-SC0020086. We also thank Ben Johnson for
-assistance constructing custom FSPS models and Benjamin J. Weiner for
-the suggestion of fitting emission-line doublets as an amplitude and a
-line-ratio.
+JM gratefully acknowledges funding support from the U.S. Department of
+Energy, Office of Science, Office of High Energy Physics under Award
+Number DE-SC0020086. We also thank Ben Johnson for assistance
+constructing custom FSPS models, Benjamin J. Weiner for the suggestion
+of fitting emission-line doublets as an amplitude and a line-ratio,
+and Ashod Khederlarian for contributing a tutorial on an early version
+of \fastspecfit.
 
 This research used data obtained with the Dark Energy Spectroscopic
 Instrument (DESI). DESI construction and operations is managed by the
@@ -4005,7 +4010,7 @@ notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/change
   with no significant median offset. We attribute this scatter to the
   substantial changes in our SPS templates since v2.5.0
   (Table~\ref{table:vac-history}), combined with the low
-  signal-to-noise ratio of most ELG continua. Moreover, because
+  S/N of most ELG continua. Moreover, because
   \texttt{Iron/v2.1} and \texttt{Fuji/v3.2} share the same code and
   templates, the difference between their two columns isolates the
   effect of the data-reduction changes from \texttt{Fuji} to
