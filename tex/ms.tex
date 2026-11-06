@@ -3955,6 +3955,63 @@ algorithmic changes, major bug fixes, and much more, we refer to the
 detailed \fastspecfit{} change log and release
 notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/changes.rst}}
 
+\added{Because many users combine measurements from different VACs, we
+  also quantify how the most widely used quantities change from one
+  release to the next. We match \texttt{Loa/v2.0} to the three earlier
+  \fastspec{} VACs which have been public the longest,
+  \texttt{Iron/v3.0}, \texttt{Iron/v2.1}, and \texttt{Fuji/v3.2}. We
+  omit \texttt{Iron/v4.0}, which we produced with the same code and
+  templates as \texttt{Loa/v2.0}. We also restrict the comparison to
+  SV3, whose targets appear in every release and whose coadded spectra
+  include the same exposures in each specprod. After matching on
+  \texttt{TARGETID}, we require each object to satisfy the
+  good-redshift criteria for its target class (\S\ref{ssec:cuts}) in
+  both catalogs. Among these objects, fewer than 0.2\% of the BGS,
+  LRG, and ELG targets have redshifts which differ by more than
+  1000~\kms{} between releases. For QSO targets, however, this
+  fraction rises to 12\% relative to \texttt{Iron} and 19\% relative
+  to \texttt{Fuji}, which we attribute to changes in both the Redrock
+  and \texttt{QuasarNet} redshifts between specprods and in how
+  \fastspecfit{} applies the \texttt{QuasarNet} correction
+  (\S\ref{ssec:catalog}). We exclude objects whose redshift changed
+  from the remainder of the comparison.}
+
+\input{tables/table-vac-compare}
+
+\added{In Table~\ref{table:vac-compare} we list the median difference
+  and NMAD of several key quantities for each target class. Relative
+  to \texttt{Iron/v3.0}, the median offsets are smaller than 0.01~dex
+  (or 0.01~mag) for every quantity except the SFR. For BGS and LRG
+  targets, the scatter in stellar mass, absolute magnitude, velocity
+  dispersion, and emission-line flux is also below 0.01~dex (or
+  0.01~mag). The small positive offset in \vdisp{} (0.004--0.007~dex)
+  is consistent with the correction for the intrinsic resolution of
+  the C3K templates (Equation~\ref{eq:vdisptot}), which we introduced
+  in \fastspecfit{}~v3.5.0. Relative to \texttt{Iron/v2.1} and
+  \texttt{Fuji/v3.2}, both produced with \fastspecfit{}~v2.5.0, the
+  scatter is larger (typically 0.02--0.06~dex), but the median offsets
+  remain below 0.015~dex. The notable exception is the stellar mass of
+  ELGs, which scatters by 0.21--0.28~dex relative to these two catalogs
+  with no significant median offset. We attribute this scatter to the
+  substantial changes in our SPS templates since v2.5.0
+  (Table~\ref{table:vac-history}), combined with the low
+  signal-to-noise ratio of most ELG continua. Moreover, because
+  \texttt{Iron/v2.1} and \texttt{Fuji/v3.2} share the same code and
+  templates, the difference between their two columns isolates the
+  effect of the data-reduction changes from \texttt{Fuji} to
+  \texttt{Iron}, which increase the scatter only modestly.}
+
+\added{Finally, the SFRs in earlier VACs are not directly comparable to
+  those in \texttt{Loa/v2.0}. Starting with \fastspecfit{}~v3.5.0, we
+  report the SFR averaged over the most recent 100~Myr
+  (Equation~\ref{eq:sfr}). Earlier versions instead reported the
+  instantaneous SFR of the best-fitting model, to which only the
+  youngest (0--30~Myr) age bin contributes. We attribute the large SFR
+  differences in Table~\ref{table:vac-compare} (median offsets up to
+  1.2~dex and NMAD values of 0.5--1.9~dex) primarily to this change in
+  definition, and we recommend against combining SFRs from
+  \texttt{Loa/v2.0} with those from any earlier VAC.}
+
 
 %An earlier Loa (DR2) build (\texttt{v1.0}, \fastspecfit{}~v3.1.4) was
 %released internally to DESI collaboration members via NERSC---and
