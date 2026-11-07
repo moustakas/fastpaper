@@ -1438,7 +1438,7 @@ following energy balance. We scale the \citet{draine07a} dust emission
 template, $S_\mathrm{dust}(\lambda)$, by the luminosity absorbed by
 each template,
 \begin{equation}
-  L_{\mathrm{abs},n} = \int_{100\,\text{\AA}}^{1000\,\mu\mathrm{m}} S_n(\lambda) (1 - e^{-\tauv
+  L_{\mathrm{abs},n} = \int_{0.01\,\mu\mathrm{m}}^{1000\,\mu\mathrm{m}} S_n(\lambda) (1 - e^{-\tauv
     k(\lambda)})\,d\lambda,
   \label{eq:labs}
 \end{equation}
@@ -1706,11 +1706,12 @@ where the line center falls within a pixel (see Appendix~D in
 arises because $\mathbf{R}$'s rows are normalized to conserve flux
 only for smooth inputs sampled at pixel centers, with no matching
 column normalization to protect sub-pixel structure
-\citep{guy23a}. Moreover, we emphasize that this bias is not just a
-modeling artifact; simulations show that even a simple
+\citep{guy23a}. Moreover, \deleted{we emphasize that} this bias is not
+just a modeling artifact; simulations show that even a simple
 (model-independent) integration of the observed pixels
-($\Phi_\mathrm{box}$; \S\ref{sssec:lines}) suffers the same loss
-for lines narrower than about one pixel (S.~Koposov 2026, private
+($\Phi_\mathrm{box}$; \S\ref{sssec:lines}) suffers the same
+\added{flux} loss for lines narrower than about one pixel (S.~Koposov
+2026, private
 communication).\footnote{\url{https://github.com/desihub/fastspecfit/issues/183}}
 
 To contend with this bias, we adopt the deconvolution strategy devised
@@ -1862,9 +1863,10 @@ second group anchored on narrow \ha; and the broad Balmer lines to a
 third group anchored on broad \ha. The \oiii{} doublet gets its own
 kinematic group because of the frequency with which this doublet shows
 an asymmetric or complex line-profile in AGN, which can bias the
-fitting of the fainter forbidden lines. \added{In both models, the lines
-in the global groups of Table~\ref{table:kinematic} have a single
-component, with no narrow+broad decomposition.}
+fitting of the fainter forbidden lines. \added{Regardless, in both
+  models, the lines in the global groups of
+  Table~\ref{table:kinematic} have a single component, with no
+  narrow+broad decomposition.}
 
 Within each kinematic group, select emission-line doublets carry an
 additional amplitude constraint, set in the same constraints file as
@@ -1878,8 +1880,9 @@ spontaneous-transition-probability value \citep{osterbrock89a}, while
 \mgii~$\lambda$2796\,/\,$\lambda$2803, carry a free (but bounded)
 amplitude ratio. In the fitting engine, we parameterize each doublet
 as a reference-line amplitude and a bounded (or fixed) amplitude
-ratio, which \replaced{is a better-constrained optimization problem than fitting
-two amplitudes independently}{lets us keep each ratio within its bounds during the fit}. Moreover, for \oiidoublet{} and
+ratio, which \replaced{is a better-constrained optimization problem
+  than fitting two amplitudes independently}{lets us keep each ratio
+  within its bounds during the fit}. Moreover, for \oiidoublet{} and
 \siidoublet{} the fitted ratio, \texttt{OII\_DOUBLET\_RATIO} and
 \texttt{SII\_DOUBLET\_RATIO}, respectively, carries physical
 significance as tracers of the local electron density
@@ -2052,16 +2055,16 @@ local continuum for the amplitude in equation~(\ref{eq:flux_phys}),
   \label{eq:fluxlimit}
 \end{equation}
 where $I_{F_c}$ is the inverse variance of $F_c$ (discussed in
-\S\ref{ssec:uncertainties}). \added{Because $I_{F_c}$ is the uncertainty on
-the mean continuum in the sidebands, $\Phi_\mathrm{lim}$ is only an
-approximate limit, and it does not capture noise variations at the
-wavelength of the line.} For lines that are dropped during
-fitting, we use a nominal $\sigma$ of 75~\kms{} for narrow lines and
-1200~\kms{} for broad lines, so that we can still report a limit for
-every line in the spectrum. We compute $\Phi_\mathrm{lim}$ as another
-possible metric for determining the statistical significance of a line
-(\S\ref{ssec:cuts}), and so \added{that }users can more easily fold upper limits
-into their specific scientific analyses.
+\S\ref{ssec:uncertainties}). \added{However, because $I_{F_c}$ is the
+  uncertainty on the mean continuum in the sidebands (not at the
+  wavelength of the line), $\Phi_\mathrm{lim}$ is only an approximate
+  flux limit.} For lines that are dropped during fitting, we use a
+nominal $\sigma$ of 75~\kms{} for narrow lines and 1200~\kms{} for
+broad lines, so that we can still report a limit for every line in the
+spectrum. We compute $\Phi_\mathrm{lim}$ as another possible metric
+for determining the statistical significance of a line
+(\S\ref{ssec:cuts}), and so \added{that }users can more easily fold
+upper limits into their specific scientific analyses.
 
 Separately, for four lines—\ion{C}{4}~$\lambda1549$, \mgiidoublet\ (summed
 as one blended feature), \hb, and \oiiilam—we also measure three
@@ -2090,13 +2093,10 @@ and the $n$th central moment is
 \end{equation}
 we evaluate equation~(\ref{eq:momentn}) for the first two non-trivial
 orders, $M_2$ and $M_3$. We tabulate $M_1$, $M_2$, and $M_3$ (in
-observed-frame \AA, \AA$^2$, and
-\AA$^3$, respectively), together with their Monte Carlo-derived inverse
-variances, as \texttt{MOMENT1}, \texttt{MOMENT2}, and \texttt{MOMENT3}
-columns prefixed by each line's name (e.g., \texttt{OIII\_5007\_MOMENT1}).
-\added{We do not correct these moments for the instrumental resolution, so
-$M_2$ includes instrumental broadening and is most useful for
-well-resolved lines.}
+observed-frame \AA, \AA$^2$, and \AA$^3$, respectively), together with
+their Monte Carlo-derived inverse variances, as \texttt{MOMENT1},
+\texttt{MOMENT2}, and \texttt{MOMENT3} columns prefixed by each line's
+name (e.g., \texttt{OIII\_5007\_MOMENT1}).
 
 In \S\ref{ssec:uncertainties} we describe how we derive
 the companion inverse-variance columns listed in
@@ -2741,19 +2741,21 @@ incorrect redshift to a small but astrophysically important fraction
 of QSO targets \citep{chaussidon23a, adame25e}. The default
 \fastspecfit{} pipeline corrects these redshifts using the
 \texttt{QuasarNet} afterburner catalog \citep{green25a}\added{, which
-reruns Redrock with a \texttt{QuasarNet} redshift prior and is} distributed
-alongside each Redrock output file \citep{desi-collaboration24d,
-  desi-collaboration26a}.\footnote{This option can be easily disabled
-by invoking the \texttt{--ignore-quasarnet} command-line argument; see
+  reruns Redrock with a \texttt{QuasarNet} redshift prior and is}
+distributed alongside each Redrock output file
+\citep{desi-collaboration24d, desi-collaboration26a}.\footnote{This
+option can be easily disabled by invoking the
+\texttt{--ignore-quasarnet} command-line argument; see
 \S\ref{sec:modes} for more options.}  For primary QSO targets and QSO
 targets observed as part of the WISE variability secondary program
-\citep{chaussidon23a, myers23a}, we replace the \added{original }Redrock redshift \added{with this result }when
-\texttt{QuasarNet} independently classifies the object as a QSO and
-when the maximum line-confidence across six diagnostic transitions
-(Ly$\alpha$, \ion{C}{4}, \ion{C}{3}, \mgii, \hb, and \ha) exceeds
-0.99. For these objects, we use the updated \texttt{Z} and
-\texttt{ZWARN} values and copy the original Redrock redshift and
-\texttt{ZWARN} columns to \texttt{Z\_RR} and \texttt{ZWARN\_RR},
+\citep{chaussidon23a, myers23a}, we replace the \added{original
+}Redrock redshift \added{with this result }when \texttt{QuasarNet}
+independently classifies the object as a QSO and when the maximum
+line-confidence across six diagnostic transitions (Ly$\alpha$,
+\ion{C}{4}, \ion{C}{3}, \mgii, \hb, and \ha) exceeds 0.99. For these
+objects, we use the updated \texttt{Z} and \texttt{ZWARN} values and
+copy the original Redrock redshift and \texttt{ZWARN} columns to
+\texttt{Z\_RR} and \texttt{ZWARN\_RR},
 respectively. Table~\ref{table:sample} summarizes the total number of
 objects in the VAC observed as part of the DESI main, special, and SV
 programs, totaling over 38~million objects, including the
@@ -3713,7 +3715,7 @@ Energy, Office of Science, Office of High Energy Physics under Award
 Number DE-SC0020086. We also thank Ben Johnson for assistance
 constructing custom FSPS models, Benjamin J. Weiner for the suggestion
 of fitting emission-line doublets as an amplitude and a line-ratio,
-and Ashod Khederlarian for contributing a tutorial on an early version
+and Ashod Khederlarian for contributing a tutorial to an early version
 of \fastspecfit.
 
 This research used data obtained with the Dark Energy Spectroscopic
@@ -3970,24 +3972,24 @@ algorithmic changes, major bug fixes, and much more, we refer to the
 detailed \fastspecfit{} change log and release
 notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/changes.rst}}
 
-\added{Because many users combine measurements from different VACs, we
-  also quantify how the most widely used quantities change from one
-  release to the next. We match \texttt{Loa/v2.0} to the three earlier
-  \fastspec{} VACs which have been public the longest,
-  \texttt{Iron/v3.0}, \texttt{Iron/v2.1}, and \texttt{Fuji/v3.2}. We
-  omit \texttt{Iron/v4.0}, which we produced with the same code and
-  templates as \texttt{Loa/v2.0}. We also restrict the comparison to
-  SV3, whose targets appear in every release and whose coadded spectra
-  include the same exposures in each specprod. After matching on
-  \texttt{TARGETID}, we require each object to satisfy the
-  good-redshift criteria for its target class (\S\ref{ssec:cuts}) in
-  both catalogs. Among these objects, fewer than 0.2\% of the BGS,
-  LRG, and ELG targets have redshifts which differ by more than
-  1000~\kms{} between releases. For QSO targets, however, this
-  fraction rises to 12\% relative to \texttt{Iron} and 19\% relative
-  to \texttt{Fuji}, which we attribute to changes in both the Redrock
-  and \texttt{QuasarNet} redshifts between specprods and in how
-  \fastspecfit{} applies the \texttt{QuasarNet} correction
+\added{Because none of these earlier VACs...many users combine
+  measurements from different VACs, we also quantify how the most
+  widely used quantities change from one release to the next. We match
+  \texttt{Loa/v2.0} to the three earlier \fastspec{} VACs which have
+  been public the longest, \texttt{Iron/v3.0}, \texttt{Iron/v2.1}, and
+  \texttt{Fuji/v3.2}. We omit \texttt{Iron/v4.0}, which we produced
+  with the same code and templates as \texttt{Loa/v2.0}. We also
+  restrict the comparison to SV3, whose targets appear in every
+  release and whose coadded spectra include the same exposures in each
+  specprod. After matching on \texttt{TARGETID}, we require each
+  object to satisfy the good-redshift criteria for its target class
+  (\S\ref{ssec:cuts}) in both catalogs. Among these objects, fewer
+  than 0.2\% of the BGS, LRG, and ELG targets have redshifts which
+  differ by more than 1000~\kms{} between releases. For QSO targets,
+  however, this fraction rises to 12\% relative to \texttt{Iron} and
+  19\% relative to \texttt{Fuji}, which we attribute to changes in
+  both the Redrock and \texttt{QuasarNet} redshifts between specprods
+  and in how \fastspecfit{} applies the \texttt{QuasarNet} correction
   (\S\ref{ssec:catalog}). We exclude objects whose redshift changed
   from the remainder of the comparison.}
 
@@ -4002,7 +4004,7 @@ notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/change
   0.01~mag). The small positive offset in \vdisp{} (0.004--0.007~dex)
   is consistent with the correction for the intrinsic resolution of
   the C3K templates (Equation~\ref{eq:vdisptot}), which we introduced
-  in \fastspecfit{}~v3.5.0. Relative to \texttt{Iron/v2.1} and
+  in \fastspecfit{}~3.5.0. Relative to \texttt{Iron/v2.1} and
   \texttt{Fuji/v3.2}, both produced with \fastspecfit{}~v2.5.0, the
   scatter is larger (typically 0.02--0.06~dex), but the median offsets
   remain below 0.015~dex. The notable exception is the stellar mass of
@@ -4017,7 +4019,7 @@ notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/change
   \texttt{Iron}, which increase the scatter only modestly.}
 
 \added{Finally, the SFRs in earlier VACs are not directly comparable to
-  those in \texttt{Loa/v2.0}. Starting with \fastspecfit{}~v3.5.0, we
+  those in \texttt{Loa/v2.0}. Starting with \fastspecfit{}~3.5.0, we
   report the SFR averaged over the most recent 100~Myr
   (Equation~\ref{eq:sfr}). Earlier versions instead reported the
   instantaneous SFR of the best-fitting model, to which only the

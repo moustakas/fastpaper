@@ -1719,10 +1719,10 @@ VAC_COMPARE_TRACK_CHANGES = True
 # footnote (rendered with \tablenotemark{a}).
 _VAC_SFR_LABEL = r'$\Delta\log_{10}\mathrm{SFR}$'
 _VAC_SFR_NOTE = (
-    r'All three earlier VACs predate \fastspecfit{}~v3.5.0, which changed the '
-    r'definition of \texttt{SFR}. Before v3.5.0, \texttt{SFR} was the '
+    r'All three earlier VACs predate \fastspecfit{}~3.5.0, which changed the '
+    r'definition of \texttt{SFR}. Before 3.5.0, \texttt{SFR} was the '
     r'instantaneous SFR of the best-fitting model, to which only the youngest '
-    r'(0--30~Myr) age bin contributes; since v3.5.0, it is the SFR averaged '
+    r'(0--30~Myr) age bin contributes; subsequently, it was redefined as the SFR averaged '
     r'over the most recent 100~Myr (Equation~\ref{eq:sfr}). The SFR '
     r'differences therefore largely reflect this change in definition.')
 
