@@ -18,7 +18,9 @@ from util import (read_fastspec, read_fastphot, plot_style,
                   corner_plot, hess_contours, DEFAULT_SPECPROD,
                   nmad, running_binstat, good_galaxies,
                   good_redshift_by_class,
-                  jiyan_p1p3, make_class_cmap, halpha_sfr, wilson_binomial_ci)
+                  jiyan_p1p3, make_class_cmap, halpha_sfr, wilson_binomial_ci,
+                  gr_color, gr_cut_value, fit_gr_cut, GR_CUT_ZBINS,
+                  GR_CUT_MSTARBINS, GR_CUT_COLORLIM)
 
 REPODIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIGDIR  = os.path.join(REPODIR, 'tex', 'figures')
@@ -389,6 +391,26 @@ def compare_mstar(survey='sv3', specprod=DEFAULT_SPECPROD, verbose=False):
 # compare-mstar-external
 # ---------------------------------------------------------------------------
 
+def cigaleagn_quality(d, sfr=True):
+    """Siudek et al. (CIGALE-AGN) quality mask.
+
+    Always applies the recommended stellar-mass cut, 0.2 <= FLAG_MASSPDF <= 5.
+    With ``sfr=True`` (for the SFR comparison) also applies the SFR cut,
+    0.2 <= FLAG_SFRPDF < 5. The mass cut matters for the SFR comparison too:
+    it removes ~100k objects whose SFR is pinned at exactly 1 Msun/yr
+    (h=0.704), which pass the SFR cut but have FLAG_MASSPDF > 1e7. We do not
+    apply the SFR cut to the mass comparison, because it preferentially
+    removes quiescent galaxies (~70% of LRGs) and biases that sample.
+
+    """
+    fmass = np.asarray(d['FLAG_LOGMSTAR_CIGALEAGN'], dtype=float)
+    good = (fmass >= 0.2) & (fmass <= 5.0)
+    if sfr:
+        fsfr = np.asarray(d['FLAG_LOGSFR_CIGALEAGN'], dtype=float)
+        good &= (fsfr >= 0.2) & (fsfr < 5.0)
+    return good
+
+
 def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
     """3×3 grid: FastSpecFit stellar masses vs external catalogs, split by target class.
 
@@ -430,7 +452,7 @@ def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
         dict(
             files=[f'cigaleagn-iron-{survey}-bright.fits', f'cigaleagn-iron-{survey}-dark.fits'],
             ext_col='LOGMSTAR_CIGALEAGN',
-            flag_col='FLAG_LOGMSTAR_CIGALEAGN',
+            quality=lambda d: cigaleagn_quality(d, sfr=False),
             label='Siudek et al. (CIGALE-AGN)',
             classes=['BGS', 'LRG', 'ELG'],
         ),
@@ -456,7 +478,7 @@ def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
 
     for ri, cat in enumerate(catalogs):
         # load and stack all files for this row
-        ref_l, ext_l, flag_l = [], [], []
+        ref_l, ext_l, qual_l = [], [], []
         goodz_l = {cls: [] for cls in all_classes}
         for fn in cat['files']:
             path = os.path.join(extdir, fn)
@@ -465,8 +487,8 @@ def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
             d = Table(fitsio.read(path))
             ref_l.append(d['LOGMSTAR'].astype(float))
             ext_l.append(d[cat['ext_col']].astype(float))
-            if 'flag_col' in cat:
-                flag_l.append(d[cat['flag_col']].astype(float))
+            if 'quality' in cat:
+                qual_l.append(cat['quality'](d))
             gz = good_redshift_by_class(d, survey)
             for cls in all_classes:
                 goodz_l[cls].append(gz[cls])
@@ -474,11 +496,11 @@ def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
         ref   = np.concatenate(ref_l)
         ext   = np.concatenate(ext_l)
         goodz = {cls: np.concatenate(v) for cls, v in goodz_l.items()}
-        flag  = np.concatenate(flag_l) if flag_l else None
+        qual  = np.concatenate(qual_l) if qual_l else None
 
         base = np.isfinite(ref) & (ref > 0) & np.isfinite(ext) & (ext > 0)
-        if flag is not None:
-            base &= (flag > 0.2) & (flag < 5.0)
+        if qual is not None:
+            base &= qual
 
         for ci, cls in enumerate(all_classes):
             ax = axes[ri, ci]
@@ -886,6 +908,144 @@ def compare_cosmos2020(survey='sv3', verbose=False):
 
 
 # ---------------------------------------------------------------------------
+# gr-mstar-cut-qa (star-forming / quiescent color cut)
+# ---------------------------------------------------------------------------
+
+def gr_cut_sample(survey='sv3', verbose=False):
+    """BGS, LRG, and ELG galaxies used to fit the 0.1(g-r) color cut.
+
+    Reads the bright and dark fastspec catalogs for ``survey`` and keeps
+    objects that pass their own class's redshift-quality cut
+    (``good_redshift_by_class``) and have a stellar mass and finite color.
+
+    Returns
+    -------
+    astropy.table.Table
+        Columns include Z, LOGMSTAR, and GR (rest-frame 0.1(g-r)).
+
+    """
+    cols = ['LOGMSTAR', 'ABSMAG01_SDSS_G', 'ABSMAG01_SDSS_R',
+            'OII_3726_FLUX', 'OII_3729_FLUX',
+            'OII_3726_FLUX_IVAR', 'OII_3729_FLUX_IVAR']
+    chunks = []
+    for program in ('bright', 'dark'):
+        cat = read_fastspec(survey, program, specprod=DEFAULT_SPECPROD,
+                            columns=cols, verbose=verbose)
+        gz = good_redshift_by_class(cat, survey)
+        keep = (gz['BGS'] | gz['LRG'] | gz['ELG']) & (cat['LOGMSTAR'] > 0)
+        cat = cat[keep]
+        cat['GR'] = gr_color(cat)
+        chunks.append(cat[np.isfinite(cat['GR'])])
+    cat = vstack(chunks)
+    if verbose:
+        print(f'Color-cut sample: {len(cat):,} galaxies')
+    return cat
+
+
+def gr_cut_coeff(survey='sv3', verbose=False, return_all=False):
+    """Fit the star-forming / quiescent 0.1(g-r) cut (see ``fit_gr_cut``).
+
+    Returns the cut coefficients (a0, a1, a2); with ``return_all=True`` also
+    returns the ``fit`` dictionary from ``fit_gr_cut`` and the fitting sample.
+
+    """
+    cat = gr_cut_sample(survey, verbose=verbose)
+    coeff, fit = fit_gr_cut(cat['LOGMSTAR'], cat['Z'], cat['GR'])
+    fmt = '{:.3f} {:+.3f} (logM - 10) {:+.3f} (z - 0.1)'
+    for label, key in (('valley', 'valley'), ('ridge', 'ridge')):
+        print(f'0.1(g-r) {label:6s}: ' + fmt.format(*fit[f'{key}_coeff']) +
+              f"  [{fit[key]['USED'].sum()} of {len(fit[key])} cells used]")
+    print('0.1(g-r) cut   : ' + fmt.format(*coeff))
+    if return_all:
+        return coeff, fit, cat
+    return coeff
+
+
+def gr_mstar_cut_qa(survey='sv3', verbose=False):
+    """QA figure for the star-forming / quiescent 0.1(g-r) color cut.
+
+    One panel per redshift bin showing 0.1(g-r) versus stellar mass for the
+    combined BGS, LRG, and ELG sample, evaluated at the bin's central
+    redshift: the per-cell red-sequence ridge colors (red squares) and the
+    fitted ridge line (dashed), the per-cell valley colors (blue circles),
+    and the adopted cut (solid). Filled symbols were used in the fits and
+    open symbols were clipped. Each panel lists the star-forming fraction.
+
+    Output: tex/figures/gr-mstar-cut-qa.pdf
+
+    """
+    coeff, fit, cat = gr_cut_coeff(survey, verbose=verbose, return_all=True)
+
+    mstarlim = [GR_CUT_MSTARBINS[0] - 0.5, GR_CUT_MSTARBINS[-1] + 0.25]
+    colorlim = GR_CUT_COLORLIM
+    zbins = GR_CUT_ZBINS
+    nz = len(zbins) - 1
+    ncol = 3
+    nrow = int(np.ceil(nz / ncol))
+
+    plot_style(talk=True, font_scale=0.85, palette='colorblind')
+    fig, axes = plt.subplots(nrow, ncol, figsize=(13, 4 * nrow),
+                             sharex=True, sharey=True)
+    fig.subplots_adjust(hspace=0.08, wspace=0.08)
+    axes = np.atleast_2d(axes)
+
+    mgrid = np.linspace(*mstarlim, 50)
+    for iz, (z1, z2) in enumerate(zip(zbins[:-1], zbins[1:])):
+        ax = axes.flat[iz]
+        I = (cat['Z'] >= z1) & (cat['Z'] < z2)
+        sub = cat[I]
+        zcen = 0.5 * (z1 + z2)
+        if len(sub) > 0:
+            hess_contours(ax, np.asarray(sub['LOGMSTAR'], float),
+                          np.asarray(sub['GR'], float), mstarlim, colorlim,
+                          bins=60, smooth=1.0, cmap='Greys',
+                          contour_color='k', contour_lw=1.2, outlier_ms=1)
+            blue = sub['GR'] < gr_cut_value(sub['LOGMSTAR'], sub['Z'], coeff)
+            fblue = np.mean(blue)
+        else:
+            fblue = np.nan
+
+        ax.plot(mgrid, gr_cut_value(mgrid, zcen, fit['ridge_coeff']),
+                color='C3', lw=2, ls='--', zorder=6)
+        ax.plot(mgrid, gr_cut_value(mgrid, zcen, coeff), color='C3', lw=2.5,
+                zorder=6)
+        for key, col, marker, color in (('valley', 'VALLEY', 'o', 'C0'),
+                                        ('ridge', 'RIDGE', 's', 'C3')):
+            C = fit[key][np.isclose(fit[key]['ZCEN'], zcen)]
+            for used in (True, False):
+                J = C['USED'] == used
+                if np.any(J):
+                    ax.scatter(C['MSTARCEN'][J], C[col][J], s=40, marker=marker,
+                               facecolors=color if used else 'none',
+                               edgecolors=color, linewidths=1.5, zorder=7)
+
+        ax.text(0.04, 0.96,
+                f'${z1:.2f}<z<{z2:.2f}$\n$N={len(sub):,}$\n'
+                f'$f_{{\\rm SF}}={fblue:.2f}$',
+                transform=ax.transAxes, fontsize='small', va='top', ha='left',
+                bbox=dict(facecolor='white', edgecolor='none', alpha=0.75, pad=2))
+        ax.set_xlim(mstarlim)
+        ax.set_ylim(colorlim)
+
+    for ax in axes.flat[nz:]:
+        ax.set_visible(False)
+    for ax in axes[:, 0]:
+        ax.set_ylabel(r'$^{0.1}(g-r)$')
+    for iz in range(nz):
+        if iz + ncol >= nz:
+            axes.flat[iz].set_xlabel(MSTAR_LABEL)
+            axes.flat[iz].tick_params(labelbottom=True)
+
+    fig.suptitle(r'$^{{0.1}}(g-r)_{{\rm cut}} = {:.3f} {:+.3f}\,(\log M - 10) '
+                 r'{:+.3f}\,(z-0.1)$'.format(*coeff), y=0.995)
+
+    outfile = os.path.join(FIGDIR, 'gr-mstar-cut-qa.pdf')
+    fig.savefig(outfile, dpi=150, bbox_inches='tight')
+    print(f'Wrote {outfile}')
+    plt.close(fig)
+
+
+# ---------------------------------------------------------------------------
 # compare-sfr-external
 # ---------------------------------------------------------------------------
 
@@ -894,7 +1054,11 @@ def compare_sfr_external(survey='sv3', verbose=False):
 
     Rows: Zou+CIGALE (loa), CIGALE-AGN (iron), GSWLC-X2 (bright/BGS only).
     Columns: BGS | LRG | ELG.  GSWLC-X2 populates BGS only; other cells hidden.
-    Each panel uses a class-colored Hess background with thick colored contours.
+    Star-forming galaxies, those bluer than the redshift-dependent 0.1(g-r)
+    cut from ``gr_cut_coeff`` (fit to the fastspec catalogs for ``survey``),
+    are shown with a class-colored Hess background and thick colored
+    contours; quiescent galaxies are shown as a gray Hess background only.
+    The listed N, median offset, and NMAD use star-forming galaxies only.
 
     survey : str
         DESI survey flavor: 'sv1', 'sv3' (default), 'main', or 'special'.
@@ -912,10 +1076,11 @@ def compare_sfr_external(survey='sv3', verbose=False):
     sfrlim = [-7, 4]
     all_classes = ['BGS', 'LRG', 'ELG']
 
+    gr_coeff = gr_cut_coeff(survey, verbose=verbose)
+
     catalogs = [
         dict(
-            files=[f'zouhu-iron-{survey}-bright.fits', f'zouhu-iron-{survey}-dark.fits'],
-            #files=[f'zouhu-loa-{survey}-bright.fits', f'zouhu-loa-{survey}-dark.fits'],
+            files=[f'zouhu-loa-{survey}-bright.fits', f'zouhu-loa-{survey}-dark.fits'],
             ext_col='SFR_ZOUHU',
             label='Zou et al. (CIGALE)',
             classes=['BGS', 'LRG', 'ELG'],
@@ -923,7 +1088,7 @@ def compare_sfr_external(survey='sv3', verbose=False):
         dict(
             files=[f'cigaleagn-iron-{survey}-bright.fits', f'cigaleagn-iron-{survey}-dark.fits'],
             ext_col='SFR_CIGALEAGN',
-            flag_col='FLAG_LOGSFR_CIGALEAGN',
+            quality=cigaleagn_quality,
             label='Siudek et al. (CIGALE-AGN)',
             classes=['BGS', 'LRG', 'ELG'],
         ),
@@ -948,17 +1113,21 @@ def compare_sfr_external(survey='sv3', verbose=False):
     fig.subplots_adjust(hspace=0.08, wspace=0.08)
 
     for ri, cat in enumerate(catalogs):
-        ref_l, ext_l, flag_l = [], [], []
+        ref_l, ext_l, qual_l, blue_l = [], [], [], []
         goodz_l = {cls: [] for cls in all_classes}
         for fn in cat['files']:
             path = os.path.join(extdir, fn)
             if verbose:
                 print(f'Reading {path}')
             d = Table(fitsio.read(path))
+            gr = gr_color(d)
+            with np.errstate(invalid='ignore'):
+                blue_l.append(np.isfinite(gr) &
+                              (gr < gr_cut_value(d['LOGMSTAR'], d['Z'], gr_coeff)))
             ref_l.append(d['SFR'].astype(float))
             ext_l.append(d[cat['ext_col']].astype(float))
-            if 'flag_col' in cat:
-                flag_l.append(d[cat['flag_col']].astype(float))
+            if 'quality' in cat:
+                qual_l.append(cat['quality'](d))
             gz = good_redshift_by_class(d, survey)
             for cls in all_classes:
                 goodz_l[cls].append(gz[cls])
@@ -966,12 +1135,13 @@ def compare_sfr_external(survey='sv3', verbose=False):
         ref   = np.concatenate(ref_l)
         ext   = np.concatenate(ext_l)
         goodz = {cls: np.concatenate(v) for cls, v in goodz_l.items()}
-        flag  = np.concatenate(flag_l) if flag_l else None
+        qual  = np.concatenate(qual_l) if qual_l else None
+        blue  = np.concatenate(blue_l)
 
         base = (np.isfinite(ref) & (ref > 0) &
                 np.isfinite(ext) & (ext > 0))
-        if flag is not None:
-            base &= (flag > 0.2) & (flag < 5.0)
+        if qual is not None:
+            base &= qual
 
         with np.errstate(divide='ignore', invalid='ignore'):
             log_ref = np.where(base, np.log10(ref), np.nan)
@@ -985,13 +1155,21 @@ def compare_sfr_external(survey='sv3', verbose=False):
                 continue
 
             cmask = base & goodz[cls]
+            sf    = cmask & blue
+            qu    = cmask & ~blue
 
-            r, e = log_ref[cmask], log_ext[cmask]
+            r, e = log_ref[sf], log_ext[sf]
             in_range = ((r >= sfrlim[0]) & (r <= sfrlim[1]) &
                         (e >= sfrlim[0]) & (e <= sfrlim[1]))
             delta = e[in_range] - r[in_range]
             color = TARGET_CLASS_COLORS[cls]
+            if verbose:
+                print(f"  {cat['label']} {cls}: {sf.sum():,} star-forming, "
+                      f'{qu.sum():,} quiescent')
 
+            # quiescent: gray background only (no contours or outlier markers)
+            hess_contours(ax, log_ref[qu], log_ext[qu], sfrlim, sfrlim, bins=60,
+                          cmap=make_class_cmap('0.4'), contour_levels=[])
             hess_contours(ax, r, e, sfrlim, sfrlim, bins=60,
                           cmap=make_class_cmap(color),
                           contour_color=color, contour_lw=2.0)
@@ -1972,6 +2150,9 @@ def main():
                         help='Stellar mass comparison: FastSpecFit vs COSMOS2020.')
     parser.add_argument('--compare-sfr-external', action='store_true',
                         help='SFR comparison: FastSpecFit vs external catalogs.')
+    parser.add_argument('--gr-mstar-cut-qa', action='store_true',
+                        help='QA figure for the star-forming/quiescent 0.1(g-r) color cut '
+                             'used in compare-sfr-external.')
     parser.add_argument('--mstar-redshift', action='store_true',
                         help='M* vs. redshift for BGS, LRG, ELG (sv3).')
     parser.add_argument('--ewoii-dn4000', action='store_true',
@@ -2032,6 +2213,9 @@ def main():
 
     if args.compare_sfr_external:
         compare_sfr_external(verbose=args.verbose)
+
+    if args.gr_mstar_cut_qa:
+        gr_mstar_cut_qa(verbose=args.verbose)
 
     if args.mstar_redshift:
         mstar_redshift(verbose=args.verbose)

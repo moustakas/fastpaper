@@ -668,6 +668,196 @@ def halpha_sfr(cat, snr_cut=3.0):
     return log_sfr, good
 
 
+GR_CUT_ZBINS     = [0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2]
+GR_CUT_MSTARBINS = np.arange(8.5, 12.0 + 0.01, 0.25)
+GR_CUT_COLORLIM  = [-0.2, 1.4]
+
+
+def gr_color(cat):
+    """Rest-frame 0.1(g-r) color from the FastSpecFit ABSMAG01 columns.
+
+    Returns NaN where either magnitude is missing (zero or non-finite).
+
+    """
+    g = np.asarray(cat['ABSMAG01_SDSS_G'], dtype=float)
+    r = np.asarray(cat['ABSMAG01_SDSS_R'], dtype=float)
+    bad = ~np.isfinite(g) | ~np.isfinite(r) | (g == 0) | (r == 0)
+    return np.where(bad, np.nan, g - r)
+
+
+def gr_cut_value(logmstar, z, coeff):
+    """Dividing 0.1(g-r) color at a given stellar mass (h=1) and redshift.
+
+    color_cut = a0 + a1 * (logmstar - 10) + a2 * (z - 0.1)
+
+    """
+    a0, a1, a2 = coeff
+    return a0 + a1 * (np.asarray(logmstar) - 10.) + a2 * (np.asarray(z) - 0.1)
+
+
+GR_CUT_DELTA = 0.20
+
+
+def _fit_plane(cells, ycol, wcol, nclip=3, sigclip=3.0, floor=0.02):
+    """Weighted, sigma-clipped fit of y = a0 + a1 (logM - 10) + a2 (z - 0.1).
+
+    Returns the coefficients and a boolean mask of the cells kept in the fit.
+
+    """
+    A = np.vstack([np.ones(len(cells)), cells['MSTARCEN'] - 10.,
+                   cells['ZCEN'] - 0.1]).T
+    y = np.asarray(cells[ycol], dtype=float)
+    w = np.sqrt(np.asarray(cells[wcol], dtype=float))
+
+    def _solve(used):
+        coeff, *_ = np.linalg.lstsq(A[used] * w[used, None], y[used] * w[used],
+                                    rcond=None)
+        return coeff
+
+    used = np.ones(len(cells), bool)
+    for _ in range(nclip):
+        coeff = _solve(used)
+        resid = y - A @ coeff
+        newused = np.abs(resid) < sigclip * max(nmad(resid[used]), floor)
+        if np.array_equal(newused, used) or newused.sum() < 4:
+            break
+        used = newused
+    return _solve(used), used
+
+
+def fit_gr_cut(logmstar, z, color, delta=GR_CUT_DELTA, zbins=GR_CUT_ZBINS,
+               mstarbins=GR_CUT_MSTARBINS, colorlim=GR_CUT_COLORLIM, dcolor=0.02,
+               smooth=2.0, nmin=200, nred_min=100, min_sep=0.15,
+               min_prominence=0.05):
+    """Fit a conservative, redshift-dependent star-forming / quiescent color cut.
+
+    The cut runs parallel to the red sequence, ``delta`` mag blueward of its
+    ridge line. We derive it in two passes over cells in (redshift, stellar
+    mass), using a smoothed 0.1(g-r) histogram in each cell:
+
+    1. Valley. In cells with two prominent peaks separated by at least
+       ``min_sep`` mag, we take the color at the minimum between them. A plane
+       fit to these valley colors gives a provisional red/blue boundary. The
+       valley is only measurable in a minority of cells (mostly at low mass
+       and low redshift), so we use it only to separate the red sequence from
+       the blue cloud in the next step.
+    2. Ridge. In every cell with at least ``nred_min`` galaxies redward of the
+       provisional boundary, we take the most populous histogram peak redward
+       of that boundary as the red-sequence ridge color, and fit a plane to
+       these ridge colors.
+
+    The returned cut is the ridge plane shifted blueward by ``delta``.
+    Galaxies bluer than the cut are classified as star-forming. With the
+    default ``delta=0.20``, the cut lies about 0.07 mag blueward of the
+    median valley, which keeps green-valley galaxies out of the star-forming
+    sample.
+
+    Each plane has the form a0 + a1 (logM - 10) + a2 (z - 0.1), and is fit
+    with each cell weighted by sqrt(N), iteratively rejecting 3-sigma
+    outliers.
+
+    Parameters
+    ----------
+    logmstar, z, color : array_like
+        Stellar mass (log10, h=1), redshift, and rest-frame 0.1(g-r) color.
+        Non-finite entries are ignored.
+    delta : float
+        Blueward offset of the cut from the red-sequence ridge [mag].
+    zbins, mstarbins : array_like
+        Bin edges in redshift and stellar mass.
+    colorlim : (float, float)
+        Color range of the histogram.
+    dcolor : float
+        Histogram bin width [mag].
+    smooth : float
+        Gaussian smoothing kernel in units of histogram bins.
+    nmin : int
+        Minimum number of galaxies in a cell.
+    nred_min : int
+        Minimum number of galaxies redward of the provisional boundary for a
+        cell to contribute to the ridge fit.
+    min_sep : float
+        Minimum color separation between the two peaks in the valley pass [mag].
+    min_prominence : float
+        Minimum peak prominence as a fraction of the smoothed histogram maximum.
+
+    Returns
+    -------
+    coeff : ndarray, shape (3,)
+        Coefficients (a0, a1, a2) of the star-forming / quiescent cut.
+    fit : dict
+        ``valley_coeff`` and ``ridge_coeff`` (plane coefficients), and the
+        per-cell tables ``valley`` (ZCEN, MSTARCEN, N, VALLEY, PEAK_BLUE,
+        PEAK_RED, USED) and ``ridge`` (ZCEN, MSTARCEN, N, NRED, RIDGE, USED),
+        where USED is False for cells rejected by the sigma clipping.
+
+    """
+    from scipy.ndimage import gaussian_filter1d
+    from scipy.signal import find_peaks
+    from astropy.table import Table
+
+    logmstar = np.asarray(logmstar, dtype=float)
+    z        = np.asarray(z, dtype=float)
+    color    = np.asarray(color, dtype=float)
+    ok = np.isfinite(logmstar) & np.isfinite(z) & np.isfinite(color)
+
+    edges   = np.arange(colorlim[0], colorlim[1] + dcolor / 2, dcolor)
+    centers = 0.5 * (edges[:-1] + edges[1:])
+
+    # smoothed histogram and peaks for every populated cell
+    hcells = []
+    for z1, z2 in zip(zbins[:-1], zbins[1:]):
+        for m1, m2 in zip(mstarbins[:-1], mstarbins[1:]):
+            I = ok & (z >= z1) & (z < z2) & (logmstar >= m1) & (logmstar < m2)
+            if I.sum() < nmin:
+                continue
+            H, _ = np.histogram(color[I], bins=edges)
+            Hs = gaussian_filter1d(H.astype(float), smooth)
+            peaks, props = find_peaks(Hs, prominence=min_prominence * Hs.max())
+            hcells.append(dict(zcen=0.5 * (z1 + z2), mcen=np.median(logmstar[I]),
+                               I=I, Hs=Hs, peaks=peaks,
+                               prom=props['prominences']))
+
+    # pass 1: valley between the two most prominent peaks
+    vrows = []
+    for c in hcells:
+        if len(c['peaks']) < 2:
+            continue
+        top = np.sort(c['peaks'][np.argsort(c['prom'])[-2:]])
+        if centers[top[1]] - centers[top[0]] < min_sep:
+            continue
+        valley = top[0] + np.argmin(c['Hs'][top[0]:top[1] + 1])
+        vrows.append((c['zcen'], c['mcen'], c['I'].sum(), centers[valley],
+                      centers[top[0]], centers[top[1]]))
+    if len(vrows) < 4:
+        raise ValueError(f'Only {len(vrows)} cells show a bimodal color '
+                         'distribution; cannot fit the color cut.')
+    vcells = Table(rows=vrows, names=['ZCEN', 'MSTARCEN', 'N', 'VALLEY',
+                                      'PEAK_BLUE', 'PEAK_RED'])
+    vcoeff, vcells['USED'] = _fit_plane(vcells, 'VALLEY', 'N', floor=dcolor)
+
+    # pass 2: red-sequence ridge redward of the provisional boundary
+    rrows = []
+    for c in hcells:
+        vline = vcoeff[0] + vcoeff[1] * (c['mcen'] - 10.) + vcoeff[2] * (c['zcen'] - 0.1)
+        nred = np.sum(color[c['I']] > vline)
+        red = c['peaks'][centers[c['peaks']] > vline]
+        if nred < nred_min or len(red) == 0:
+            continue
+        ridge = red[np.argmax(c['Hs'][red])]
+        rrows.append((c['zcen'], c['mcen'], c['I'].sum(), nred, centers[ridge]))
+    if len(rrows) < 4:
+        raise ValueError(f'Only {len(rrows)} cells have a measurable red '
+                         'sequence; cannot fit the color cut.')
+    rcells = Table(rows=rrows, names=['ZCEN', 'MSTARCEN', 'N', 'NRED', 'RIDGE'])
+    rcoeff, rcells['USED'] = _fit_plane(rcells, 'RIDGE', 'NRED', floor=dcolor)
+
+    coeff = rcoeff - np.array([delta, 0., 0.])
+    fit = dict(valley_coeff=vcoeff, ridge_coeff=rcoeff, valley=vcells,
+               ridge=rcells)
+    return coeff, fit
+
+
 def jiyan_p1p3(log_nii_ha, log_sii_ha, log_oiii_hb):
     """Ji & Yan (2020) P1 and P3 line-ratio projections for AGN/SF separation.
 

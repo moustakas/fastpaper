@@ -3145,14 +3145,6 @@ catalogs measure the same spectra and therefore share the same
 noise. Consequently, this comparison validates the line fluxes, but it
 does not test their uncertainties.}
 
-%\begin{figure*}
-%\includegraphics[width=1.0\textwidth]{compare-sfr-external.pdf}
-%\caption{Write me\label{fig:compare-sfr-external}}
-%\end{figure*}
-
-%Figure~\ref{fig:compare-sfr-external} makes the analogous comparison
-%for star-formation rates. \todo{Describe agreement.}
-
 %Figure~\ref{fig:cosmos2020} compares \fastspecfit{} stellar masses
 %against photometric stellar masses from the COSMOS2020 catalog
 %\citep{weaver22a} for DESI SV3 targets in the COSMOS field, restricted
@@ -3314,6 +3306,96 @@ between \fastspec{} and three independent, CIGALE-based stellar-mass
 catalogs is very good, particularly given the different data
 (photometry only versus spectrophotometry), templates, and
 star-formation-history parameterizations involved.
+
+\begin{figure*}
+\centering\includegraphics[width=1.0\textwidth]{compare-sfr-external.pdf}
+\caption{\added{Comparison of \fastspec{} SFRs (equation~\ref{eq:sfr};
+  $h=1$, Chabrier IMF) against the same three CIGALE-based catalogs
+  shown in Figure~\ref{fig:compare-mstar-external}, organized by DESI
+  target class along columns. We classify galaxies as star-forming or
+  quiescent using a conservative rest-frame $^{0.1}(g-r)$ color cut
+  (equation~\ref{eq:grcut}). For star-forming galaxies, the color map,
+  contours, and markers are as in
+  Figure~\ref{fig:compare-emlines-external}, while quiescent galaxies
+  are shown as a gray density map only. The dashed line is the
+  one-to-one relation. Each panel lists the number of star-forming
+  galaxies $N$, the median difference $\Delta_\mathrm{med}$ (external
+  minus \fastspec) in dex, and the \texttt{NMAD} scatter in dex, all
+  computed using the star-forming galaxies only.}
+  \label{fig:compare-sfr-external}}
+\end{figure*}
+
+\added{In Figure~\ref{fig:compare-sfr-external} we compare our SFRs
+against the same three catalogs. Unlike the stellar masses, the four sets
+of SFRs are not defined identically. We report the mean SFR over the
+last 100~Myr (equation~\ref{eq:sfr}), as does GSWLC-X2
+\citep{salim16a}, whereas the Zou et~al. and \citet{siudek24a}
+catalogs report the instantaneous SFR and the mean SFR over the last
+10~Myr, respectively (DESI Collaboration et~al., in
+preparation). Moreover, only GSWLC-X2 constrains the SFR with
+rest-frame UV (GALEX) and mid-IR (WISE 22\,\micron) photometry;
+the other three catalogs, including ours, rely on optical and
+$W1$--$W2$ (or $W1$--$W4$) photometry and, for \fastspec{} and Zou
+et~al., the DESI spectrum.}
+
+\added{Because none of these catalogs constrains the SFRs of quiescent
+galaxies well (see below), we follow DESI Collaboration et~al. (in
+preparation) and compute the comparison statistics for star-forming
+galaxies only. Instead of their spectral classification, however, we
+use our rest-frame $^{0.1}(g-r)$ color. Using our SV3 BGS, LRG, and
+ELG samples, we measure the color of the red-sequence ridge in bins of
+stellar mass and redshift, and fit these measurements with a plane,
+$^{0.1}(g-r)_\mathrm{ridge}=0.906+0.067\,(\logmstar-10)-0.130\,(z-0.1)$,
+which describes the ridge to within 0.013~mag (\texttt{NMAD}). We then
+classify a galaxy as star-forming if it is more than 0.2~mag bluer
+than this ridge line,}
+\begin{equation}
+  ^{0.1}(g-r) < 0.706 + 0.067\,(\logmstar-10) - 0.130\,(z-0.1).
+  \label{eq:grcut}
+\end{equation}
+\added{This cut lies $\approx0.07$~mag blueward of the minimum between
+the red sequence and the blue cloud (where we can measure it), so it
+deliberately excludes green-valley galaxies at the cost of some
+genuinely star-forming galaxies. In the sample matched to the Zou
+et~al. catalog, it classifies 49\%, 13\%, and 99\% of the BGS, LRG,
+and ELG targets as star-forming, slightly below the fractions that
+DESI Collaboration et~al. (in preparation) find for BGS and LRG
+targets (51\% and 18\%).}
+
+\added{For star-forming galaxies, our SFRs track the external
+measurements over three to four orders of magnitude. For BGS and ELG
+targets, the median offsets relative to the two CIGALE-based catalogs
+range from $-0.24$ to $+0.09$~dex, with $\mathtt{NMAD}=0.28$--$0.41$~dex.
+For BGS targets, the two catalogs bracket our measurements
+($\Delta_\mathrm{med}=0.09\pm0.33$~dex for Zou et~al. and
+$-0.22\pm0.28$~dex for \citealt{siudek24a}). The largest offset is
+relative to GSWLC-X2, $\Delta_\mathrm{med}=-0.44\pm0.23$~dex, so our
+BGS SFRs are systematically higher by nearly a factor of three. We
+have not yet identified the origin of this offset, even though the
+comparison with GSWLC-X2 is arguably the most informative one, because
+it uses the same SFR averaging timescale and includes UV and mid-IR
+constraints. For the minority of star-forming LRG targets, the scatter
+is much larger ($\mathtt{NMAD}=0.57$--$0.66$~dex), and the offsets
+relative to the two CIGALE-based catalogs have opposite signs ($+0.41$
+and $-0.20$~dex), indicating that none of these catalogs constrains
+their SFRs well.}
+
+\added{For quiescent galaxies, in contrast, our SFRs fall well below
+the external values, reaching $\mathrm{SFR}\lesssim10^{-4}~h^{-2}\,
+\msun~\mathrm{yr}^{-1}$, while the CIGALE-based SFRs level off at
+roughly $10^{-2}$--$1~h^{-2}\,\msun~\mathrm{yr}^{-1}$. This
+difference follows from the SFH parameterizations. Our NNLS fit
+(\S\ref{sssec:fitting}) can assign little or no mass to the two
+youngest age bins, whereas a delayed-$\tau$ SFH always retains some
+residual star formation. Neither value is well constrained by
+the available data, so we recommend that users treat the SFRs of
+quiescent galaxies with considerable caution. Overall, our results are
+consistent with DESI Collaboration et~al. (in preparation), who
+compare the SFRs of star-forming galaxies from \fastspecfit{} and
+several other SED-fitting codes and find
+$\mathtt{NMAD}\approx0.3$--$0.5$~dex scatter even between codes with
+similar modeling assumptions, and who likewise find that the SFRs of
+star-forming LRGs are poorly constrained.}
 
 \todo{Add a sentence pointing to the PROVABGS comparison in the GQP
   DR2 Key Paper (Saulder CWR comment; the response says this was

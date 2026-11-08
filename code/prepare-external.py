@@ -423,8 +423,10 @@ def prepare_cigaleagn(survey=None, verbose=False):
         SFR_ERR_h1  = SFR_h1 × LOGSFR_ERR × ln(10)       (dex → linear propagation)
 
     Quality flags are stored in the output for use in figure code:
-        Good masses:  0.2 < FLAG_MASSPDF < 5.0
-        Good SFRs:    0.2 < FLAG_SFRPDF  < 5.0
+        Good masses:  0.2 <= FLAG_MASSPDF <= 5.0
+        Good SFRs:    0.2 <= FLAG_SFRPDF  <  5.0
+    The figure code applies the mass cut to both comparisons and the SFR cut
+    to the SFR comparison only.
 
     References:
         Siudek et al. (2025) — https://www.aanda.org/articles/aa/full_html/2025/08/aa55463-25/aa55463-25.html

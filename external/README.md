@@ -100,8 +100,8 @@ columns above (Iron only — the Loa Zou catalog carries no line fluxes).
 | `LOGMSTAR_ERR_CIGALEAGN` | dex | 1σ uncertainty |
 | `SFR_CIGALEAGN` | M_sun/yr | SFR at h=1 (linear; converted from log) |
 | `SFR_ERR_CIGALEAGN` | M_sun/yr | 1σ uncertainty |
-| `FLAG_LOGMSTAR_CIGALEAGN` | — | Mass PDF quality flag; good fits: 0.2 < flag < 5.0 |
-| `FLAG_LOGSFR_CIGALEAGN` | — | SFR PDF quality flag; good fits: 0.2 < flag < 5.0 |
+| `FLAG_LOGMSTAR_CIGALEAGN` | — | Mass PDF quality flag; good fits: 0.2 ≤ flag ≤ 5.0 |
+| `FLAG_LOGSFR_CIGALEAGN` | — | SFR PDF quality flag; good fits: 0.2 ≤ flag < 5.0 (the SFR figure applies both flag cuts; the mass flag also removes ~100k rows with SFR pinned at 1 M_sun/yr) |
 | `AGNFRAC_CIGALEAGN` | — | AGN fraction |
 
 ---
