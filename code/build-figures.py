@@ -1720,11 +1720,7 @@ VAC_COMPARE_TRACK_CHANGES = True
 _VAC_SFR_LABEL = r'$\Delta\log_{10}\mathrm{SFR}$'
 _VAC_SFR_NOTE = (
     r'All three earlier VACs predate \fastspecfit{}~3.5.0, which changed the '
-    r'definition of \texttt{SFR}. Before 3.5.0, \texttt{SFR} was the '
-    r'instantaneous SFR of the best-fitting model, to which only the youngest '
-    r'(0--30~Myr) age bin contributes; subsequently, it was redefined as the SFR averaged '
-    r'over the most recent 100~Myr (Equation~\ref{eq:sfr}). The SFR '
-    r'differences therefore largely reflect this change in definition.')
+    r'definition of \texttt{SFR} (see Appendix~\ref{sec:appendix_vacs}).')
 
 
 def _vac_col(cat, col, tag=None):
@@ -1936,7 +1932,7 @@ def vac_compare_table(verbose=False):
             r'Median difference ($\Delta$; \texttt{Loa/v2.0} minus the earlier VAC) '
             r'and normalized median absolute deviation ($\sigma$) for SV3 targets with a '
             r'good redshift (\S\ref{ssec:cuts}) in both catalogs and redshifts that agree '
-            rf'to within {MAX_DV_KMS:.0f}~\kms{{}}. Line fluxes and \vdisp{{}} require '
+            rf'to within {MAX_DV_KMS:.0f}~\kms{{}}. Line fluxes and \vdisp{{}} require flux '
             rf'$\mathrm{{S/N}}>{VAC_COMPARE_SNRMIN:.0f}$ in both catalogs.') + '}',
         r'\end{deluxetable*}',
     ]

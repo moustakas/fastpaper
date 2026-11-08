@@ -3973,26 +3973,29 @@ algorithmic changes, major bug fixes, and much more, we refer to the
 detailed \fastspecfit{} change log and release
 notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/changes.rst}}
 
-\added{Because none of these earlier VACs...many users combine
-  measurements from different VACs, we also quantify how the most
-  widely used quantities change from one release to the next. We match
-  \texttt{Loa/v2.0} to the three earlier \fastspec{} VACs which have
-  been public the longest, \texttt{Iron/v3.0}, \texttt{Iron/v2.1}, and
+\added{In the remainder of this appendix, we quantify the statistical
+  differences across a subset of these releases for a handful of key
+  quantities measured by \fastspecfit. We match \texttt{Loa/v2.0} to
+  the three earlier \fastspec{} VACs which have been public the
+  longest, \texttt{Iron/v3.0}, \texttt{Iron/v2.1}, and
   \texttt{Fuji/v3.2}. We omit \texttt{Iron/v4.0}, which we produced
-  with the same code and templates as \texttt{Loa/v2.0}. We also
-  restrict the comparison to SV3, whose targets appear in every
-  release and whose coadded spectra include the same exposures in each
-  specprod. After matching on \texttt{TARGETID}, we require each
-  object to satisfy the good-redshift criteria for its target class
-  (\S\ref{ssec:cuts}) in both catalogs. Among these objects, fewer
-  than 0.2\% of the BGS, LRG, and ELG targets have redshifts which
-  differ by more than 1000~\kms{} between releases. For QSO targets,
-  however, this fraction rises to 12\% relative to \texttt{Iron} and
-  19\% relative to \texttt{Fuji}, which we attribute to changes in
-  both the Redrock and \texttt{QuasarNet} redshifts between specprods
-  and in how \fastspecfit{} applies the \texttt{QuasarNet} correction
-  (\S\ref{ssec:catalog}). We exclude objects whose redshift changed
-  from the remainder of the comparison.}
+  with the same code and templates as \texttt{Loa/v2.0}, as well as
+  the earlier \texttt{Iron} and \texttt{Fuji} VACs, which were only
+  available internally to DESI collaboration members before being
+  superseded. We also restrict the comparison to SV3, whose targets
+  appear in every release and whose coadded spectra include the same
+  exposures in each specprod. After matching on \texttt{TARGETID}, we
+  require each object to satisfy the good-redshift criteria for its
+  target class (\S\ref{ssec:cuts}) in both catalogs. Among these
+  objects, fewer than 0.2\% of the BGS, LRG, and ELG targets have
+  redshifts which differ by more than 1000~\kms{} between
+  releases. For QSO targets, however, this fraction rises to 12\%
+  relative to \texttt{Iron} and 19\% relative to \texttt{Fuji}, which
+  we attribute to changes in both the \texttt{QuasarNet}
+  classifications and Redrock redshifts between specprods and in how
+  \fastspecfit{} updates its QSO redshifts (\S\ref{ssec:catalog}). We
+  exclude objects whose redshift changed from the following
+  comparisons.}
 
 \input{tables/table-vac-compare}
 
@@ -4006,12 +4009,12 @@ notes.\footnote{\url{https://github.com/desihub/fastspecfit/blob/main/doc/change
   is consistent with the correction for the intrinsic resolution of
   the C3K templates (Equation~\ref{eq:vdisptot}), which we introduced
   in \fastspecfit{}~3.5.0. Relative to \texttt{Iron/v2.1} and
-  \texttt{Fuji/v3.2}, both produced with \fastspecfit{}~v2.5.0, the
+  \texttt{Fuji/v3.2}, both produced with \fastspecfit{}~2.5.0, the
   scatter is larger (typically 0.02--0.06~dex), but the median offsets
   remain below 0.015~dex. The notable exception is the stellar mass of
   ELGs, which scatters by 0.21--0.28~dex relative to these two catalogs
   with no significant median offset. We attribute this scatter to the
-  substantial changes in our SPS templates since v2.5.0
+  substantial changes in our SPS templates since 2.5.0
   (Table~\ref{table:vac-history}), combined with the low
   S/N of most ELG continua. Moreover, because
   \texttt{Iron/v2.1} and \texttt{Fuji/v3.2} share the same code and
