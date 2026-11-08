@@ -611,7 +611,8 @@ def halpha_sfr(cat, snr_cut=3.0):
 
     Applies an aperture correction (APERCORR), derives E(B-V) from the Balmer
     decrement using a Cardelli+O'Donnell (R_V=3.1) extinction curve, and converts
-    to SFR via Hao et al. (2011) for a Chabrier IMF.
+    to SFR via the Hao et al. (2011, Table 2) Kroupa-IMF calibration, converted
+    to a Chabrier IMF with the Madau & Dickinson (2014) factors (0.63/0.67).
 
     Parameters
     ----------
@@ -662,8 +663,12 @@ def halpha_sfr(cat, snr_cut=3.0):
 
     l_ha = 4.0 * np.pi * dlum_cm ** 2 * f_ha_corr  # [erg/s]
 
+    # Hao+11 Table 2: log C(Hα) = -41.257 for Kroupa (0.1-100 Msun, 100 Myr);
+    # Kroupa -> Chabrier: log10(0.63/0.67) ≈ -0.027 dex (Madau & Dickinson 2014).
+    log_c_ha = -41.257 + np.log10(0.63 / 0.67)
+
     with np.errstate(divide='ignore', invalid='ignore'):
-        log_sfr = np.where(good, np.log10(l_ha) - 41.27, np.nan)
+        log_sfr = np.where(good, np.log10(l_ha) + log_c_ha, np.nan)
 
     return log_sfr, good
 

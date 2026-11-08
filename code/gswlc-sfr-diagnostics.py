@@ -25,7 +25,7 @@ including the H-alpha comparison in bins of aperture correction. At the
 time of writing: Delta log SFR = -0.45 +/- 0.24 dex, Delta log M* = -0.21
 dex, Delta log sSFR = -0.20 dex; Spearman(Delta SFR, Delta tau_V) = 0.50;
 FastSpecFit, GSWLC-X2, Zou, and Siudek SFRs exceed the H-alpha SFRs by
-+0.56, +0.09, +0.39, and +0.33 dex (common sample), independent of
++0.57, +0.11, +0.41, and +0.34 dex (common sample), independent of
 aperture correction. The Zou offset relative to GSWLC-X2 tracks the
 attenuation difference even more tightly (Spearman 0.82; Zou median
 tau_V = 0.64 versus 0.39 for FastSpecFit and 0.28 for GSWLC-X2). Our

@@ -3335,7 +3335,7 @@ star-formation-history parameterizations involved. \todo{Could soften
   whereas the Zou et~al. and \citet{siudek24a} catalogs report the
   instantaneous SFR and the mean SFR over the last 10~Myr,
   respectively (DESI Collaboration et~al., in preparation). Moreover,
-  only GSWLC-X2 constrains the SFR with rest-frame UV
+  only GSWLC-X2 constrains the SFR with observed-frame UV
   \citep[GALEX;][]{martin05a} photometry.}
 
 \added{Because of the difficulty of constraining the SFRs of quiescent
@@ -3372,24 +3372,50 @@ star-formation-history parameterizations involved. \todo{Could soften
   of star-forming LRGs, meanwhile, the scatter is much larger,
   $\mathtt{NMAD}=0.57$--$0.66$~dex, with large median offsets that are
   opposite in sign ($+0.41$ and $-0.20$~dex), indicating that none of
-  these catalogs constrains their SFRs well.
+  these catalogs constrains their SFRs well (see also DESI
+  Collaboration et~al., in preparation).}
 
-  Compared to the GSWLC-X2 catalog, which is only available for BGS
-  targets, the \fastspecfit{} SFRs are systematically higher by nearly
-  a factor of three, $\Delta_\mathrm{med}=-0.44\pm0.23$~dex. To check
-  this result, we compute SFRs for the same set of galaxies with a
-  well-measured ($\mathrm{S/N}>3$) \ha{} line, corrected for aperture
-  effects and extinction using the Balmer decrement \citep{hao11a},
-  and find an $\approx0.55$~dex offset, whereas GSWLC-X2 agrees with
-  the \ha-based SFRs to within 0.1~dex.  Moreover, the offset grows
-  with our inferred attenuation. The Zou et~al. and \citet{siudek24a}
-  SFRs, which adopt different attenuation laws, also exceed the \ha{}
-  SFRs, by 0.3--0.4~dex, so we attribute the offset to a degeneracy
-  between dust attenuation and stellar age that none of these fits can
-  break without the rest-frame UV and mid-IR constraints available to
-  GSWLC-X2.
+\added{Compared to the GSWLC-X2 catalog, which is only available for
+  BGS targets, the \fastspecfit{} SFRs are systematically higher by
+  nearly a factor of three, $\Delta_\mathrm{med}=-0.44\pm0.23$~dex. To
+  determine which set of SFRs is more accurate, we compute an
+  independent SFR for the subset of these galaxies with well-measured
+  ($\mathrm{S/N}>3$) \ha{} and \hb{} line-emission. We correct the
+  \ha{} flux for aperture effects and for dust attenuation using the
+  Balmer decrement, and convert it to an SFR following \citet{hao11a}.
+  GSWLC-X2 agrees with these \ha-based SFRs to within
+  $\approx0.1$~dex, whereas the \fastspecfit{} SFRs exceed them by
+  $\approx0.57$~dex, with no dependence on the size of the aperture
+  correction. The Zou et~al. and \citet{siudek24a} SFRs also exceed
+  the \ha-based SFRs, by 0.34--0.41~dex, so this excess is not unique
+  to \fastspecfit.}
 
-}
+\added{Our stellar masses for these galaxies are also higher than
+  GSWLC-X2, by 0.21~dex (Figure~\ref{fig:compare-mstar-external}), so
+  the corresponding offset in specific SFR is about half as large,
+  $-0.20$~dex. What distinguishes GSWLC-X2 from the other three
+  catalogs, however, is its rest-frame UV photometry, which leads us
+  to attribute the SFR excess to the well-known degeneracy between
+  dust attenuation and stellar age \citep[e.g.,][]{conroy13a}. At
+  optical and near-IR wavelengths, a fit can reproduce the same red
+  continuum with either an older, less attenuated stellar population
+  or a younger, dustier one, and the latter solution implies a higher
+  SFR once corrected for dust. Rest-frame UV photometry, which is
+  dominated by young, massive stars, breaks this
+  degeneracy. Consistent with this picture, the SFR offset relative to
+  GSWLC-X2 correlates with the difference in inferred attenuation
+  (Spearman $\rho=0.50$). Moreover, the Zou et~al. SFRs, which have
+  the largest median attenuation of the three catalogs ($\tauv=0.64$,
+  versus 0.39 for \fastspec{} and 0.28 for GSWLC-X2), track this
+  difference even more closely ($\rho=0.82$). We conclude that,
+  without rest-frame UV constraints, the SPS-derived SFRs from
+  \fastspecfit{} (and from other optical and near-IR SED fits) should
+  be used with caution, particularly in an absolute sense. The
+  relative SFRs are more robust, given that they track the external
+  measurements over nearly four orders of magnitude. For star-forming
+  galaxies with well-measured \ha{} and \hb{} emission, dust-corrected
+  SFRs computed from our emission-line fluxes provide a more reliable
+  absolute calibration.}
 
 %\added{For quiescent galaxies, by contrast, our SFRs fall well below
 %  the values measured by the other two catalogs, reaching
