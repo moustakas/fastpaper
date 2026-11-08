@@ -24,6 +24,7 @@ fastpaper1/
 │   ├── build-figures.py     # primary figure-generation entry point
 │   ├── example-qa.py        # Section 4 illustrative-example QA figure
 │   ├── linemasker-qa.py     # line-masking/patch-fitting QA figure (Section 3.3)
+│   ├── gswlc-sfr-diagnostics.py  # reference figure: FastSpecFit vs GSWLC-X2 SFR offset (Section 5.4)
 │   ├── prepare-external.py  # cross-match external comparison catalogs
 │   └── util.py               # shared VAC-reading utilities
 ├── external/            # prepared external comparison catalogs (README tracked; FITS gitignored, see external/README.md)
@@ -63,6 +64,10 @@ python code/example-qa.py --redrockfile data/redrock-main-dark-29972.fits --outf
 
 # Line-masking / patch-fitting QA figure (Section 3.3)
 python code/linemasker-qa.py --redrockfile data/redrock-main-bright-17366.fits --outfile tex/figures/linemasker.pdf
+
+# Star-forming/quiescent 0.1(g-r) cut QA and the GSWLC-X2 SFR-offset diagnostics (Section 5.4; reference only)
+python code/build-figures.py --gr-mstar-cut-qa
+python code/gswlc-sfr-diagnostics.py
 
 # Prepare external comparison catalogs (cross-matched to the Loa FastSpecFit VAC)
 python code/prepare-external.py --zouhu [--specprod loa|iron] [--verbose]

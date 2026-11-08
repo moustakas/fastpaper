@@ -858,6 +858,76 @@ def fit_gr_cut(logmstar, z, color, delta=GR_CUT_DELTA, zbins=GR_CUT_ZBINS,
     return coeff, fit
 
 
+def gr_cut_sample(survey='sv3', verbose=False):
+    """BGS, LRG, and ELG galaxies used to fit the 0.1(g-r) color cut.
+
+    Reads the bright and dark fastspec catalogs for ``survey`` and keeps
+    objects that pass their own class's redshift-quality cut
+    (``good_redshift_by_class``) and have a stellar mass and finite color.
+
+    Returns
+    -------
+    astropy.table.Table
+        Columns include Z, LOGMSTAR, and GR (rest-frame 0.1(g-r)).
+
+    """
+    cols = ['LOGMSTAR', 'ABSMAG01_SDSS_G', 'ABSMAG01_SDSS_R',
+            'OII_3726_FLUX', 'OII_3729_FLUX',
+            'OII_3726_FLUX_IVAR', 'OII_3729_FLUX_IVAR']
+    chunks = []
+    for program in ('bright', 'dark'):
+        cat = read_fastspec(survey, program, specprod=DEFAULT_SPECPROD,
+                            columns=cols, verbose=verbose)
+        gz = good_redshift_by_class(cat, survey)
+        keep = (gz['BGS'] | gz['LRG'] | gz['ELG']) & (cat['LOGMSTAR'] > 0)
+        cat = cat[keep]
+        cat['GR'] = gr_color(cat)
+        chunks.append(cat[np.isfinite(cat['GR'])])
+    cat = vstack(chunks)
+    if verbose:
+        print(f'Color-cut sample: {len(cat):,} galaxies')
+    return cat
+
+
+def gr_cut_coeff(survey='sv3', verbose=False, return_all=False):
+    """Fit the star-forming / quiescent 0.1(g-r) cut (see ``fit_gr_cut``).
+
+    Returns the cut coefficients (a0, a1, a2); with ``return_all=True`` also
+    returns the ``fit`` dictionary from ``fit_gr_cut`` and the fitting sample.
+
+    """
+    cat = gr_cut_sample(survey, verbose=verbose)
+    coeff, fit = fit_gr_cut(cat['LOGMSTAR'], cat['Z'], cat['GR'])
+    fmt = '{:.3f} {:+.3f} (logM - 10) {:+.3f} (z - 0.1)'
+    for label, key in (('valley', 'valley'), ('ridge', 'ridge')):
+        print(f'0.1(g-r) {label:6s}: ' + fmt.format(*fit[f'{key}_coeff']) +
+              f"  [{fit[key]['USED'].sum()} of {len(fit[key])} cells used]")
+    print('0.1(g-r) cut   : ' + fmt.format(*coeff))
+    if return_all:
+        return coeff, fit, cat
+    return coeff
+
+
+def cigaleagn_quality(d, sfr=True):
+    """Siudek et al. (CIGALE-AGN) quality mask.
+
+    Always applies the recommended stellar-mass cut, 0.2 <= FLAG_MASSPDF <= 5.
+    With ``sfr=True`` (for the SFR comparison) also applies the SFR cut,
+    0.2 <= FLAG_SFRPDF < 5. The mass cut matters for the SFR comparison too:
+    it removes ~100k objects whose SFR is pinned at exactly 1 Msun/yr
+    (h=0.704), which pass the SFR cut but have FLAG_MASSPDF > 1e7. We do not
+    apply the SFR cut to the mass comparison, because it preferentially
+    removes quiescent galaxies (~70% of LRGs) and biases that sample.
+
+    """
+    fmass = np.asarray(d['FLAG_LOGMSTAR_CIGALEAGN'], dtype=float)
+    good = (fmass >= 0.2) & (fmass <= 5.0)
+    if sfr:
+        fsfr = np.asarray(d['FLAG_LOGSFR_CIGALEAGN'], dtype=float)
+        good &= (fsfr >= 0.2) & (fsfr < 5.0)
+    return good
+
+
 def jiyan_p1p3(log_nii_ha, log_sii_ha, log_oiii_hb):
     """Ji & Yan (2020) P1 and P3 line-ratio projections for AGN/SF separation.
 
