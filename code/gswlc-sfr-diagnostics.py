@@ -5,14 +5,14 @@ For SV3/bright BGS targets matched to GSWLC-X2 (Salim et al. 2016, 2018)
 and classified as star-forming by the conservative rest-frame 0.1(g-r)
 color cut (util.fit_gr_cut), FastSpecFit SFRs are higher than GSWLC-X2 by
 ~0.45 dex (Section 5.4, Figure compare-sfr-external). This script makes a
-six-panel reference figure of the offset, Delta log SFR (GSWLC-X2 minus
-FastSpecFit), against:
+six-panel reference figure of the offset, Delta log SFR (FastSpecFit minus
+GSWLC-X2, the sign convention used throughout Section 5.4), against:
 
-  (a) the stellar-mass offset, Delta log M* (GSWLC-X2 minus FastSpecFit);
-  (b) the attenuation offset, Delta tau_V (GSWLC-X2 minus FastSpecFit);
+  (a) the stellar-mass offset, Delta log M* (FastSpecFit minus GSWLC-X2);
+  (b) the attenuation offset, Delta tau_V (FastSpecFit minus GSWLC-X2);
   (c) redshift;
   (d) FastSpecFit specific SFR (note that FastSpecFit's SFR enters both
-      axes, which builds in part of the anticorrelation);
+      axes, which builds in part of the correlation);
   (e) FastSpecFit stellar mass;
 
 and (f) shows the distributions of log SFR minus the dust-corrected,
@@ -22,8 +22,8 @@ al. (CIGALE-AGN, Iron; mass and SFR quality flags applied).
 
 The summary statistics behind the Section 5.4 narrative are also printed,
 including the H-alpha comparison in bins of aperture correction. At the
-time of writing: Delta log SFR = -0.45 +/- 0.24 dex, Delta log M* = -0.21
-dex, Delta log sSFR = -0.20 dex; Spearman(Delta SFR, Delta tau_V) = 0.50;
+time of writing: Delta log SFR = +0.45 +/- 0.24 dex, Delta log M* = +0.21
+dex, Delta log sSFR = +0.20 dex; Spearman(Delta SFR, Delta tau_V) = 0.50;
 FastSpecFit, GSWLC-X2, Zou, and Siudek SFRs exceed the H-alpha SFRs by
 +0.57, +0.11, +0.41, and +0.34 dex (common sample), independent of
 aperture correction. The Zou offset relative to GSWLC-X2 tracks the
@@ -31,7 +31,7 @@ attenuation difference even more tightly (Spearman 0.82; Zou median
 tau_V = 0.64 versus 0.39 for FastSpecFit and 0.28 for GSWLC-X2). Our
 interpretation is a dust-age degeneracy shared by all three optical+WISE
 fits despite their different attenuation laws: without the rest-frame UV
-and 22-micron constraints that GSWLC-X2 has, a fit can trade more dust for
+(GALEX) constraints that GSWLC-X2 has, a fit can trade more dust for
 younger stars, which inflates the dust-corrected SFR.
 
 Inputs (all prepared by code/prepare-external.py; nothing new is needed):
@@ -128,9 +128,10 @@ def read_sample(survey='sv3', coeff=None, verbose=False):
     log_ha, good_ha = halpha_sfr(cat, snr_cut=3.0)
     cat['LOGSFR_HA'] = np.where(good_ha, log_ha, np.nan)
 
-    cat['DLOGSFR'] = cat['LOGSFR_GSWLC'] - cat['LOGSFR']
-    cat['DLOGM']   = cat['LOGMSTAR_GSWLCX2'] - cat['LOGMSTAR']
-    cat['DTAUV']   = cat['TAUV_GSWLCX2'] - cat['TAUV']
+    # FastSpecFit minus GSWLC-X2
+    cat['DLOGSFR'] = cat['LOGSFR'] - cat['LOGSFR_GSWLC']
+    cat['DLOGM']   = cat['LOGMSTAR'] - cat['LOGMSTAR_GSWLCX2']
+    cat['DTAUV']   = cat['TAUV'] - cat['TAUV_GSWLCX2']
     cat['LOGSSFR'] = cat['LOGSFR'] - cat['LOGMSTAR']
 
     if verbose:
@@ -169,9 +170,9 @@ def print_summary(cat):
 
     tz = np.asarray(cat['TAUV_ZOU'])
     k = np.isfinite(tz) & np.isfinite(np.asarray(cat['LOGSFR_ZOU']))
-    dZ = np.asarray(cat['LOGSFR_GSWLC'] - cat['LOGSFR_ZOU'])[k]
-    dTZ = np.asarray(cat['TAUV_GSWLCX2'])[k] - tz[k]
-    print(f'Zou tau_V median = {np.median(tz[k]):.2f}; GSWLC-X2 minus Zou: '
+    dZ = np.asarray(cat['LOGSFR_ZOU'] - cat['LOGSFR_GSWLC'])[k]
+    dTZ = tz[k] - np.asarray(cat['TAUV_GSWLCX2'])[k]
+    print(f'Zou tau_V median = {np.median(tz[k]):.2f}; Zou minus GSWLC-X2: '
           f'Delta log SFR = {np.median(dZ):+.3f}, '
           f'Spearman(Delta SFR, Delta tau_V) = {spearmanr(dZ, dTZ)[0]:.2f}')
 
@@ -209,15 +210,15 @@ def make_figure(cat, outfile):
     plot_style(talk=True, font_scale=0.8, palette='colorblind')
     fig, axes = plt.subplots(2, 3, figsize=(14, 8.5))
     fig.subplots_adjust(hspace=0.35, wspace=0.12)
-    ylim = [-2, 1.2]
+    ylim = [-1.2, 2]
     dS = np.asarray(cat['DLOGSFR'])
-    dslabel = r'$\Delta\log_{10}\mathrm{SFR}$ [GSWLC-X2 $-$ FSF]'
+    dslabel = r'$\Delta\log_{10}\mathrm{SFR}$ [FSF $-$ GSWLC-X2]'
 
     panels = [
-        (np.asarray(cat['DLOGM']), [-0.8, 0.4], 12,
-         r'$\Delta\log_{10}\mathcal{M}_{*}$ [GSWLC-X2 $-$ FSF]'),
-        (np.asarray(cat['DTAUV']), [-1.5, 0.75], 12,
-         r'$\Delta\tau_V$ [GSWLC-X2 $-$ FSF]'),
+        (np.asarray(cat['DLOGM']), [-0.4, 0.8], 12,
+         r'$\Delta\log_{10}\mathcal{M}_{*}$ [FSF $-$ GSWLC-X2]'),
+        (np.asarray(cat['DTAUV']), [-0.75, 1.5], 12,
+         r'$\Delta\tau_V$ [FSF $-$ GSWLC-X2]'),
         (np.asarray(cat['Z']), [0.0, 0.3], 10, 'Redshift'),
         (np.asarray(cat['LOGSSFR']), [-11.5, -8.5], 12,
          r'$\log_{10}(\mathrm{sSFR}/\mathrm{yr}^{-1})$ [FSF]'),

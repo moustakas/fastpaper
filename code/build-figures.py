@@ -492,7 +492,7 @@ def compare_mstar_external(survey='sv3', verbose=False, black_contours=True):
             cmask = base & goodz[cls]
 
             r, e = ref[cmask], ext[cmask]
-            delta = e - r
+            delta = r - e  # FastSpecFit minus external
             color = TARGET_CLASS_COLORS[cls]
 
             if black_contours:
@@ -700,7 +700,7 @@ def compare_emlines_external(verbose=False, survey='sv3', pull_denom='quadrature
 
             logr = np.log10(rf)
             loge = np.log10(ef)
-            delta = loge - logr
+            delta = logr - loge  # FastSpecFit minus external
 
             lo = min(np.percentile(logr, 1), np.percentile(loge, 1))
             hi = max(np.percentile(logr, 99), np.percentile(loge, 99))
@@ -737,7 +737,7 @@ def compare_emlines_external(verbose=False, survey='sv3', pull_denom='quadrature
                 denom = re_[err_ok]
             else:  # 'ext'
                 denom = ee[err_ok]
-            pull = (ef[err_ok] - rf[err_ok]) / denom
+            pull = (rf[err_ok] - ef[err_ok]) / denom  # FastSpecFit minus external
             pull = pull[np.isfinite(pull)]
 
             if verbose:
@@ -798,8 +798,8 @@ def compare_cosmos2020(survey='sv3', verbose=False):
 
     Data: external/cosmos2020-sv3-{bright,dark}.fits (position-matched, h=1,
     Chabrier IMF).  Top panel: LOGMSTAR_COSMOS2020 vs LOGMSTAR scatter (Hess +
-    contours + 1:1 line + stats).  Bottom panel: Δlog M (COSMOS2020 −
-    FastSpecFit) vs redshift with running median + IQR.
+    contours + 1:1 line + stats).  Bottom panel: Δlog M (FastSpecFit −
+    COSMOS2020) vs redshift with running median + IQR.
     Output: tex/figures/compare-cosmos2020.pdf
     """
     import fitsio
@@ -829,7 +829,7 @@ def compare_cosmos2020(survey='sv3', verbose=False):
     lm = np.array(cat['LOGMSTAR'],            dtype=float)
     lc = np.array(cat['LOGMSTAR_COSMOS2020'], dtype=float)
     z  = np.array(cat['Z'],                   dtype=float)
-    dv = lc - lm
+    dv = lm - lc  # FastSpecFit minus COSMOS2020
 
     zlim = [-0.1, 1.8]
     #zlim = (np.percentile(z, 1), np.percentile(z, 99))
@@ -878,7 +878,7 @@ def compare_cosmos2020(survey='sv3', verbose=False):
     ax_dz.set_xlabel(r'$z$')
     ax_dz.set_ylabel(
         r'$\Delta\log_{10}\,(\mathcal{M}_*\,h^{-2}/\mathcal{M}_\odot)$'
-        '\n(COSMOS2020 $-$ FastSpecFit)')
+        '\n(FastSpecFit $-$ COSMOS2020)')
     ax_dz.xaxis.set_major_locator(plt.MultipleLocator(0.5))
 
     outfile = os.path.join(FIGDIR, 'compare-cosmos2020.pdf')
@@ -1091,7 +1091,7 @@ def compare_sfr_external(survey='sv3', verbose=False):
             r, e = log_ref[sf], log_ext[sf]
             in_range = ((r >= sfrlim[0]) & (r <= sfrlim[1]) &
                         (e >= sfrlim[0]) & (e <= sfrlim[1]))
-            delta = e[in_range] - r[in_range]
+            delta = r[in_range] - e[in_range]  # FastSpecFit minus external
             color = TARGET_CLASS_COLORS[cls]
             if verbose:
                 print(f"  {cat['label']} {cls}: {sf.sum():,} star-forming, "
@@ -1482,7 +1482,7 @@ def compare_vdisp(verbose=False, two_panel=False):
     fs_p, ppxf_p, snr_p = fs[good], ppxf[good], snr[good]
     fserr_p   = 1. / np.sqrt(ivar[good])
     ppxferr_p = ppxferr[good]
-    dpp = ppxf_p - fs_p
+    dpp = fs_p - ppxf_p  # FastSpecFit minus pPXF
 
     sigrange = [30, 400]
     resrange = [-150, 150]
@@ -1538,7 +1538,7 @@ def compare_vdisp(verbose=False, two_panel=False):
         err_ok = ((fserr_p <= np.percentile(fserr_p, 99)) &
                   (ppxferr_p <= np.percentile(ppxferr_p, 99)))
         denom = np.sqrt(ppxferr_p[err_ok] ** 2 + fserr_p[err_ok] ** 2)
-        pull = (ppxf_p[err_ok] - fs_p[err_ok]) / denom
+        pull = (fs_p[err_ok] - ppxf_p[err_ok]) / denom  # FastSpecFit minus pPXF
         pull = pull[np.isfinite(pull)]
 
         if verbose:
@@ -1547,7 +1547,7 @@ def compare_vdisp(verbose=False, two_panel=False):
             # below), as in compare_emlines_external
             pull_stats = pull[(pull >= -5) & (pull <= 5)]
             nclip = pull.size - pull_stats.size
-            print(f'  pull (pPXF - FastSpecFit)/quadrature-error: '
+            print(f'  pull (FastSpecFit - pPXF)/quadrature-error: '
                   f'N={pull_stats.size:,} (clipped {nclip:,} at |pull|>5)  '
                   f'mean={np.mean(pull_stats):+.3f}  '
                   f'median={np.median(pull_stats):+.3f}  NMAD={nmad(pull_stats):.3f}  '

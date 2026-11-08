@@ -946,15 +946,15 @@ the MIST stellar isochrones \citep[\added{v1.0;}][]{choi16a,
   dotter16a}, and a \citet{chabrier03a} IMF from
 $0.08$--$120$~\msun. The \texttt{C3K\_R3K} library spans 100~\AA{} to
 1000~$\mu$m. In the rest-frame optical (3500--9800~\AA) it has
-$\mathcal{R}_{\mathrm{C3K}} \approx 3000$, corresponding to a Gaussian
+$\mathcal{R}_{\mathrm{C3K}}=3000$, corresponding to a Gaussian
 line-spread function with
 $\sigma_\mathrm{C3K}=c/(2.355\,\mathcal{R}_\mathrm{C3K})=42$~\kms{},
-sampled in constant-velocity $\Delta
-v=50$~\kms{} pixels. At shorter and longer wavelengths\added{,} our
-models have lower resolution and sparser wavelength sampling, which
-keeps the UV-to-IR template lightweight for synthetic photometry and
-dust-emission modeling (\S\ref{sssec:fitting}) without wasting
-resolution where the spectroscopic fit does not need it.
+sampled in constant-velocity $\Delta v=50$~\kms{} pixels. At shorter
+and longer wavelengths\added{,} our models have lower resolution and
+sparser wavelength sampling, which keeps the UV-to-IR template
+lightweight for synthetic photometry and dust-emission modeling
+(\S\ref{sssec:fitting}) without wasting resolution where the
+spectroscopic fit does not need it.
 
 Following \citet{leja17a}, we build five ``continuity age'' basis
 templates spanning fixed lookback-time bins, each assuming a constant
@@ -970,23 +970,23 @@ $\log_{10}(t/\mathrm{yr}) = 7.48$ and $8.0$, respectively), while the
 metallicity, $\log_{10}(Z/Z_\odot) = 0$ (with no $\alpha$-element
 enhancement), \replaced{in two parallel variants---one including and
   one excluding nebular emission (continuum and lines) from the FSPS
-  built-in nebular photoionization grid \mbox{\citep{byler17a}}}{with and
-  without nebular emission lines \citep{byler17a}. We use the SPS
-  models with emission lines when computing K-corrections
+  built-in nebular photoionization grid \mbox{\citep{byler17a}}}{with
+  and without nebular emission lines \citep{byler17a}. We need both
+  variants because the broadband photometry includes any nebular line
+  emission, whereas we model the emission lines in the spectrum
+  separately (\S\ref{ssec:emlines}). We therefore use the variant with
+  emission lines in the joint spectrophotometric fit
+  (\S\ref{sssec:fitting}), where masking line-contaminated pixels
+  restricts its effect to the synthetic photometry, and for
+  K-corrections (\S\ref{ssec:quantities}). We use the variant without
+  emission lines everywhere else, including the velocity-dispersion
+  fit (\S\ref{sssec:vdisp}), the continuum model we subtract before
+  fitting the emission lines, and continuum-derived quantities such as
+  $D_n(4000)$ and the monochromatic luminosities
   (\S\ref{ssec:quantities}).}
 
-%\added{We need both variants because the broadband photometry includes
-%  any nebular line emission, whereas we model the emission lines in
-%  the spectrum separately (\S\ref{ssec:emlines}). We therefore use the
-%  variant with emission lines in the joint spectrophotometric fit
-%  (\S\ref{sssec:fitting}), where masking line-contaminated pixels
-%  restricts its effect to the synthetic photometry, and for
-%  K-corrections (\S\ref{ssec:quantities}). We use the variant without
-%  emission lines everywhere else, including the velocity-dispersion
-%  fit (\S\ref{sssec:vdisp}), the continuum model we subtract before
-%  fitting the emission lines, and continuum-derived quantities such as
-%  $D_n(4000)$ and the monochromatic luminosities
-%  (\S\ref{ssec:quantities}).}
+%We use the SPS models with emission lines when fitting the computing
+%K-corrections (\S\ref{ssec:quantities}).}
 
 We index the resulting rest-frame templates $S_n(\lambda)$, $n =
 1,\ldots,n_\mathrm{template}$ (with $n_\mathrm{template}=5$)\deleted{,} by
@@ -3053,7 +3053,7 @@ specprods and because of our override of some QSO redshifts
 pull,
 
 \begin{equation}
-\mathrm{pull} = \frac{x_{\mathrm{ext}} - x_{\mathrm{ref}}}
+\mathrm{pull} = \frac{x_{\mathrm{ref}} - x_{\mathrm{ext}}}
   {\sqrt{\delta x_{\mathrm{ext}}^2 + \delta x_{\mathrm{ref}}^2}},
 \label{eq:pull}
 \end{equation}
@@ -3080,7 +3080,7 @@ in Figure~\ref{fig:vdisp}---and its uncertainty in the external and
   we show individual galaxies as markers\replaced{ and the dashed}{. The dashed} line is the
   one-to-one relation. Finally, each panel lists the matched sample
   size $N$, the median difference in logarithmic flux,
-  $\Delta_{\mathrm{med}}$ (external minus \fastspec) in dex, and the
+  $\Delta_{\mathrm{med}}$ (\replaced{external minus \fastspec}{\fastspec{} minus external}) in dex, and the
   \texttt{NMAD} scatter in dex. \label{fig:compare-emlines-external}}
 \end{figure*}
 
@@ -3107,16 +3107,16 @@ $\mathtt{NMAD}\equiv1.4826\,\mathrm{median}(|x-\mathrm{median}(x)|)$,
 a robust estimator of the standard deviation for a distribution that
 may contain outliers. Here and throughout, we quote comparisons as
 $\Delta_\mathrm{med}\pm\mathtt{NMAD}$.} scatter of
-$0.006\pm0.022$~dex. For \ha{} and \hb{} we find median differences of
-$-0.029\pm0.020$~dex and $-0.085\pm0.067$~dex, respectively---tight,
+$-0.006\pm0.022$~dex. For \ha{} and \hb{} we find median differences of
+$0.029\pm0.020$~dex and $0.085\pm0.067$~dex, respectively---tight,
 but offset by roughly one \texttt{NMAD} (\fastspec{} is
 brighter). These systematic differences are most likely due to
 \texttt{emlinefit}'s treatment of the continuum around each line as a
 constant pedestal with no correction for stellar absorption, which
-would cause the Balmer lines to be underestimated (negative pull;
+would cause the Balmer lines to be underestimated (\replaced{negative}{positive} pull;
 Figure~\ref{fig:compare-emlines-external} insets). The differences
 with \oiii, meanwhile, are notably larger, with an offset of
-$0.115\pm0.033$~dex and a distinctly non-Gaussian pull. Because the
+$-0.115\pm0.033$~dex and a distinctly non-Gaussian pull. Because the
 \texttt{emlinefit} continuum window for \oiii{} (nominally
 $\pm100$~\AA{} in the rest frame around each line) extends blueward to
 the immediate vicinity of \hb, it is possible that the same unmodeled
@@ -3180,9 +3180,9 @@ does not test their uncertainties.}
   the dashed line is the one-to-one relation, and the inset shows the
   pull distribution (equation~\ref{eq:pull}) compared to a unit
   Gaussian (black curve). We find a median offset and \texttt{NMAD}
-  scatter of $-15.9\pm12.9$~\kms{} (\fastspec{} yields systematically
+  scatter of $15.9\pm12.9$~\kms{} (\fastspec{} yields systematically
   larger \vdisp{} values) and a median pull of
-  $-1.06\pm0.82$. \label{fig:vdisp}}
+  $1.06\pm0.82$. \label{fig:vdisp}}
 \end{figure*}
 
 Next, Figure~\ref{fig:vdisp} compares the \fastspec{} $\vdisp$
@@ -3225,9 +3225,9 @@ $\sigma_{\mathrm{B}}\approx 35-65$~\kms; see
 \end{figure*}
 
 For $N=80,693$ objects in common, we find a median offset and
-\texttt{NMAD} scatter of $\Delta_\mathrm{med}=-15.9\pm12.9$~\kms{}
+\texttt{NMAD} scatter of $\Delta_\mathrm{med}=15.9\pm12.9$~\kms{}
 (\fastspec{} systematically higher), with a pull of
-$-1.06\pm0.82$, indicating that the offset is comparable to the
+$1.06\pm0.82$, indicating that the offset is comparable to the
 combined per-object uncertainties. The residual is statistically significant but
 relatively small on an instrumental scale---about a third of a native
 DESI pixel ($0.8$~\AA, or $\approx53$~\kms{} at 4500~\AA). However,
@@ -3273,7 +3273,7 @@ of objects in the comparison sample but not the statistical results or
 our conclusions.
 
 %each panel lists the matched sample size $N$, the median mass offset
-%$\Delta_\mathrm{med}$ (external minus \fastspec{}) in dex, and the
+%$\Delta_\mathrm{med}$ (\fastspec{} minus external) in dex, and the
 %\texttt{NMAD} scatter.
 
 All three of these external catalogs perform photometric SED fits, but
@@ -3298,15 +3298,19 @@ non-parametric and parametric SFH-derived masses, which attribute
 $\approx0.1$--$0.3$~dex systematic differences to the additional
 flexibility of a non-parametric model accommodating more mass in old,
 high-mass-to-light-ratio stellar populations \citep{leja19b, leja20a,
-  lower20a}. The difference for ELG targets is higher ($\mathtt{NMAD}
-\approx 0.4$~dex), likely reflecting the fainter, \replaced{lower
-  signal-to-noise}{lower-S/N} broadband photometry available for these
-star-forming targets, especially in the WISE IR bands. Overall, the
-agreement between \fastspec{} and three independent, CIGALE-based
-stellar-mass catalogs is very good, particularly given the different
+  lower20a}. The \replaced{difference for}{scatter in the difference
+  for} ELG targets is higher, $\mathtt{NMAD} \approx 0.4$~dex, likely
+reflecting the fainter, \replaced{lower signal-to-noise}{lower-S/N}
+broadband photometry available for these star-forming targets,
+especially in the WISE IR bands. \added{More generally, offsets of
+  this size are typical of SED-based stellar masses, which carry
+  systematic uncertainties of $\approx0.2$--$0.3$~dex depending on the
+  adopted SPS models, priors, and fitting technique
+  \citep{moustakas13a, conroy13a}.} Overall, the agreement between
+\fastspec{} and three independent, CIGALE-based stellar-mass catalogs
+is \replaced{very good}{reasonable}, particularly given the different
 data (photometry only versus spectrophotometry), templates, and
-star-formation-history parameterizations involved. \todo{Could soften
-  the ``very good'' comment and cite conroy13a and moustakas13a.}
+star-formation-history parameterizations involved.
 
 \begin{figure*}
 \centering\includegraphics[width=1.0\textwidth]{compare-sfr-external.pdf}
@@ -3321,7 +3325,7 @@ star-formation-history parameterizations involved. \todo{Could soften
     galaxies are shown as a gray density map only. The dashed line is
     the one-to-one relation. Each panel lists the number of
     star-forming galaxies $N$, the median difference
-    $\Delta_\mathrm{med}$ (external minus \fastspec) in dex, and the
+    $\Delta_\mathrm{med}$ (\fastspec{} minus external) in dex, and the
     \texttt{NMAD} scatter in dex, all computed using the star-forming
     galaxies only.}
   \label{fig:compare-sfr-external}}
@@ -3339,12 +3343,12 @@ star-formation-history parameterizations involved. \todo{Could soften
   \citep[GALEX;][]{martin05a} photometry.}
 
 \added{Because of the difficulty of constraining the SFRs of quiescent
-  galaxies (see below), we follow DESI Collaboration et~al. (in
-  preparation) and compute the comparison statistics for star-forming
-  galaxies only using the rest-frame $^{0.1}(g-r)$ color. Separately
-  for BGS, LRG, and ELG targets, we measure the color of the
-  red-sequence ridge in bins of stellar mass and redshift, and fit
-  these measurements with a plane.
+  galaxies, we follow DESI Collaboration et~al. (in preparation) and
+  compute the comparison statistics for star-forming galaxies only
+  using the rest-frame $^{0.1}(g-r)$ color. Separately for BGS, LRG,
+  and ELG targets, we measure the color of the red-sequence ridge in
+  bins of stellar mass and redshift, and fit these measurements with a
+  plane.
   %$^{0.1}(g-r)_\mathrm{ridge}=0.906+0.067\,(\logmstar-10)-0.130\,(z-0.1)$
   % describes the ridge to within 0.013~mag (\texttt{NMAD}).
   We then classify a galaxy as star-forming if it is more than 0.2~mag
@@ -3365,24 +3369,24 @@ star-formation-history parameterizations involved. \todo{Could soften
 %$-0.20$ to $+0.41$~dex (LRG), and $-0.24$ to $-0.16$~dex (ELG)
 
 \added{For star-forming galaxies, our SFRs generally track the
-  external measurements over nearly four orders of magnitude. For BGS
-  and ELG targets, the median offsets relative to Zou et~al. and
-  \citet{siudek24a} range from $+0.09$ to $-0.24$~dex with
+  external measurements over nearly four decades. For BGS and ELG
+  targets, the median offsets relative to Zou et~al. and
+  \citet{siudek24a} range from $-0.09$ to $+0.24$~dex with
   $\mathtt{NMAD}=0.28$--$0.41$~dex. For the relatively small fraction
   of star-forming LRGs, meanwhile, the scatter is much larger,
   $\mathtt{NMAD}=0.57$--$0.66$~dex, with large median offsets that are
-  opposite in sign ($+0.41$ and $-0.20$~dex), indicating that none of
+  opposite in sign ($-0.41$ and $+0.20$~dex), indicating that none of
   these catalogs constrains their SFRs well (see also DESI
   Collaboration et~al., in preparation).}
 
 \added{Compared to the GSWLC-X2 catalog, which is only available for
   BGS targets, the \fastspecfit{} SFRs are systematically higher by
-  nearly a factor of three, $\Delta_\mathrm{med}=-0.44\pm0.23$~dex. To
+  nearly a factor of three, $\Delta_\mathrm{med}=0.44\pm0.23$~dex. To
   determine which set of SFRs is more accurate, we compute an
   independent SFR for the subset of these galaxies with well-measured
   ($\mathrm{S/N}>3$) \ha{} and \hb{} line-emission. We correct the
-  \ha{} flux for aperture effects and for dust attenuation using the
-  Balmer decrement, and convert it to an SFR following \citet{hao11a}.
+  \ha{} flux for aperture effects and dust attenuation using the
+  Balmer decrement, and convert it to SFR following \citet{hao11a}.
   GSWLC-X2 agrees with these \ha-based SFRs to within
   $\approx0.1$~dex, whereas the \fastspecfit{} SFRs exceed them by
   $\approx0.57$~dex, with no dependence on the size of the aperture
@@ -3391,31 +3395,32 @@ star-formation-history parameterizations involved. \todo{Could soften
   to \fastspecfit.}
 
 \added{Our stellar masses for these galaxies are also higher than
-  GSWLC-X2, by 0.21~dex (Figure~\ref{fig:compare-mstar-external}), so
-  the corresponding offset in specific SFR is about half as large,
-  $-0.20$~dex. What distinguishes GSWLC-X2 from the other three
-  catalogs, however, is its rest-frame UV photometry, which leads us
-  to attribute the SFR excess to the well-known degeneracy between
-  dust attenuation and stellar age \citep[e.g.,][]{conroy13a}. At
-  optical and near-IR wavelengths, a fit can reproduce the same red
-  continuum with either an older, less attenuated stellar population
-  or a younger, dustier one, and the latter solution implies a higher
-  SFR once corrected for dust. Rest-frame UV photometry, which is
-  dominated by young, massive stars, breaks this
-  degeneracy. Consistent with this picture, the SFR offset relative to
-  GSWLC-X2 correlates with the difference in inferred attenuation
-  (Spearman $\rho=0.50$). Moreover, the Zou et~al. SFRs, which have
-  the largest median attenuation of the three catalogs ($\tauv=0.64$,
-  versus 0.39 for \fastspec{} and 0.28 for GSWLC-X2), track this
-  difference even more closely ($\rho=0.82$). We conclude that,
-  without rest-frame UV constraints, the SPS-derived SFRs from
-  \fastspecfit{} (and from other optical and near-IR SED fits) should
-  be used with caution, particularly in an absolute sense. The
-  relative SFRs are more robust, given that they track the external
-  measurements over nearly four orders of magnitude. For star-forming
-  galaxies with well-measured \ha{} and \hb{} emission, dust-corrected
-  SFRs computed from our emission-line fluxes provide a more reliable
-  absolute calibration.}
+  GSWLC-X2, by 0.20~dex (Figure~\ref{fig:compare-mstar-external},
+  bottom row), so the corresponding offset in specific SFR,
+  $\mathrm{SFR}/\Mstar$, is about half as large,
+  $\approx0.20$~dex. What distinguishes GSWLC-X2 from the other three
+  catalogs, however, is its UV photometry, which leads us to posit
+  that the SFR discrepancy we find is due to the well-known degeneracy
+  between dust attenuation and stellar age
+  \citep[e.g.,][]{conroy13a}. At optical and near-IR wavelengths, a
+  fit can reproduce the same red continuum with either an older, less
+  attenuated stellar population or a younger, dustier one, and the
+  latter solution implies a higher SFR once corrected for
+  dust. Rest-frame UV photometry, which is dominated by young, massive
+  stars, breaks this degeneracy. Consistent with this picture, the SFR
+  offset relative to GSWLC-X2 correlates with the difference in
+  inferred attenuation (Spearman $\rho=0.50$). Moreover, the Zou
+  et~al. SFRs, which have the largest median attenuation of the three
+  catalogs ($\tauv=0.64$, versus 0.39 for \fastspec{} and 0.28 for
+  GSWLC-X2), track this difference even more closely ($\rho=0.82$). We
+  conclude that, without rest-frame UV constraints, the SPS-derived
+  SFRs from \fastspecfit{} (and from other optical and near-IR SED
+  fits) should be used with caution, particularly in an absolute
+  sense. The relative SFRs, on the other hand, are more robust, given
+  that they track the external measurements over nearly four orders of
+  magnitude. For star-forming galaxies with well-measured \ha{} and
+  \hb{} emission, dust-corrected SFRs computed from our emission-line
+  fluxes provide a more reliable absolute calibration.}
 
 %\added{For quiescent galaxies, by contrast, our SFRs fall well below
 %  the values measured by the other two catalogs, reaching
