@@ -11,20 +11,23 @@ This is the repository for "FastSpecFit: Spectrophotometric Modeling of Extragal
 ## Repository Structure
 
 ```
-fastpaper1/
+fastpaper/
 ├── tex/
-│   ├── ms.tex          # main manuscript (AASTeX 6.3.1, submitting to AJ)
+│   ├── ms.tex          # main manuscript (AASTeX 7, submitting to AJ)
 │   ├── refs.bib        # BibTeX bibliography (managed with BibDesk)
 │   ├── figures/        # version-controlled final figures (only those used in ms.tex)
 │   ├── tables/         # version-controlled final LaTeX table files
 │   ├── Makefile         # `make` runs the full lualatex+bibtex build
-│   ├── aastex701.cls   # AAS journal class
-│   └── aasjournalv7.bst
+│   ├── aastex702.cls   # AAS journal class
+│   └── aasjournalv7.1.bst
 ├── code/                    # figure-generation and QA scripts (see code/README.md)
 │   ├── build-figures.py     # primary figure-generation entry point
 │   ├── example-qa.py        # Section 4 illustrative-example QA figure
 │   ├── linemasker-qa.py     # line-masking/patch-fitting QA figure (Section 3.3)
+│   ├── pipeline-diagnostics.py   # Section 5.5 wavelength/flux-calibration diagnostics
 │   ├── gswlc-sfr-diagnostics.py  # reference figure: FastSpecFit vs GSWLC-X2 SFR offset (Section 5.4)
+│   ├── vdisp-qa.py               # draft velocity-dispersion QA figure (not in the paper)
+│   ├── qso-redshift-systematics.py  # QSO line-redshift systematics (separate proposal, not the paper)
 │   ├── prepare-external.py  # cross-match external comparison catalogs
 │   └── util.py               # shared VAC-reading utilities
 ├── qa/                  # reference/diagnostic figures not in the paper (see qa/README.md)
@@ -54,8 +57,8 @@ Figure-generation and QA scripts run on NERSC (Perlmutter) and require the DESI 
 
 ```bash
 # Figure generation (code/build-figures.py) — run from repo root
+python code/build-figures.py --all [--specprod loa] [--verbose]   # every paper figure
 python code/build-figures.py --compare-mstar [--specprod loa] [--verbose]
-python code/build-figures.py --compare-mstar --split-contours [--specprod loa]
 
 # Illustrative-example QA figures (Section 4) — single target, standalone fit, no completed catalog needed.
 # See data/README.md for the full file-to-figure manifest, including the vdisp-qa.py workshop figure.
@@ -80,21 +83,18 @@ See `external/README.md` for details on each external comparison catalog (Zou/CI
 
 ```bash
 conda env create -f environment.yml
-conda activate fastpaper1
+conda activate fastspec
 ```
 
-`python-fsps` requires a special compile flag for the C3K stellar library:
-```bash
-FFLAGS="-DMILES=0 -DC3K=1" pip install fsps --no-binary fsps
-```
+This is the same `fastspec` environment FastSpecFit is developed in. Versions are unpinned for now; an exact lockfile is planned for the Zenodo release.
 
 ## Key Python Dependencies
 
 - `fastspecfit` — the code being documented; provides `fastspec` CLI and `fastspecfit.{io,util,mpi}`
-- `desitarget` — DESI target selection and masking (`bgs_mask`, `geomask`, etc.)
+- `desitarget`, `desispec`, `desiutil` — DESI target masks, spectroscopic data I/O, and utilities
+- `speclite` — filter curves and synthetic photometry
 - `fitsio`, `astropy` — FITS I/O and table handling
-- `numpy`, `scipy`, `matplotlib`, `seaborn` — scientific computing stack
-- `prospect` + `sedpy` — Prospector SED fitting (appendix comparison only)
+- `numpy`, `scipy`, `matplotlib`, `seaborn`, `pyyaml` — scientific computing stack
 
 ## FastSpecFit Domain Context
 

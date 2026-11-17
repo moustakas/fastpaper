@@ -1,72 +1,46 @@
-# Figure Generation
+# Figure and Table Generation
 
-Paper figures are written to `tex/figures/` and can be committed directly into the repo for inclusion in the paper. Reference and diagnostic figures that are not in the paper are written to `qa/` (see `qa/README.md`).
+Paper figures are written to `tex/figures/` and committed for inclusion in the paper. Reference and diagnostic figures that are not in the paper are written to `qa/` (see `qa/README.md`).
 
-All scripts run on NERSC (Perlmutter) where the DESI software environment and VAC paths are available. Scripts in this directory are imported as modules by `build-figures.py`; analysis notebooks (`*.ipynb`) are for exploration and are not part of the production figure pipeline.
-
-## Environment
+Most scripts run on NERSC (Perlmutter), where the DESI software environment and VAC paths are available. Run everything from the repo root. Each script's module docstring documents its exact invocation and options.
 
 ```bash
-conda activate fastpaper1
+conda env create -f environment.yml   # once
+conda activate fastspec
 ```
 
 ## build-figures.py
 
-The primary figure-generation script. Run from the repo root:
+The primary figure-generation script; each flag builds one figure (`--all` rebuilds every figure in the paper). Stellar masses and SFRs are stored with **h=1** and a **Chabrier IMF**. Each figure function takes its own `survey` argument (default `'sv3'`), so switching one figure to the main survey is a one-line change to that function's default.
 
-```bash
-python code/build-figures.py --help
-```
+| Flag | Output |
+|---|---|
+| `--sps-models` | `tex/figures/sps-models.pdf` |
+| `--compare-mstar` | `tex/figures/compare-mstar-fastphot.pdf` |
+| `--compare-mstar-external` | `tex/figures/compare-mstar-external.pdf` |
+| `--compare-emlines-external [--pull-denom {quadrature,ref,ext}]` | `tex/figures/compare-emlines-external.pdf`; `qa/compare-emlines-external-{ref,ext}.pdf` for the non-default pull denominators |
+| `--compare-sfr-external` | `tex/figures/compare-sfr-external.pdf` |
+| `--mstar-redshift` | `tex/figures/mstar-redshift.pdf` |
+| `--bpt-agn` | `tex/figures/bpt-agn.pdf` |
+| `--compare-vdisp [--vdisp-two-panel]` | `tex/figures/compare-vdisp.pdf` |
+| `--vac-compare-table` | `tex/tables/table-vac-compare.tex` (Appendix B; requires `prepare-external.py --vacs`) |
+| `--gr-mstar-cut-qa` | `qa/gr-mstar-cut-qa.pdf` |
+| `--cosmos2020` | `qa/compare-cosmos2020.pdf` |
+| `--ewoii-dn4000` | `qa/ewoii-dn4000.pdf` |
+| `--sfr-mstar-bgs [--flag-agn]` | `qa/sfr-mstar-bgs.pdf` |
+| `--broadhalpha-fraction-bgs [--binwidth DEX]` | `qa/broadhalpha-fraction-bgs.pdf` |
 
-### Stellar mass comparison
-
-Compares `LOGMSTAR` from the fastspec and fastphot VACs. Uses the sv3 (SV3/one-percent) catalogs by default, which are compact single files. All masses use **h=1, Chabrier IMF (0.1–100 M☉)**.
-
-Each figure function in `build-figures.py` takes its own `survey` argument (default `'sv3'`) rather than a shared CLI flag, so switching one figure to the main survey (larger, split into 12 nside=1 healpix files) is a one-line code edit — the function's default — not a global switch that would also affect unrelated figures. `compare_mstar`, `compare_mstar_external`, `compare_sfr_external`, `compare_emlines_external`, `compare_cosmos2020`, `mstar_redshift`, `ewoii_dn4000`, `bpt_agn`, `sfr_mstar_bgs`, and `broadhalpha_fraction_bgs` all support this.
-
-Diagonal panels always show per-target-class colored histograms (BGS/LRG/ELG/Other). Off-diagonal panels default to the all-objects Hess diagram; use `--split-contours` to also split the contours by target class.
-
-```bash
-# default: sv3, all-objects Hess + per-class diagonal histograms
-python code/build-figures.py --compare-mstar [--specprod loa] [--verbose]
-
-# per-class contours on off-diagonal panels too
-python code/build-figures.py --compare-mstar --split-contours [--specprod loa] [--verbose]
-```
-
-Outputs:
-- `tex/figures/compare-mstar-sv3.png` — default (per-class diagonal, all-objects Hess)
-- `tex/figures/compare-mstar-sv3-split.png` — per-class contours (`--split-contours`)
-
----
+Common options: `--specprod` (default `loa`) and `--verbose`.
 
 ## Other scripts
 
-### fastspec-repeats
-
-Fits repeat observations to assess redshift and spectrophotometric reproducibility (Appendix).
-
-```bash
-./code/fastspec-repeats --build-parent
-./code/fastspec-repeats --fastspec-cumulative --mp 8
-./code/fastspec-repeats --merge
-./code/fastspec-repeats --qa
-```
-
-### fluxivar-sims
-
-Simulations to validate flux uncertainty estimates.
-
-```bash
-./code/fluxivar-sims --sims --niter 5000 --snr 10
-./code/fluxivar-sims --qa --snr 10
-```
-
-### prospector-modeling
-
-Prospector SED fitting for comparison against FastSpecFit stellar masses (Appendix).
-
-```bash
-python code/prospector-modeling --priors delayedtau --sedfit --verbose --mp 12
-python code/prospector-modeling --priors continuitysfh --qaplots --verbose --mp 12
-```
+| Script | Purpose |
+|---|---|
+| `example-qa.py` | Section 4 illustrative-example figures (`tex/figures/example-{bgs,elg,qso}.pdf`); fits a single target standalone from the files in `data/` |
+| `linemasker-qa.py` | Line-masking / patch-fitting figure (`tex/figures/linemasker.pdf`, Section 3.3) |
+| `pipeline-diagnostics.py` | Section 5.5 diagnostics: `--wavecal` and `--fluxcal` build samples in `external/`; `--wavecal-figure` writes `tex/figures/wave-residuals.pdf` |
+| `prepare-external.py` | Cross-matches external catalogs (`--zouhu`, `--cigaleagn`, `--gswlcx2`, `--cosmos2020`, `--fpcatalog`, `--emlinefit`) and earlier VACs (`--vacs`) to the FastSpecFit VAC; see `external/README.md` |
+| `gswlc-sfr-diagnostics.py` | Reference figure on the FastSpecFit vs. GSWLC-X2 SFR offset (`qa/`, Section 5.4) |
+| `vdisp-qa.py` | Draft velocity-dispersion QA figure (`qa/`); inputs in `data/` |
+| `qso-redshift-systematics.py` | QSO emission-line redshift systematics, for a separate proposal (`qa/`) |
+| `util.py` | Shared catalog readers and plotting helpers |
