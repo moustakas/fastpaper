@@ -46,7 +46,7 @@ Usage (from the repo root):
 
     python code/gswlc-sfr-diagnostics.py [--verbose]
 
-Output: tex/figures/gswlc-sfr-diagnostics.pdf (reference figure; not
+Output: qa/gswlc-sfr-diagnostics.pdf (reference figure; not
 included in the paper).
 
 """
@@ -62,7 +62,7 @@ from util import (plot_style, nmad, running_binstat, halpha_sfr, gr_color,
 
 REPODIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXTDIR  = os.path.join(REPODIR, 'external')
-FIGDIR  = os.path.join(REPODIR, 'tex', 'figures')
+QADIR   = os.path.join(REPODIR, 'qa')
 
 BGS_COLOR = '#1B7837'  # matches TARGET_CLASS_COLORS['BGS'] in build-figures.py
 
@@ -278,7 +278,7 @@ def main():
         description=__doc__.split('\n')[0])
     parser.add_argument('--survey', default='sv3',
                         help='DESI survey flavor of the prepared external files.')
-    parser.add_argument('--outfile', default=os.path.join(FIGDIR, 'gswlc-sfr-diagnostics.pdf'),
+    parser.add_argument('--outfile', default=os.path.join(QADIR, 'gswlc-sfr-diagnostics.pdf'),
                         help='Output figure.')
     parser.add_argument('--verbose', action='store_true', help='Print progress.')
     args = parser.parse_args()

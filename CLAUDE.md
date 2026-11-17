@@ -15,7 +15,7 @@ fastpaper1/
 ├── tex/
 │   ├── ms.tex          # main manuscript (AASTeX 6.3.1, submitting to AJ)
 │   ├── refs.bib        # BibTeX bibliography (managed with BibDesk)
-│   ├── figures/        # version-controlled final figures (committed after generation)
+│   ├── figures/        # version-controlled final figures (only those used in ms.tex)
 │   ├── tables/         # version-controlled final LaTeX table files
 │   ├── Makefile         # `make` runs the full lualatex+bibtex build
 │   ├── aastex701.cls   # AAS journal class
@@ -27,6 +27,7 @@ fastpaper1/
 │   ├── gswlc-sfr-diagnostics.py  # reference figure: FastSpecFit vs GSWLC-X2 SFR offset (Section 5.4)
 │   ├── prepare-external.py  # cross-match external comparison catalogs
 │   └── util.py               # shared VAC-reading utilities
+├── qa/                  # reference/diagnostic figures not in the paper (see qa/README.md)
 ├── external/            # prepared external comparison catalogs (README tracked; FITS gitignored, see external/README.md)
 ├── data/                # small reference files for Zenodo (large data lives on NERSC)
 ├── environment.yml      # conda environment for reproducibility
@@ -65,7 +66,7 @@ python code/example-qa.py --redrockfile data/redrock-main-dark-29972.fits --outf
 # Line-masking / patch-fitting QA figure (Section 3.3)
 python code/linemasker-qa.py --redrockfile data/redrock-main-bright-17366.fits --outfile tex/figures/linemasker.pdf
 
-# Star-forming/quiescent 0.1(g-r) cut QA and the GSWLC-X2 SFR-offset diagnostics (Section 5.4; reference only)
+# Star-forming/quiescent 0.1(g-r) cut QA and the GSWLC-X2 SFR-offset diagnostics (Section 5.4; reference only, written to qa/)
 python code/build-figures.py --gr-mstar-cut-qa
 python code/gswlc-sfr-diagnostics.py
 

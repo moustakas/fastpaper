@@ -9,7 +9,8 @@ cutout, broadband SED, full observed spectrum with the best-fit
 continuum/smooth-continuum/emission-line model, and a bottom row of zoom
 panels on a standard set of line groups chosen from the target's redshift
 (see default_groups_for_redshift) -- whichever of those fall in the
-observed window are shown. Written to tex/figures/.
+observed window are shown. Paper figures (Figs. 3--5) pass --outfile
+tex/figures/example-{bgs,elg,qso}.pdf; the default output goes to qa/.
 
 Panel content and per-camera colors intentionally match fastspecfit.qa's
 production QA figure (fastspecfit.qa.qa_fastspec); several of its private
@@ -44,7 +45,7 @@ import argparse
 import numpy as np
 
 REPODIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_OUTFILE = os.path.join(REPODIR, 'tex', 'figures', 'example-qa.pdf')
+DEFAULT_OUTFILE = os.path.join(REPODIR, 'qa', 'example-qa.pdf')
 DEFAULT_FPHOTODIR = os.path.join(REPODIR, 'data')
 
 # Standard zoom-panel groups, left to right: each is (line_names, label),

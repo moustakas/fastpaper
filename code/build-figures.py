@@ -5,7 +5,8 @@ Run from the repo root or from code/:
 
     python code/build-figures.py --compare-mstar [--verbose]
 
-Each flag generates one figure written to tex/figures/.
+Each flag generates one figure. Paper figures are written to tex/figures/;
+reference and diagnostic figures not in the paper are written to qa/.
 
 """
 import sys, os, argparse, pdb
@@ -24,6 +25,7 @@ from util import (read_fastspec, read_fastphot, plot_style,
 
 REPODIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIGDIR  = os.path.join(REPODIR, 'tex', 'figures')
+QADIR   = os.path.join(REPODIR, 'qa')
 
 # axis label for log stellar mass stored at h=1
 MSTAR_LABEL = r'$\log_{10}\,(\mathcal{M}_{*}\,h^{-2}\,/\,\mathcal{M}_{\odot})$'
@@ -609,7 +611,8 @@ def compare_emlines_external(verbose=False, survey='sv3', pull_denom='quadrature
         blowing up mean/skew/kurtosis if left in) — rerun with each of the
         three pull_denom choices to compare.
 
-    Output: tex/figures/compare-emlines-external[-{pull_denom}].pdf
+    Output: tex/figures/compare-emlines-external.pdf (default pull_denom),
+    or qa/compare-emlines-external-{pull_denom}.pdf otherwise
     """
     import fitsio
 
@@ -783,7 +786,8 @@ def compare_emlines_external(verbose=False, survey='sv3', pull_denom='quadrature
         fig.suptitle(f'Pull denominator: {denom_label}', fontsize='small', y=0.995)
 
     suffix  = '' if pull_denom == 'quadrature' else f'-{pull_denom}'
-    outfile = os.path.join(FIGDIR, f'compare-emlines-external{suffix}.pdf')
+    outdir  = FIGDIR if pull_denom == 'quadrature' else QADIR
+    outfile = os.path.join(outdir, f'compare-emlines-external{suffix}.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -800,7 +804,7 @@ def compare_cosmos2020(survey='sv3', verbose=False):
     Chabrier IMF).  Top panel: LOGMSTAR_COSMOS2020 vs LOGMSTAR scatter (Hess +
     contours + 1:1 line + stats).  Bottom panel: Δlog M (FastSpecFit −
     COSMOS2020) vs redshift with running median + IQR.
-    Output: tex/figures/compare-cosmos2020.pdf
+    Output: qa/compare-cosmos2020.pdf
     """
     import fitsio
     from matplotlib.gridspec import GridSpec
@@ -881,7 +885,7 @@ def compare_cosmos2020(survey='sv3', verbose=False):
         '\n(FastSpecFit $-$ COSMOS2020)')
     ax_dz.xaxis.set_major_locator(plt.MultipleLocator(0.5))
 
-    outfile = os.path.join(FIGDIR, 'compare-cosmos2020.pdf')
+    outfile = os.path.join(QADIR, 'compare-cosmos2020.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -901,7 +905,7 @@ def gr_mstar_cut_qa(survey='sv3', verbose=False):
     and the adopted cut (solid). Filled symbols were used in the fits and
     open symbols were clipped. Each panel lists the star-forming fraction.
 
-    Output: tex/figures/gr-mstar-cut-qa.pdf
+    Output: qa/gr-mstar-cut-qa.pdf
 
     """
     coeff, fit, cat = gr_cut_coeff(survey, verbose=verbose, return_all=True)
@@ -969,7 +973,7 @@ def gr_mstar_cut_qa(survey='sv3', verbose=False):
     fig.suptitle(r'$^{{0.1}}(g-r)_{{\rm cut}} = {:.3f} {:+.3f}\,(\log M - 10) '
                  r'{:+.3f}\,(z-0.1)$'.format(*coeff), y=0.995)
 
-    outfile = os.path.join(FIGDIR, 'gr-mstar-cut-qa.pdf')
+    outfile = os.path.join(QADIR, 'gr-mstar-cut-qa.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -1220,7 +1224,7 @@ def ewoii_dn4000(survey='sv3', verbose=False):
     survey : str
         DESI survey flavor: 'sv1', 'sv3' (default), 'main', or 'special'.
 
-    Output: tex/figures/ewoii-dn4000.pdf
+    Output: qa/ewoii-dn4000.pdf
     """
     from matplotlib.lines import Line2D
 
@@ -1283,7 +1287,7 @@ def ewoii_dn4000(survey='sv3', verbose=False):
 
     fig.tight_layout()
 
-    outfile = os.path.join(FIGDIR, 'ewoii-dn4000.pdf')
+    outfile = os.path.join(QADIR, 'ewoii-dn4000.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -1593,7 +1597,7 @@ def sfr_mstar_bgs(survey='sv3', specprod=DEFAULT_SPECPROD,
     lacking sufficient S/N on the AGN diagnostic lines are retained in the SF
     sample.  The AGN subset is computed but not yet plotted (reserved for future
     use as a separate set of contours).
-    Output: tex/figures/sfr-mstar-bgs.pdf
+    Output: qa/sfr-mstar-bgs.pdf
     """
     mstarlim = [7, 13]
     sfrlim   = [-3, 2.5]
@@ -1717,7 +1721,7 @@ def sfr_mstar_bgs(survey='sv3', specprod=DEFAULT_SPECPROD,
 
     fig.tight_layout()
 
-    outfile = os.path.join(FIGDIR, 'sfr-mstar-bgs.pdf')
+    outfile = os.path.join(QADIR, 'sfr-mstar-bgs.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -1734,7 +1738,7 @@ def broadhalpha_fraction_bgs(survey='sv3', specprod=DEFAULT_SPECPROD,
     Selection: sv3/bright, z=[0.05, 0.4], good_galaxies, BGS targets only.
     Detection criterion: HALPHA_BROAD_FLUX * sqrt(HALPHA_BROAD_FLUX_IVAR) > 3.
     Error bars: Wilson 68% (1σ) binomial confidence intervals.
-    Output: tex/figures/broadhalpha-fraction-bgs.pdf
+    Output: qa/broadhalpha-fraction-bgs.pdf
     """
     mstarlim = [8, 12]
     zlim     = [0.05, 0.4]
@@ -1797,7 +1801,7 @@ def broadhalpha_fraction_bgs(survey='sv3', specprod=DEFAULT_SPECPROD,
 
     fig.tight_layout()
 
-    outfile = os.path.join(FIGDIR, 'broadhalpha-fraction-bgs.pdf')
+    outfile = os.path.join(QADIR, 'broadhalpha-fraction-bgs.pdf')
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
@@ -2107,6 +2111,7 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(FIGDIR, exist_ok=True)
+    os.makedirs(QADIR, exist_ok=True)
 
     if args.all:
         sps_models(verbose=args.verbose)

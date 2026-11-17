@@ -21,7 +21,7 @@ TARGETID or which figure they feed.
 | `{coadd,redrock}-main-bright-27851` | 39628087574398347 | 0.0813 | Fig. 3, `example-bgs.pdf` (§4.1) — `code/example-qa.py` |
 | `{coadd,redrock}-main-dark-29973` | 39627663165362386 | 0.9449 | Fig. 4, `example-elg.pdf` (§4.2) — `code/example-qa.py` |
 | `{coadd,redrock}-main-dark-29972` | 39627657142340435 | 2.0731 | Fig. 5, `example-qso.pdf` (§4.3) — `code/example-qa.py` |
-| `redrock-main-dark-17289`, `f-main-dark-17289-39627496647296130`, `qa-vdisp-chi2scan-39627496647296130.ecsv`, `cutout-39627496647296130.jpeg` | 39627496647296130 | — | Draft vdisp-section figure, not yet in `ms.tex` — `code/vdisp-qa.py` |
+| `redrock-main-dark-17289`, `f-main-dark-17289-39627496647296130`, `qa-vdisp-chi2scan-39627496647296130.ecsv`, `cutout-39627496647296130.jpeg` | 39627496647296130 | — | Draft vdisp-section figure, not in `ms.tex` (`qa/vdisp-qa.pdf`) — `code/vdisp-qa.py` |
 
 The exact regeneration command for each is given inline in `CLAUDE.md`
 ("Running the Analysis Scripts").

@@ -1,6 +1,6 @@
 # Figure Generation
 
-All figures are written to `tex/figures/` and can be committed directly into the repo for inclusion in the paper.
+Paper figures are written to `tex/figures/` and can be committed directly into the repo for inclusion in the paper. Reference and diagnostic figures that are not in the paper are written to `qa/` (see `qa/README.md`).
 
 All scripts run on NERSC (Perlmutter) where the DESI software environment and VAC paths are available. Scripts in this directory are imported as modules by `build-figures.py`; analysis notebooks (`*.ipynb`) are for exploration and are not part of the production figure pipeline.
 

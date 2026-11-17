@@ -49,7 +49,7 @@ import numpy as np
 
 REPODIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATADIR = os.path.join(REPODIR, 'data')
-DEFAULT_OUTFILE = os.path.join(REPODIR, 'tex', 'figures', 'vdisp-qa.pdf')
+DEFAULT_OUTFILE = os.path.join(REPODIR, 'qa', 'vdisp-qa.pdf')
 DEFAULT_FPHOTODIR = DATADIR
 
 # single example this figure is being workshopped on; override on the

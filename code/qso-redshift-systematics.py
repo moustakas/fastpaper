@@ -42,7 +42,7 @@ Two-step process, as usual:
 
 Output files:
     external/qso-zsys-{specprod}-{survey}-{program}.fits
-    tex/figures/qso-redshift-systematics.pdf
+    qa/qso-redshift-systematics.pdf
 
 Usage (from repo root or code/, on NERSC for --prepare):
     python code/qso-redshift-systematics.py --prepare [--survey main] [--verbose]
@@ -423,7 +423,7 @@ def qso_zsys_figure(specprod=DEFAULT_SPECPROD, survey='main', nbins=40,
     object-to-object scatter within a bin (that's what the shaded IQR band
     shows).
 
-    Output: tex/figures/qso-redshift-systematics.pdf
+    Output: qa/qso-redshift-systematics.pdf
 
     """
     import matplotlib.pyplot as plt
@@ -532,7 +532,8 @@ def qso_zsys_figure(specprod=DEFAULT_SPECPROD, survey='main', nbins=40,
     axn.set_ylabel('Number of QSOs')
     axn.set_xlabel(r'Redshift')
 
-    outfile = os.path.join(REPODIR, 'tex', 'figures', 'qso-redshift-systematics.pdf')
+    outfile = os.path.join(REPODIR, 'qa', 'qso-redshift-systematics.pdf')
+    os.makedirs(os.path.dirname(outfile), exist_ok=True)
     fig.savefig(outfile, dpi=150, bbox_inches='tight')
     print(f'Wrote {outfile}')
     plt.close(fig)
