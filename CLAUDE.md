@@ -47,6 +47,8 @@ make            # runs lualatex, bibtex, lualatex, lualatex (see tex/Makefile)
 
 The bibliography file is `refs.bib`; `ms.tex` references it as `\bibliography{refs}`.
 
+`ms.tex` references figures and tables by bare filename (found via `\graphicspath` and `\input@path`), so it builds both in the repo and in a flat directory. Keep it that way: the AAS upload system rejects subdirectories. `make submit` (in `tex/`) builds `submit.zip` with every source file at one level and test-builds that flat copy in `submit-check/`.
+
 ## Author List
 
 The author order in `tex/ms.tex` is: John Moustakas, Jeremy Buhler, Dirk Scholte (fixed, in that order), then everyone else alphabetically by last name. Accents are ignored when sorting (Pérez-Ràfols comes before Prada) and spaces count (Le Guillou comes before Leauthaud). New DESI author-list exports (`DESI-*_author_list.csv`) must be merged into this order. Do not use the CSV's own order: it puts Moustakas first, sorts accented names after `z`, and leaves out Buhler. Use one `\author[ORCID]` and one `\email` per author, and one `\affiliation` for each CSV row. Skip rows whose affiliation is `"None"`.

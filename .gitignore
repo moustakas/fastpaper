@@ -23,6 +23,11 @@ tex/*.out
 tex/*.synctex.gz
 tex/*.fls
 tex/*.fdb_latexmk
+
+# Flat AAS upload bundle (built by `make submit` in tex/)
+tex/submit/
+tex/submit-check/
+tex/submit.zip
 tex/*.pdf
 
 # Large FITS data files (data lives on NERSC; only small reference files in data/)

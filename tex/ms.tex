@@ -53,6 +53,7 @@
 \newcommand{\logmstar}{\ensuremath{\log_{10}(\Mstar\,h^{-2}/\msun)}}
 
 \graphicspath{{./}{figures/}}
+\makeatletter\def\input@path{{./}{tables/}}\makeatother
 
 \submitjournal{\aj}
 
@@ -500,7 +501,8 @@ Early Data Release and Data Release 1.
 \end{abstract}
 
 \keywords{\uat{Astronomy software}{1855} --- \uat{Catalogs}{205} ---
-  \uat{Redshift surveys}{1378} --- \uat{Spectrophotometry}{1556}}
+  \uat{Galaxy properties}{615} --- \uat{Spectrophotometry}{1556} ---
+  \uat{Stellar populations}{1622}}
 
 \section{Introduction}
 \label{sec:intro}
@@ -909,7 +911,7 @@ additional fitting modes, including a ``photometry-only'' mode called
 \label{ssec:templates}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/sps-models.pdf}
+\centering\includegraphics[width=1.0\textwidth]{sps-models.pdf}
 \caption{The five SPS templates spanning \fastspecfit's lookback-time
   age bins (\S\ref{ssec:templates}), computed at solar metallicity
   ($\log_{10}Z/Z_\odot=0$) with $\tauv=0.1$ and normalized to a
@@ -1039,7 +1041,7 @@ which flags which lines, if present, are most likely to be
 well-detected in a given spectrum. We describe these latter quantities
 in detail in the next subsection (\S\ref{ssec:patches}).
 
-\input{tables/table-emlines}
+\input{table-emlines}
 
 \subsection{Adaptive Emission-Line Masking}
 \label{ssec:patches}
@@ -1067,7 +1069,7 @@ line-emission (although the statistically defensible decision is made
 in the final fitting pass, described in \S\ref{sssec:kinematic}).
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/linemasker.pdf}
+\centering\includegraphics[width=1.0\textwidth]{linemasker.pdf}
 \caption{Illustration of the line-masking algorithm for an example BGS
   target at $z=0.3292$ (\texttt{TARGETID=39627670102744387} from the
   main survey bright-time program, appearing on HEALPix
@@ -1739,7 +1741,7 @@ defines two important kinematic models: an emission line model
 consisting entirely of narrow lines (\emph{narrow-only}) and a model
 with both narrow and broad lines (\emph{narrow+broad}).
 
-\input{tables/table-kinematic-bounds}
+\input{table-kinematic-bounds}
 
 The narrow-only model ties all forbidden lines to one group anchored
 to \oiiilam{} and a second group consisting of all \ion{H}{1} and
@@ -1866,7 +1868,7 @@ by eye in the spectrum and is therefore one of the quantities we can
 use to determine the statistical significance of a line
 (\S\ref{ssec:cuts}).
 
-\input{tables/table-linesummary}
+\input{table-linesummary}
 
 Next, we compute the Gaussian-integrated flux $\Phi$ analytically from
 the fitted parameters using equation~(\ref{eq:flux_phys}), again,
@@ -2046,7 +2048,7 @@ well as the
 \texttt{speclite}
 filter curve names and their respective rest-frame wavelengths.
 
-\input{tables/table-absmag-bands}
+\input{table-absmag-bands}
 
 In addition to rest-frame photometry, we also measure several
 rest-frame monochromatic luminosities and observed-frame continuum
@@ -2241,7 +2243,7 @@ model QSO continua.
 \label{ssec:example_bgs}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/example-bgs.pdf}
+\centering\includegraphics[width=1.0\textwidth]{example-bgs.pdf}
 \caption{\fastspecfit{} output for a low-redshift BGS galaxy at
   $z=0.0813$ (\texttt{TARGETID=39628087574398347}; main survey, bright
   program, HEALPix~27851). Top: broadband SED showing the observed
@@ -2318,7 +2320,7 @@ Terlevich \citep[BPT;][]{baldwin81a} diagram (\S\ref{ssec:reach}).
 \label{ssec:example_elg}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/example-elg.pdf}
+\centering\includegraphics[width=1.0\textwidth]{example-elg.pdf}
 \caption{Same as Figure~\ref{fig:example_bgs}, but for an
   intermediate-redshift ELG at $z=0.9449$
   (\texttt{TARGETID=39627663165362386}; main survey, dark program,
@@ -2377,7 +2379,7 @@ galaxy.
 \label{ssec:example_qso}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/example-qso.pdf}
+\centering\includegraphics[width=1.0\textwidth]{example-qso.pdf}
 \caption{Same as Figure~\ref{fig:example_bgs}, but for a
   high-redshift QSO at $z=2.0731$ (\texttt{TARGETID=39627657142340435};
   main survey, dark program, HEALPix~29972) with a median aperture
@@ -2504,7 +2506,7 @@ distance and distance modulus, which are required by our modeling
 ($z\approx0$) targets in DESI, we refer the reader to
 \citet{koposov26a}.
 
-\input{tables/table-sample}
+\input{table-sample}
 
 Unfortunately, the Redrock redshift-fitting pipeline assigns an
 incorrect redshift to a small but astrophysically important fraction
@@ -3239,7 +3241,7 @@ planned updates and improvements to the code.
 \label{ssec:reach}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/mstar-redshift.pdf}
+\centering\includegraphics[width=1.0\textwidth]{mstar-redshift.pdf}
 \caption{Stellar mass versus redshift for BGS (left), LRG (center),
   and ELG (right) targets observed during the DESI SV3 bright and dark
   programs. The color scale and contours in each panel show the
@@ -3275,7 +3277,7 @@ comprehensive resource for studies of galaxy evolution over the past
 $\approx$10~Gyr.
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/bpt-agn.pdf}
+\centering\includegraphics[width=1.0\textwidth]{bpt-agn.pdf}
 \caption{AGN diagnostic diagrams for BGS galaxies in the SV3 bright
   program. In both panels, we require flux $\mathrm{S/N}>3$ in all the
   emission lines used to construct each diagram, and the background
@@ -3620,7 +3622,7 @@ VAC, please see the online
 documentation.\footnote{\url{https://fastspecfit.readthedocs.io/en/latest/fastphot.html}}
 
 \begin{figure*}
-\centering\includegraphics[width=1.0\textwidth]{figures/compare-mstar-fastphot.pdf}
+\centering\includegraphics[width=1.0\textwidth]{compare-mstar-fastphot.pdf}
 \caption{Comparison of \fastspecfit{} stellar masses derived from
   spectrophotometric fitting (\fastspec) and from photometry-only
   fitting (\fastphot{}), organized by target class.  \textit{Top row:}
@@ -3686,7 +3688,7 @@ in this paper) since 2022 August. In \S\ref{sec:intro} we cite just a
 small fraction of the publications which have resulted from these
 datasets.
 
-\input{tables/table-vac-history}
+\input{table-vac-history}
 
 In Table~\ref{table:vac-history} we document this history by listing
 the current set of \fastspec{} and \fastphot{} VACs, the date they
@@ -3721,7 +3723,7 @@ In the remainder of this appendix, we quantify the statistical
   exclude objects whose redshift changed from the following
   comparisons.
 
-\input{tables/table-vac-compare}
+\input{table-vac-compare}
 
 In Table~\ref{table:vac-compare} we list the median difference
   and NMAD of several key quantities for each target class. Relative
