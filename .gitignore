@@ -146,3 +146,7 @@ ENV/
 
 # Rope project settings
 .ropeproject
+# Flat arXiv bundle (built by `make arxiv` in tex/)
+tex/arxiv/
+tex/arxiv-check/
+tex/arxiv.tar.gz
